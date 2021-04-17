@@ -1,3 +1,5 @@
+#include <math.h>
+
 namespace mdk
 {
 #define Unit inline constexpr double

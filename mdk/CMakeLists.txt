@@ -12,9 +12,14 @@ target_sources(${LIBRARY_NAME} PRIVATE
 
 target_include_directories(${LIBRARY_NAME} PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${LIBRARY_NAME}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<INSTALL_INTERFACE:include/${LIBRARY_NAME}>)
 
 target_include_directories(${LIBRARY_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
+find_package(Eigen3 3.3 REQUIRED)
+
+target_link_libraries(${LIBRARY_NAME} PUBLIC
+    Eigen3::Eigen)
