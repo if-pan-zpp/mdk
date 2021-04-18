@@ -1,6 +1,8 @@
 #include "files/go/LegacyParser.hpp"
 #include "utils/Units.hpp"
 #include <sstream>
+#include <files/param/LegacyParser.hpp>
+
 using namespace mdk::go;
 using namespace std;
 
@@ -52,4 +54,3 @@ std::ostream &LegacyParser::write(ostream &os, StructuredPart const& sp) {
 
     return os;
 }
-

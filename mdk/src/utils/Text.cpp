@@ -32,3 +32,22 @@ string_view mdk::rtrim(string_view s) {
 string_view mdk::trim(string_view s) {
     return rtrim(ltrim(s));
 }
+
+string line(istream& is) {
+    string s;
+    getline(is, s);
+    return s;
+}
+
+void skipLine(istream& is) {
+    string line;
+    getline(is, line);
+}
+
+stringstream lineStream(istream& is) {
+    string line;
+    getline(is, line);
+    stringstream ss;
+    ss << line;
+    return ss;
+}

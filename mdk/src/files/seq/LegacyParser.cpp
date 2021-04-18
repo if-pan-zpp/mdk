@@ -60,5 +60,6 @@ Data LegacyParser::read(const std::filesystem::path &path) {
 }
 
 void LegacyParser::write(const filesystem::path &path, const Data &seq) {
-    // TODO: writing out seq files; low priority.
+    // TODO: writing out sequences in legacy format.
+    // Priority: low
 }

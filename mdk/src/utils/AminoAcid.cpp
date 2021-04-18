@@ -1,18 +1,10 @@
 #include "utils/AminoAcid.hpp"
+#include <algorithm>
 
 using namespace mdk;
 using namespace std;
 
 AminoAcid::AminoAcid() {
-    numAminoAcids = 20;
-
-    allCodes = "GPQCASVTILNDKEMHFRYW";
-
-    allNames = {
-        "ALA", "ARG", "ASN", "ASP", "CYS", "GLU", "GLN", "GLY", "HIS", "ILE",
-        "LEU", "LYS", "MET", "PHE", "PRO", "SER", "THR", "TRP", "TYR", "VAL"
-    };
-
     codeToName = {
         {'A', "ALA"},
         {'R', "ARG"},
@@ -58,6 +50,9 @@ AminoAcid::AminoAcid() {
         {"TYR", 'Y'},
         {"VAL", 'V'}
     };
+
+    numAminoAcids = 20;
+    allAminoAcids = makeAminoAcids();
 }
 
 AminoAcid::AminoAcid(char c) {
@@ -80,4 +75,15 @@ AminoAcid::operator std::string() const {
 
 bool AminoAcid::operator==(AminoAcid const &aminoAcid2) const {
     return code == aminoAcid2.code;
+}
+
+std::vector<AminoAcid> AminoAcid::makeAminoAcids() {
+    std::vector<AminoAcid> aminoAcids(numAminoAcids);
+    string codes = "GPQCASVTILNDKEMHFRYW";
+
+    for (int i = 0; i < numAminoAcids; ++i) {
+        aminoAcids[i] = (AminoAcid)codes[i];
+    }
+
+    return aminoAcids;
 }
