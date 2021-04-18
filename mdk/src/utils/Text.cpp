@@ -33,18 +33,18 @@ string_view mdk::trim(string_view s) {
     return rtrim(ltrim(s));
 }
 
-string line(istream& is) {
+string mdk::line(istream& is) {
     string s;
     getline(is, s);
     return s;
 }
 
-void skipLine(istream& is) {
+void mdk::skipLine(istream& is) {
     string line;
     getline(is, line);
 }
 
-stringstream lineStream(istream& is) {
+stringstream mdk::lineStream(istream& is) {
     string line;
     getline(is, line);
     stringstream ss;

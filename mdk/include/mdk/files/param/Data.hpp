@@ -37,7 +37,7 @@ namespace mdk::param {
         using PerPairData = std::unordered_map<
             std::pair<AminoAcid, AminoAcid>, T>;
 
-        PerPairData<double> pairwiseMinDist;
-        std::optional<PerPairData<double>> mjMatrix;
+        bool withMJ = false;
+        PerPairData<double> pairwiseMinDist, mjMatrix;
     };
 }

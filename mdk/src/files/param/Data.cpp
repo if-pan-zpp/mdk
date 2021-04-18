@@ -2,7 +2,7 @@
 using namespace mdk::param;
 using namespace std;
 
-std::vector<Variants> variants() {
+std::vector<Variants> mdk::param::variants() {
     return { GG, GP, GX, PG, PP, PX, XG, XP, XX };
 }
 

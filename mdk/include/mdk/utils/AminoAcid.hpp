@@ -13,16 +13,14 @@ namespace mdk {
         explicit operator char() const;
         explicit operator std::string() const;
 
+        static std::unordered_map<std::string, char> nameToCode;
+        static std::unordered_map<char, std::string> codeToName;
         static std::vector<AminoAcid> allAminoAcids;
-        static int numAminoAcids;
+        static constexpr int numAminoAcids = 20;
 
         bool operator==(AminoAcid const &aminoAcid2) const;
 
     private:
-        static std::unordered_map<std::string, char> nameToCode;
-        static std::unordered_map<char, std::string> codeToName;
-        static std::vector<AminoAcid> makeAminoAcids();
-
         char code;
         std::string name;
     };

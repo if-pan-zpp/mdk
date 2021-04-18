@@ -23,7 +23,7 @@ target_include_directories(${TARGET}
 
 target_compile_options(${TARGET}
     PRIVATE
-        -Wall -Wextra
+        -Wall -Wextra -fPIC
         $<$<CONFIG:Debug>:-pg>
         $<$<CONFIG:Release>:-Ofast -march=native>
     )

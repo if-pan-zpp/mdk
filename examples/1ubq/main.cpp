@@ -1,15 +1,12 @@
 #include <mdk/files/pdb/Parser.hpp>
+#include <mdk/files/param/LegacyParser.hpp>
 #include <fstream>
 using namespace std;
 using namespace mdk;
 
 int main() {
-    ifstream ubq_pdb_file("data/1ubq.pdb");
-    pdb::Parser parser;
-    auto ubq = parser.read(ubq_pdb_file);
-
-    ofstream ubq_save_file("data/1ubq.save.pdb");
-    parser.write(ubq_save_file, ubq);
+    ifstream param_file("data/parametersMJ96.txt");
+    auto params = param::LegacyParser().read(param_file);
 
     return 0;
 }
