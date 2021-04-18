@@ -4,22 +4,22 @@
 #include <unordered_map>
 #include "mdk/files/pdb/Record.hpp"
 
-namespace mdk {
-    class PDBFile {
+namespace mdk::pdb {
+    class Data {
     public:
         std::vector<Record> records;
     };
 
     class RecordParser;
 
-    class PDBParser {
+    class Parser {
     private:
         std::unordered_map<int, std::shared_ptr<RecordParser>> parsers;
 
     public:
-        PDBParser();
+        Parser();
 
-        PDBFile read(std::istream& is);
-        std::ostream& write(std::ostream& os, PDBFile const& file);
+        Data read(std::istream& is);
+        std::ostream& write(std::ostream& os, Data const& data);
     };
 }

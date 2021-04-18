@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-namespace mdk {
+namespace mdk::pdb {
     class Field {
     public:
         virtual void read(const std::string &s) = 0;

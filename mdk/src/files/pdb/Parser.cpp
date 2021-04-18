@@ -1,10 +1,10 @@
-#include "files/pdb/PDBParser.hpp"
+#include "files/pdb/Parser.hpp"
 #include "utils/Text.hpp"
 #include "files/pdb/RecordParsers.hpp"
-using namespace mdk;
+using namespace mdk::pdb;
 using namespace std;
 
-PDBParser::PDBParser() {
+Parser::Parser() {
     parsers = {
         { ((Record)Atom()).index(), make_shared<AtomParser>() },
         { ((Record)SSBond()).index(), make_shared<SSBondParser>() },
@@ -14,8 +14,8 @@ PDBParser::PDBParser() {
     };
 }
 
-PDBFile PDBParser::read(istream &is) {
-    PDBFile pdb;
+Data Parser::read(std::istream& is) {
+    Data data;
 
     for (string line; getline(is, line); ) {
         if (line.size() < 80)
@@ -24,18 +24,19 @@ PDBFile PDBParser::read(istream &is) {
         for (auto const& [idx, parser]: parsers) {
             auto record = parser->tryParse(line);
             if (!holds_alternative<monostate>(record)) {
-                pdb.records.push_back(record);
-                if (holds_alternative<End>(record)) return pdb;
+                data.records.push_back(record);
+
+                if (holds_alternative<End>(record)) return data;
                 else break;
             }
         }
     }
 
-    return pdb;
+    return data;
 }
 
-std::ostream &PDBParser::write(ostream &os, const PDBFile &file) {
-    for (auto const& record: file.records) {
+std::ostream &Parser::write(ostream &os, const Data &data) {
+    for (auto const& record: data.records) {
         parsers[record.index()]->write(os, record);
         os << endl;
     }

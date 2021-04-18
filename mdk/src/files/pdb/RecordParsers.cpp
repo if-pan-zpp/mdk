@@ -1,7 +1,7 @@
 #include "files/pdb/RecordParsers.hpp"
 #include "utils/Units.hpp"
 #include "files/pdb/Field.hpp"
-using namespace mdk;
+using namespace mdk::pdb;
 using namespace std;
 
 std::ostream& RecordParser::write(std::ostream& os, Record const& other) {

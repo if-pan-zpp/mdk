@@ -3,7 +3,7 @@
 #include "files/pdb/Field.hpp"
 #include "files/pdb/Record.hpp"
 
-namespace mdk {
+namespace mdk::pdb {
     class RecordParser {
     protected:
         Record record;

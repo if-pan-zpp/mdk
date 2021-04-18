@@ -3,7 +3,7 @@
 #include <string>
 #include <variant>
 
-namespace mdk {
+namespace mdk::pdb {
     class Atom {
     public:
         int serialNum;

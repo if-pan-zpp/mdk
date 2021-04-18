@@ -2,7 +2,7 @@
 #include "files/pdb/Field.hpp"
 #include <stdexcept>
 #include <string.h>
-using namespace mdk;
+using namespace mdk::pdb;
 using namespace std;
 
 void Integer::read(const string &s) {
