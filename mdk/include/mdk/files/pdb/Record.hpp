@@ -1,6 +1,7 @@
 #pragma once
 #include <eigen3/Eigen/Core>
 #include <string>
+#include <variant>
 
 namespace mdk {
     class Atom {
@@ -42,19 +43,14 @@ namespace mdk {
         int z;
     };
 
+    class Model {
+    public:
+        int serialNum;
+    };
+
     class End {
     public:
     };
 
-    struct Record {
-    public:
-        Record();
-        ~Record();
-        Record(Record const& other);
-        Record(Record&& other) noexcept;
-        Record& operator=(Record const& other);
-
-        enum Types { ATOM, SSBOND, CRYST1, END } tag;
-        union { Atom atom; SSBond ssbond; Cryst1 cryst1; End end; };
-    };
+    using Record = std::variant<std::monostate, Atom, SSBond, Cryst1, End, Model>;
 }

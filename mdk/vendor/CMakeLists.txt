@@ -1,5 +1,8 @@
 include(FetchContent)
 
+# This is for suppressing warnings from Eigen3
+set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS 1 CACHE INTERNAL "No dev warnings")
+
 message("Fetching: Eigen3")
 FetchContent_Declare(
     Eigen3

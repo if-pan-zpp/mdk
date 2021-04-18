@@ -1,6 +1,5 @@
 #include "files/ContactMapFile.hpp"
 #include "utils/Units.hpp"
-#include "../utils/Text.hpp"
 #include <sstream>
 using namespace mdk;
 using namespace std;

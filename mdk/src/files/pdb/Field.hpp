@@ -1,15 +1,22 @@
 #pragma once
-#include "files/pdb/Field.hpp"
+#include <string>
+#include <vector>
 
 namespace mdk {
+    class Field {
+    public:
+        virtual void read(const std::string &s) = 0;
+        virtual void write(std::string &s) const = 0;
+    };
+
     class Integer: public Field {
     private:
-        int i, j;
+        int i, j, offset;
         int *v;
 
     public:
-        Integer(int i, int j, int& v):
-            i{i}, j{j}, v{&v} {};
+        Integer(int i, int j, int& v, int offset = 0):
+            i{i}, j{j}, offset{offset}, v{&v} {};
 
         void read(const std::string &s) override;
         void write(std::string &s) const override;

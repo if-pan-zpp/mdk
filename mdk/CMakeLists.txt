@@ -1,26 +1,39 @@
-set(LIBRARY_NAME mdk)
+set(TARGET mdk)
 
-add_library(${LIBRARY_NAME})
+add_library(${TARGET})
 
 file(GLOB_RECURSE PUBLIC_SOURCES include/*)
-target_sources(${LIBRARY_NAME} PUBLIC
-    ${PUBLIC_SOURCES})
-
 file(GLOB_RECURSE PRIVATE_SOURCES src/*)
-target_sources(${LIBRARY_NAME} PRIVATE
+
+target_sources(${TARGET}
+    PUBLIC
+        ${PUBLIC_SOURCES}
+    PRIVATE
     ${PRIVATE_SOURCES})
 
-target_include_directories(${LIBRARY_NAME} PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${LIBRARY_NAME}>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-    $<INSTALL_INTERFACE:include/${LIBRARY_NAME}>)
+target_include_directories(${TARGET}
+    PRIVATE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${TARGET}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+        $<INSTALL_INTERFACE:include/${TARGET}>
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+    )
 
-target_include_directories(${LIBRARY_NAME} PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>)
+target_compile_options(${TARGET}
+    PRIVATE
+        -Wall -Wextra
+        $<$<CONFIG:Debug>:-pg>
+        $<$<CONFIG:Release>:-Ofast -march=native>
+    )
 
-add_subdirectory(vendor)
+target_compile_features(${TARGET}
+    PRIVATE
+        cxx_std_17)
+
+#add_subdirectory(vendor)
 
 find_package(Eigen3 3.3 REQUIRED)
-target_link_libraries(${LIBRARY_NAME} PUBLIC
+target_link_libraries(${TARGET} PUBLIC
     Eigen3::Eigen)

@@ -1,8 +1,8 @@
 #pragma once
+#include <vector>
 #include <memory>
 #include <unordered_map>
-#include "files/pdb/LineParsers.hpp"
-#include "files/pdb/Records.hpp"
+#include "mdk/files/pdb/Record.hpp"
 
 namespace mdk {
     class PDBFile {
@@ -10,10 +10,11 @@ namespace mdk {
         std::vector<Record> records;
     };
 
+    class RecordParser;
+
     class PDBParser {
     private:
-        std::unordered_map<Record::Types, std::shared_ptr<LineParser>> parsers;
-        Record record;
+        std::unordered_map<int, std::shared_ptr<RecordParser>> parsers;
 
     public:
         PDBParser();

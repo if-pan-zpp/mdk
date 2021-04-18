@@ -7,6 +7,7 @@
 namespace mdk {
     class ContactMapFile {
     public:
+        ContactMapFile() = default;
         ContactMapFile(std::istream& is);
         friend std::ostream &operator<<(std::ostream &os, ContactMapFile const& cmf);
 

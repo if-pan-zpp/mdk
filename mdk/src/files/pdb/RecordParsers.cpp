@@ -1,39 +1,46 @@
-#include "files/pdb/LineParsers.hpp"
+#include "files/pdb/RecordParsers.hpp"
 #include "utils/Units.hpp"
-#include "files/pdb/ActualFields.hpp"
+#include "files/pdb/Field.hpp"
 using namespace mdk;
 using namespace std;
 
-std::ostream &operator<<(ostream &os, const LineParser &p) {
-    std::string line(80, ' ');
-    for (auto const& field: p.fields) {
-        field->write(line);
+std::ostream& RecordParser::write(std::ostream& os, Record const& other) {
+    if (record.index() == other.index()) {
+        record = other;
+
+        std::string line(80, ' ');
+        for (auto const& field: fields) {
+            field->write(line);
+        }
+        os << line;
     }
-    os << line << endl;
     return os;
 }
 
-bool LineParser::tryParse(const string &s) const {
+Record RecordParser::tryParse(const string &s) const {
     try {
         for (auto const& field: fields) {
             field->read(s);
         }
-        return true;
+        return record;
     }
     catch (exception const& e) {
-        return false;
+        return std::monostate();
     }
 }
 
-AtomParser::AtomParser(Atom &atom) {
+AtomParser::AtomParser() {
+    record = Atom();
+    auto& atom = get<Atom>(record);
+
     fields = {
         make_shared<Literal>(1, 6, "ATOM  "),
-        make_shared<Integer>(7, 11, atom.serialNum),
+        make_shared<Integer>(7, 11, atom.serialNum, -1),
         make_shared<String>(13, 16, atom.atomName),
         make_shared<Char>(17, atom.altLocation),
         make_shared<String>(18, 20, atom.residueName),
         make_shared<Char>(22, atom.chainID),
-        make_shared<Integer>(23, 26, atom.residueSeqNum),
+        make_shared<Integer>(23, 26, atom.residueSeqNum, -1),
         make_shared<Char>(27, atom.insertionCode),
         make_shared<Real>(31, 38, 8, 3, atom.pos.x()),
         make_shared<Real>(39, 46, 8, 3, atom.pos.y()),
@@ -45,16 +52,19 @@ AtomParser::AtomParser(Atom &atom) {
     };
 }
 
-SSBondParser::SSBondParser(SSBond &ssbond) {
+SSBondParser::SSBondParser() {
+    record = SSBond();
+    auto& ssbond = get<SSBond>(record);
+
     fields = {
         make_shared<Literal>(1, 6, "SSBOND"),
-        make_shared<Integer>(8, 10, ssbond.serialNum),
+        make_shared<Integer>(8, 10, ssbond.serialNum, -1),
         make_shared<Literal>(12, 14, "CYS"),
         make_shared<Char>(16, ssbond.res[0].chainId),
-        make_shared<Integer>(18, 21, ssbond.res[0].residueSeqNum),
+        make_shared<Integer>(18, 21, ssbond.res[0].residueSeqNum, -1),
         make_shared<Char>(22, ssbond.res[0].insertionCode),
         make_shared<Char>(30, ssbond.res[1].chainId),
-        make_shared<Integer>(32, 35, ssbond.res[1].residueSeqNum),
+        make_shared<Integer>(32, 35, ssbond.res[1].residueSeqNum, -1),
         make_shared<Char>(36, ssbond.res[1].insertionCode),
         make_shared<SymOp>(60, 65, ssbond.res[0].symmetryOp),
         make_shared<SymOp>(67, 72, ssbond.res[1].symmetryOp),
@@ -62,7 +72,10 @@ SSBondParser::SSBondParser(SSBond &ssbond) {
     };
 }
 
-Cryst1Parser::Cryst1Parser(Cryst1 &cryst1) {
+Cryst1Parser::Cryst1Parser() {
+    record = Cryst1();
+    auto& cryst1 = get<Cryst1>(record);
+
     fields = {
         make_shared<Literal>(1, 6, "CRYST1"),
         make_shared<Real>(7, 15, 9, 3, cryst1.size.x(), angstrom),
@@ -76,7 +89,18 @@ Cryst1Parser::Cryst1Parser(Cryst1 &cryst1) {
     };
 }
 
+ModelParser::ModelParser() {
+    record = Model();
+    auto& model = get<Model>(record);
+
+    fields = {
+        make_shared<Literal>(1, 6, "MODEL "),
+        make_shared<Integer>(11, 14, model.serialNum, -1)
+    };
+}
+
 EndParser::EndParser() {
+    record = End();
     fields = {
         make_unique<Literal>(1, 6, "END   ")
     };
