@@ -4,14 +4,14 @@ using namespace mdk;
 using namespace std;
 
 string_view mdk::view(string const& s, int i, int j) {
-    if (i > s.size() || j > s.size() || i > j)
+    if (i > (int)s.size() || j > (int)s.size() || i > j)
         throw runtime_error("invalid view requested");
 
     return string_view(s.data() + i - 1, j - i + 1);
 }
 
 char mdk::view(string const& s, int i) {
-    if (i > s.size())
+    if (i > (int)s.size())
         throw runtime_error("invalid view requested");
 
     return s[i - 1];
