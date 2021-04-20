@@ -1,7 +1,6 @@
-#include "files/go/LegacyParser.hpp"
+#include "io/go/LegacyParser.hpp"
 #include "utils/Units.hpp"
 #include <sstream>
-#include <files/param/LegacyParser.hpp>
 
 using namespace mdk::go;
 using namespace std;
@@ -17,10 +16,10 @@ StructuredPart LegacyParser::read(std::istream &is) {
     sp.contacts = vector<StructuredPart::Contact>(numOfContacts);
     for (int i = 0; i < numOfContacts; ++i) {
         auto& contact = sp.contacts[i];
-        is >> contact.res1 >> contact.res2 >> contact.eqDist;
+        is >> contact.res1 >> contact.res2 >> contact.dist;
         --contact.res1;
         --contact.res2;
-        contact.eqDist *= 5.0 * angstrom;
+        contact.dist *= f77unit;
     }
 
     sp.tether = vector<double>(numOfResidues, 0);
@@ -44,7 +43,7 @@ std::ostream &LegacyParser::write(ostream &os, StructuredPart const& sp) {
     for (auto& contact: sp.contacts) {
         os << contact.res1 + 1 << "\t";
         os << contact.res2 + 1 << "\t";
-        os << contact.eqDist / (5.0 * angstrom) << endl;
+        os << contact.dist / (5.0 * angstrom) << endl;
     }
 
     for (size_t i = 0; i < sp.tether.size(); ++i) {

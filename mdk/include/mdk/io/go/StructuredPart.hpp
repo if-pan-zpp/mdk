@@ -8,7 +8,7 @@ namespace mdk::go {
 
         struct Contact {
             int res1, res2;
-            double eqDist;
+            double dist;
         };
 
         std::vector<Contact> contacts;

@@ -1,6 +1,6 @@
-#include "files/pdb/RecordParsers.hpp"
+#include "RecordParsers.hpp"
 #include "utils/Units.hpp"
-#include "files/pdb/Field.hpp"
+#include "Field.hpp"
 using namespace mdk::pdb;
 using namespace std;
 
@@ -89,19 +89,23 @@ Cryst1Parser::Cryst1Parser() {
     };
 }
 
-ModelParser::ModelParser() {
-    record = Model();
-    auto& model = get<Model>(record);
-
-    fields = {
-        make_shared<Literal>(1, 6, "MODEL "),
-        make_shared<Integer>(11, 14, model.serialNum, -1)
-    };
-}
-
 EndParser::EndParser() {
     record = End();
     fields = {
         make_unique<Literal>(1, 6, "END   ")
+    };
+}
+
+TerParser::TerParser() {
+    record = Ter();
+    auto& ter = get<Ter>(record);
+
+    fields = {
+        make_unique<Literal>(1, 6, "TER   "),
+        make_unique<Integer>(7, 11, ter.serialNum, -1),
+        make_unique<String>(18, 20, ter.residueName),
+        make_unique<Char>(22, ter.chainId),
+        make_unique<Integer>(23, 26, ter.residueSeqNum, -1),
+        make_unique<Char>(27, ter.insertionCode)
     };
 }

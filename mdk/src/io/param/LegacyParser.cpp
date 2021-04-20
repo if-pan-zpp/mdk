@@ -1,18 +1,18 @@
-#include "files/param/LegacyParser.hpp"
+#include "io/param/LegacyParser.hpp"
 #include "utils/Text.hpp"
 #include <sstream>
 using namespace mdk;
 using namespace mdk::param;
 using namespace std;
 
-static void fetchDefAngleParams(istream &is, Data &data) {
+static void fetchDefAngleParams(istream &is, Parameters &data) {
     skipLine(is);
     auto ss = lineStream(is);
     for (auto& coeff: data.defAngleParams)
         ss >> coeff;
 }
 
-static void fetchAngleParams(istream &is, Data &data) {
+static void fetchAngleParams(istream &is, Parameters &data) {
     skipLine(is);
     for (auto var: variants()) {
         auto ss = lineStream(is);
@@ -21,7 +21,7 @@ static void fetchAngleParams(istream &is, Data &data) {
     }
 }
 
-static void fetchDihedralParams(istream &is, Data &data) {
+static void fetchDihedralParams(istream &is, Parameters &data) {
     skipLine(is);
     for (auto var: variants()) {
         auto ss = lineStream(is);
@@ -30,7 +30,7 @@ static void fetchDihedralParams(istream &is, Data &data) {
     }
 }
 
-static void fetchSpecificity(istream &is, Data &data) {
+static void fetchSpecificity(istream &is, Parameters &data) {
     auto ss = lineStream(is);
     vector<AminoAcid> order;
     for (string name; ss >> name; ) {
@@ -55,7 +55,7 @@ static void fetchSpecificity(istream &is, Data &data) {
         ss >> data.specificity[acid].polarCoordNum;
 }
 
-static void fetchRadii(istream &is, Data &data) {
+static void fetchRadii(istream &is, Parameters &data) {
     skipLine(is);
 
     auto ss = lineStream(is);
@@ -63,11 +63,14 @@ static void fetchRadii(istream &is, Data &data) {
         ss >> data.radius[acid];
 }
 
-static void fetchPairwiseData(istream &is, Data &data) {
+static void fetchPairwiseData(istream &is, Parameters &data) {
     string header;
     getline(is, header);
+
     bool fetchMJ = (header == "amino acid pair distances and energies");
-    data.withMJ = fetchMJ;
+    if (fetchMJ) {
+        data.mjMatrix = Parameters::PerPairData<double>();
+    }
 
     int numPairs = AminoAcid::numAminoAcids * (AminoAcid::numAminoAcids+1) / 2;
     for (int i = 0; i < numPairs; ++i) {
@@ -86,14 +89,14 @@ static void fetchPairwiseData(istream &is, Data &data) {
             double mjEnergy;
             ss >> mjEnergy;
 
-            data.mjMatrix[{acid1, acid2}] = mjEnergy;
-            data.mjMatrix[{acid2, acid1}] = mjEnergy;
+            data.mjMatrix.value()[{acid1, acid2}] = mjEnergy;
+            data.mjMatrix.value()[{acid2, acid1}] = mjEnergy;
         }
     }
 }
 
-Data LegacyParser::read(istream &is) {
-    Data data;
+Parameters LegacyParser::read(istream &is) {
+    Parameters data;
 
     fetchDefAngleParams(is, data);
     fetchAngleParams(is, data);
@@ -105,7 +108,7 @@ Data LegacyParser::read(istream &is) {
     return data;
 }
 
-std::ostream &LegacyParser::write(ostream &os, const Data &data) {
+std::ostream &LegacyParser::write(ostream &os, const Parameters &data) {
     // TODO: writing out parameters in legacy format
     // Priority: low
     return os;

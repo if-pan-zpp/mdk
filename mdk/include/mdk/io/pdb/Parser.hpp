@@ -2,14 +2,9 @@
 #include <vector>
 #include <memory>
 #include <unordered_map>
-#include "mdk/files/pdb/Record.hpp"
+#include <mdk/io/pdb/Data.hpp>
 
 namespace mdk::pdb {
-    class Data {
-    public:
-        std::vector<Record> records;
-    };
-
     class RecordParser;
 
     class Parser {

@@ -1,9 +1,11 @@
 #pragma once
 #include <memory>
-#include "files/pdb/Field.hpp"
-#include "files/pdb/Record.hpp"
+#include "Field.hpp"
+#include "io/pdb/Record.hpp"
 
 namespace mdk::pdb {
+    using namespace records;
+
     class RecordParser {
     protected:
         Record record;
@@ -18,6 +20,11 @@ namespace mdk::pdb {
     class AtomParser: public RecordParser {
     public:
         AtomParser();
+    };
+
+    class HetatmParser: public RecordParser {
+    public:
+        HetatmParser();
     };
 
     class SSBondParser: public RecordParser {
@@ -35,8 +42,8 @@ namespace mdk::pdb {
         EndParser();
     };
 
-    class ModelParser: public RecordParser {
+    class TerParser: public RecordParser {
     public:
-        ModelParser();
+        TerParser();
     };
 }

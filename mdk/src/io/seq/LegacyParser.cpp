@@ -1,13 +1,13 @@
-#include "files/seq/LegacyParser.hpp"
-#include "files/go/LegacyParser.hpp"
+#include "io/seq/LegacyParser.hpp"
+#include "io/go/LegacyParser.hpp"
 #include "utils/Text.hpp"
 #include <fstream>
 using namespace mdk::seq;
 using namespace std;
 
-Data LegacyParser::read(const std::filesystem::path &path) {
+Sequence LegacyParser::read(const std::filesystem::path &path) {
     auto file = ifstream(path);
-    Data seq;
+    Sequence seq;
     go::LegacyParser goParser;
 
     string line;
@@ -15,14 +15,14 @@ Data LegacyParser::read(const std::filesystem::path &path) {
 
     int numOfChains;
     if (line.substr(0, 7) == "screend") {
-        seq.screend = stod(line.substr(8));
+        seq.screeningDist = stod(line.substr(8));
         file >> numOfChains;
     }
     else {
         numOfChains = stoi(line);
     }
 
-    seq.chains = vector<Data::Chain>(numOfChains);
+    seq.chains = vector<Sequence::Chain>(numOfChains);
     for (auto& chain: seq.chains) {
         int numOfResidues;
         file >> numOfResidues;
@@ -59,7 +59,7 @@ Data LegacyParser::read(const std::filesystem::path &path) {
     return seq;
 }
 
-void LegacyParser::write(const filesystem::path &path, const Data &seq) {
+void LegacyParser::write(const filesystem::path &path, const Sequence &seq) {
     // TODO: writing out sequences in legacy format.
     // Priority: low
 }

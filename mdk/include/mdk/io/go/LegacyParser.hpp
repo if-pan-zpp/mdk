@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "mdk/files/go/StructuredPart.hpp"
+#include "StructuredPart.hpp"
 
 namespace mdk::go {
     class LegacyParser {

@@ -1,4 +1,4 @@
-#include "files/param/Data.hpp"
+#include "io/param/Parameters.hpp"
 using namespace mdk::param;
 using namespace std;
 
@@ -6,7 +6,7 @@ std::vector<Variants> mdk::param::variants() {
     return { GG, GP, GX, PG, PP, PX, XG, XP, XX };
 }
 
-Data::Data() {
+Parameters::Parameters() {
     defAngleParams = Coeffs(7);
     for (auto const& var: variants()) {
         angleParams[var] = defAngleParams;
@@ -19,7 +19,6 @@ Data::Data() {
 
         for (auto const& acid2: AminoAcid::allAminoAcids) {
             pairwiseMinDist[{acid1, acid2}] = 0;
-            mjMatrix[{acid1, acid2}] = 0;
         }
     }
 }

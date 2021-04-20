@@ -1,6 +1,7 @@
-#include "files/pdb/Parser.hpp"
+#include "io/pdb/Parser.hpp"
 #include "utils/Text.hpp"
-#include "files/pdb/RecordParsers.hpp"
+#include "RecordParsers.hpp"
+using namespace mdk::pdb::records;
 using namespace mdk::pdb;
 using namespace std;
 
@@ -10,7 +11,6 @@ Parser::Parser() {
         { ((Record)SSBond()).index(), make_shared<SSBondParser>() },
         { ((Record)Cryst1()).index(), make_shared<Cryst1Parser>() },
         { ((Record)End()).index(), make_shared<EndParser>() },
-        { ((Record)Model()).index(), make_shared<ModelParser>() }
     };
 }
 

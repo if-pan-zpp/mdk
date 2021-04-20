@@ -9,9 +9,9 @@ namespace mdk::param {
     enum Variants { GG, GP, GX, PG, PP, PX, XG, XP, XX };
     std::vector<Variants> variants();
 
-    class Data {
+    class Parameters {
     public:
-        Data();
+        Parameters();
 
         using Coeffs = std::vector<double>;
         Coeffs defAngleParams;
@@ -37,7 +37,7 @@ namespace mdk::param {
         using PerPairData = std::unordered_map<
             std::pair<AminoAcid, AminoAcid>, T>;
 
-        bool withMJ = false;
-        PerPairData<double> pairwiseMinDist, mjMatrix;
+        PerPairData<double> pairwiseMinDist;
+        std::optional<PerPairData<double>> mjMatrix;
     };
 }

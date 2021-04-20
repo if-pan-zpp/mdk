@@ -1,5 +1,5 @@
 #include "utils/Text.hpp"
-#include "files/pdb/Field.hpp"
+#include "Field.hpp"
 #include <stdexcept>
 #include <string.h>
 using namespace mdk::pdb;
@@ -18,7 +18,7 @@ void format(string_view sv, const char *fmt, Args const&... args) {
 
 void Integer::write(string &s) const {
     auto sv = view(s, i, j);
-    format(sv, "%d", *v - offset);
+    format(sv, "%*d", sv.size(), *v - offset);
 }
 
 void Real::read(const string &s) {

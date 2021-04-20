@@ -4,7 +4,7 @@
 using namespace mdk;
 using namespace std;
 
-std::unordered_map<char, std::string> AminoAcid::codeToName = {
+unordered_map<char, string> AminoAcid::codeToName = {
     {'A', "ALA"},
     {'R', "ARG"},
     {'N', "ASN"},
@@ -27,7 +27,7 @@ std::unordered_map<char, std::string> AminoAcid::codeToName = {
     {'V', "VAL"}
 };
 
-std::unordered_map<std::string, char> AminoAcid::nameToCode = {
+unordered_map<string, char> AminoAcid::nameToCode = {
     {"ALA", 'A'},
     {"ARG", 'R'},
     {"ASN", 'N'},
@@ -50,19 +50,24 @@ std::unordered_map<std::string, char> AminoAcid::nameToCode = {
     {"VAL", 'V'}
 };
 
-static std::vector<AminoAcid> makeAllAminoAcids() {
-    std::vector<AminoAcid> aminoAcids(AminoAcid::numAminoAcids);
+unordered_set<string> AminoAcid::allNames = {
+    "ALA", "ARG", "ASN", "ASP", "CYS", "GLU", "GLN", "GLY", "HIS",
+    "ILE", "LEU", "LYS", "MET", "PHE", "PRO", "SER", "THR", "TRP",
+    "TYR", "VAL"
+};
+
+static unordered_set<AminoAcid> makeAllAminoAcids() {
+    unordered_set<AminoAcid> aminoAcids(AminoAcid::numAminoAcids);
     string codes = "GPQCASVTILNDKEMHFRYW";
 
     for (int i = 0; i < AminoAcid::numAminoAcids; ++i) {
-        aminoAcids[i] = (AminoAcid)codes[i];
+        aminoAcids.insert((AminoAcid)codes[i]);
     }
 
     return aminoAcids;
 }
 
-
-std::vector<AminoAcid> AminoAcid::allAminoAcids = makeAllAminoAcids();
+unordered_set<AminoAcid> AminoAcid::allAminoAcids = makeAllAminoAcids();
 
 AminoAcid::AminoAcid() {
     code = 'A';
@@ -88,6 +93,10 @@ AminoAcid::operator std::string() const {
 
 bool AminoAcid::operator==(AminoAcid const &aminoAcid2) const {
     return code == aminoAcid2.code;
+}
+
+bool AminoAcid::isAminoAcid(const string &s) {
+    return allNames.find(s) != allNames.end();
 }
 
 
