@@ -2,8 +2,8 @@
 #include <vector>
 #include <Eigen/Core>
 #include <unordered_map>
-#include <mdk/model/CoarseModel.hpp>
 #include <mdk/utils/AminoAcid.hpp>
+#include <mdk/model/Model.hpp>
 
 namespace mdk::pdb {
     class Model {
@@ -42,11 +42,11 @@ namespace mdk::pdb {
         Eigen::Vector3d cellDims;
 
     public:
-        CoarseModel coarsen(bool contactsFromAllAtoms = true);
+        mdk::Model reduce(bool contactsFromAllAtoms = true);
 
     private:
         bool hasAllAtoms() const;
-        std::vector<CoarseModel::Bond> allAtomCContacts();
-        std::vector<CoarseModel::Bond> onlyCAContacts();
+        std::vector<mdk::Model::Bond> allAtomCContacts();
+        std::vector<mdk::Model::Bond> onlyCAContacts();
     };
 }

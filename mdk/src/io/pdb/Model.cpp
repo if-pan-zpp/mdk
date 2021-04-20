@@ -4,11 +4,11 @@ using namespace mdk;
 using namespace mdk::pdb;
 using namespace std;
 
-CoarseModel Model::coarsen(bool contactsFromAllAtoms) {
-    CoarseModel coarseModel;
+mdk::Model pdb::Model::reduce(bool contactsFromAllAtoms) {
+    mdk::Model model;
 }
 
-bool Model::hasAllAtoms() const {
+bool pdb::Model::hasAllAtoms() const {
     for (auto const& [chainID, chain]: chains) {
         for (auto const& [resID, res]: chain.residues) {
             if (AminoAcid::isAminoAcid(res.type)) {
@@ -20,10 +20,10 @@ bool Model::hasAllAtoms() const {
     return true;
 }
 
-vector<CoarseModel::Bond> Model::allAtomCContacts() {
-    return std::vector<CoarseModel::Bond>();
+vector<mdk::Model::Bond> pdb::Model::allAtomCContacts() {
+
 }
 
-vector<CoarseModel::Bond> Model::onlyCAContacts() {
-    return std::vector<CoarseModel::Bond>();
+vector<mdk::Model::Bond> pdb::Model::onlyCAContacts() {
+
 }
