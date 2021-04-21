@@ -1,4 +1,4 @@
-#include "io/pdb/Parser.hpp"
+#include "files/pdb/Parser.hpp"
 #include "utils/Text.hpp"
 #include "RecordParsers.hpp"
 using namespace mdk::pdb::records;
@@ -14,8 +14,8 @@ Parser::Parser() {
     };
 }
 
-Data Parser::read(std::istream& is) {
-    Data data;
+RawData Parser::read(std::istream& is) {
+    RawData data;
 
     for (string line; getline(is, line); ) {
         if (line.size() < 80)
@@ -35,7 +35,7 @@ Data Parser::read(std::istream& is) {
     return data;
 }
 
-std::ostream &Parser::write(ostream &os, const Data &data) {
+std::ostream &Parser::write(ostream &os, const RawData &data) {
     for (auto const& record: data.records) {
         parsers[record.index()]->write(os, record);
         os << endl;

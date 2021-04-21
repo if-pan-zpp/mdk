@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include "Field.hpp"
-#include "io/pdb/Record.hpp"
+#include "files/pdb/Record.hpp"
 
 namespace mdk::pdb {
     using namespace records;

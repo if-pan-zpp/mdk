@@ -2,7 +2,7 @@
 #include "utils/Units.hpp"
 using namespace mdk;
 
-static ResidueTypes createResidueTypes() {
+ResidueTypes mdk::createTypes() {
     ResidueTypes types;
 
     for (auto const& acid: AminoAcid::allAminoAcids) {
@@ -152,5 +152,3 @@ static ResidueTypes createResidueTypes() {
 
     return types;
 }
-
-ResidueTypes types = createResidueTypes();

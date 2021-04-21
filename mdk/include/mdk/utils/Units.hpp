@@ -51,4 +51,6 @@ namespace mdk
     /* Degrees */
     Unit radian = 1.0;
     Unit degree = (2.0 * M_PI / 360.0) * radian;
+
+#undef Unit
 }

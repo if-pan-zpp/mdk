@@ -1,5 +1,5 @@
-#include "io/seq/LegacyParser.hpp"
-#include "io/go/LegacyParser.hpp"
+#include "files/seq/LegacyParser.hpp"
+#include "files/go/LegacyParser.hpp"
 #include "utils/Text.hpp"
 #include <fstream>
 using namespace mdk::seq;

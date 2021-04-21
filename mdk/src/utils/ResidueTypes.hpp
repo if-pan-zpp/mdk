@@ -17,5 +17,5 @@ namespace mdk {
 
     using ResidueTypes = std::unordered_map<AminoAcid, ResidueTypeInfo>;
 
-    extern ResidueTypes types;
+    ResidueTypes createTypes();
 }

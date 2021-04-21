@@ -1,4 +1,4 @@
-#include "io/go/LegacyParser.hpp"
+#include "files/go/LegacyParser.hpp"
 #include "utils/Units.hpp"
 #include <sstream>
 
