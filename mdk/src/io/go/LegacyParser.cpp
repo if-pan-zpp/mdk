@@ -16,13 +16,13 @@ StructuredPart LegacyParser::read(std::istream &is) {
     sp.contacts = vector<StructuredPart::Contact>(numOfContacts);
     for (int i = 0; i < numOfContacts; ++i) {
         auto& contact = sp.contacts[i];
-        is >> contact.res1 >> contact.res2 >> contact.dist;
-        --contact.res1;
-        --contact.res2;
+        is >> contact.res[0] >> contact.res[1] >> contact.dist;
+        --contact.res[0];
+        --contact.res[1];
         contact.dist *= f77unit;
     }
 
-    sp.tether = vector<double>(numOfResidues, 0);
+    sp.len = numOfResidues;
     sp.angle = vector<double>(numOfResidues);
     sp.dihedral = vector<double>(numOfResidues);
 
@@ -38,15 +38,15 @@ StructuredPart LegacyParser::read(std::istream &is) {
 std::ostream &LegacyParser::write(ostream &os, StructuredPart const& sp) {
     os << sp.offset << endl;
     os << sp.contacts.size() << endl;
-    os << sp.tether.size() << endl;
+    os << sp.len << endl;
 
     for (auto& contact: sp.contacts) {
-        os << contact.res1 + 1 << "\t";
-        os << contact.res2 + 1 << "\t";
+        os << contact.res[0] + 1 << "\t";
+        os << contact.res[1] + 1 << "\t";
         os << contact.dist / (5.0 * angstrom) << endl;
     }
 
-    for (size_t i = 0; i < sp.tether.size(); ++i) {
+    for (size_t i = 0; i < sp.len; ++i) {
         os << sp.angle[i] / radian << "\t";
         os << sp.dihedral[i] / radian << endl;
     }

@@ -4,14 +4,14 @@
 namespace mdk::go {
     class StructuredPart {
     public:
-        int offset;
+        int len, offset;
 
         struct Contact {
-            int res1, res2;
+            int res[2];
             double dist;
         };
 
         std::vector<Contact> contacts;
-        std::vector<double> tether, angle, dihedral;
+        std::vector<double> angle, dihedral;
     };
 }

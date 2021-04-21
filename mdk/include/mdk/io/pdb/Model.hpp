@@ -13,40 +13,42 @@ namespace mdk::pdb {
         struct Chain;
 
         struct Atom {
-            int id;
+            int idx;
             Residue *res;
             Eigen::Vector3d pos;
             std::string name, element;
         };
 
         struct Residue {
-            int id;
+            int idx;
             Chain *chain;
             std::string type;
             std::unordered_map<int, Atom> atoms;
         };
 
         struct Chain {
-            char id;
+            char idx;
             std::unordered_map<int, Residue> residues;
         };
         std::unordered_map<char, Chain> chains;
 
-        struct SSBond {
-            int id;
-            Residue *res[2];
+        struct Contact {
+            int idx;
+            Atom *atom[2];
             double dist0;
+            std::string type;
         };
-        std::unordered_map<int, SSBond> ssbonds;
+        std::unordered_map<int, Contact> contacts;
 
-        Eigen::Vector3d cellDims;
+        Eigen::Vector3d cell;
 
     public:
-        mdk::Model reduce(bool contactsFromAllAtoms = true);
+        mdk::Model reduce();
+        void createContacts(bool fromAllAtoms = true);
 
     private:
         bool hasAllAtoms() const;
-        std::vector<mdk::Model::Bond> allAtomCContacts();
-        std::vector<mdk::Model::Bond> onlyCAContacts();
+        std::vector<Atom*> allAtoms();
+        std::vector<Atom*> contactAtoms(bool fromAllAtoms);
     };
 }

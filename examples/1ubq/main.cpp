@@ -7,6 +7,8 @@ int main() {
     ifstream pdb_file("data/1ubq.pdb");
     auto pdb = pdb::Parser().read(pdb_file);
 
+    auto model = pdb.asModel();
+
     ofstream pdb_save_file("data/1ubq.save.pdb");
     pdb::Parser().write(pdb_save_file, pdb);
 
