@@ -14,8 +14,8 @@ Parser::Parser() {
     };
 }
 
-RawData Parser::read(std::istream& is) {
-    RawData data;
+Data Parser::read(std::istream& is) {
+    Data data;
 
     for (string line; getline(is, line); ) {
         if (line.size() < 80)
@@ -35,7 +35,7 @@ RawData Parser::read(std::istream& is) {
     return data;
 }
 
-std::ostream &Parser::write(ostream &os, const RawData &data) {
+std::ostream &Parser::write(ostream &os, const Data &data) {
     for (auto const& record: data.records) {
         parsers[record.index()]->write(os, record);
         os << endl;

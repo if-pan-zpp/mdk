@@ -58,8 +58,3 @@ Sequence LegacyParser::read(const std::filesystem::path &path) {
 
     return seq;
 }
-
-void LegacyParser::write(const filesystem::path &path, const Sequence &seq) {
-    // TODO: writing out sequences in legacy format.
-    // Priority: low
-}

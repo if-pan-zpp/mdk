@@ -5,10 +5,7 @@ using namespace std;
 
 int main() {
     ifstream pdb_file("data/1ubq.pdb");
-    auto pdb = pdb::Parser().read(pdb_file);
-
-    ofstream pdb_save_file("data/1ubq.save.pdb");
-    pdb::Parser().write(pdb_save_file, pdb);
+    auto model = pdb::Parser().read(pdb_file);
 
     return 0;
 }

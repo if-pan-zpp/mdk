@@ -2,7 +2,7 @@
 #include <vector>
 #include <memory>
 #include <unordered_map>
-#include "RawData.hpp"
+#include "Data.hpp"
 
 namespace mdk::pdb {
     class RecordParser;
@@ -14,7 +14,7 @@ namespace mdk::pdb {
     public:
         Parser();
 
-        RawData read(std::istream& is);
-        std::ostream& write(std::ostream& os, RawData const& data);
+        Data read(std::istream& is);
+        std::ostream& write(std::ostream& os, Data const& data);
     };
 }
