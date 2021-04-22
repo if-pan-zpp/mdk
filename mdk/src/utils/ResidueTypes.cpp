@@ -1,4 +1,4 @@
-#include "ResidueTypes.hpp"
+#include "utils/ResidueTypes.hpp"
 #include "utils/Units.hpp"
 using namespace mdk;
 
@@ -11,6 +11,7 @@ ResidueTypes mdk::createTypes() {
         acidInfo.atomInfo["CA"].radius = 1.88;
         acidInfo.atomInfo["C"].radius = 1.61;
         acidInfo.atomInfo["O"].radius = 1.42;
+        acidInfo.atomInfo["OXT"].radius = 1.42; // ??
 
         for (auto& [type, entry]: acidInfo.atomInfo) {
             entry.inBackbone = true;
@@ -145,7 +146,7 @@ ResidueTypes mdk::createTypes() {
 
     for (auto& [acid, acidInfo]: types) {
         for (auto& [atomType, atomInfo]: acidInfo.atomInfo) {
-            acidInfo.atoms.insert(atomType);
+            acidInfo.heavyAtoms.insert(atomType);
             atomInfo.radius *= angstrom;
         }
     }

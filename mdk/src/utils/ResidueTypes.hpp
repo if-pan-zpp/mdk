@@ -11,7 +11,7 @@ namespace mdk {
     };
 
     struct ResidueTypeInfo {
-        std::unordered_set<std::string> atoms;
+        std::unordered_set<std::string> heavyAtoms;
         std::unordered_map<std::string, AtomTypeInfo> atomInfo;
     };
 
