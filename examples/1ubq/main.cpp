@@ -8,5 +8,9 @@ int main() {
     auto model = pdb::Parser().read(pdb_file).asModel();
     model.addNativeContacts();
 
+    auto coarsened = model.coarsen();
+    ofstream coarse_file("data/1ubq.coarse.pdb");
+    pdb::Parser().write(coarse_file, pdb::Data(AtomicModel(coarsened)));
+
     return 0;
 }

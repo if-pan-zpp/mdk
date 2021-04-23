@@ -128,6 +128,7 @@ CoarseModel AtomicModel::coarsen() {
         for (int resIdx = 0; resIdx < n; ++resIdx) {
             auto& res = chain.residues[resIdx];
             auto& resThere = model.addResidue(&chainThere);
+            resIdxMap[res->serial] = resThere.idx;
             resThere.type = res->type;
             resThere.pos = res->find("CA")->pos;
         }
@@ -141,15 +142,15 @@ CoarseModel AtomicModel::coarsen() {
         chainThere.tethers = vector<double>(n);
 
         for (int resIdx = 0; resIdx < n; ++resIdx) {
-            auto v4 = model.residues[resIdx].pos;
+            auto v4 = model.residues.at(resIdx).pos;
             if (resIdx > 0) {
-                auto v3 = model.residues[resIdx-1].pos;
+                auto v3 = model.residues.at(resIdx-1).pos;
                 chainThere.tethers[resIdx-1] = (v4 - v3).norm();
                 if (resIdx > 1) {
-                    auto v2 = model.residues[resIdx-2].pos;
+                    auto v2 = model.residues.at(resIdx-2).pos;
                     sp.angle[resIdx-1] = angle(v2, v3, v4);
                     if (resIdx > 2) {
-                        auto v1 = model.residues[resIdx-3].pos;
+                        auto v1 = model.residues.at(resIdx-3).pos;
                         sp.dihedral[resIdx-1] = dihedral(v1, v2, v3, v4);
                     }
                 }
@@ -163,7 +164,7 @@ CoarseModel AtomicModel::coarsen() {
         contThere.type = cont.type;
         contThere.dist0 = cont.dist0;
         for (int i = 0; i < 2; ++i) {
-            contThere.res[i] = resIdxMap[cont.atom[i]->res->idx];
+            contThere.res[i] = resIdxMap.at(cont.atom[i]->res->idx);
         }
     }
 
