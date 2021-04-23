@@ -3,6 +3,7 @@
 #include <string>
 #include <Eigen/Core>
 #include <mdk/utils/Units.hpp>
+#include <mdk/utils/Random.hpp>
 
 namespace mdk {
     class CoarseModel {
@@ -46,6 +47,6 @@ namespace mdk {
 
     public:
         void morphIntoLine(double tether0 = 3.8*angstrom);
-        void morphIntoSAW();
+        void morphIntoSAW(Random *rand, double density, bool withPBC, double intersectionDist);
     };
 }

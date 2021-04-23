@@ -33,8 +33,14 @@ CoarseModel::StructuredPart& CoarseModel::addSP() {
 }
 
 void CoarseModel::morphIntoLine(double tether0) {
+    Eigen::Vector3d cur = { 0.0, 0.0, 0.0 };
+
     Eigen::Vector3d dir = { 0.0, 0.0, tether0 };
     for (auto& res: residues) {
         res.pos = res.idx * dir;
     }
+}
+
+void CoarseModel::morphIntoSAW(Random *rand, double density, bool withPBC, double intersectionDist) {
+
 }
