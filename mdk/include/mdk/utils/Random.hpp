@@ -6,12 +6,14 @@ namespace mdk {
     class Random {
     public:
         virtual double uniform() = 0;
+        double uniform(double a, double b);
 
         virtual double normal() {
             double r1 = uniform();
             double r2 = uniform();
             return sqrt(-2.0  * log(r1)) * cos(2.0 * M_PI * r2);
         }
+        double normal(double mu, double sigma);
     };
 
     class ModernRandom: public Random {
@@ -46,7 +48,7 @@ namespace mdk {
         static constexpr double
             eps = 1.2e-7,
             rnmx = 1.-eps,
-            am = 1/im1;
+            am = 1.0/im1;
 
         int iy = 0, idum = -448, idum2 = 123456789;
         int iv[ntab];

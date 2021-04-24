@@ -1,9 +1,11 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <optional>
 #include <Eigen/Core>
 #include <mdk/utils/Units.hpp>
 #include <mdk/utils/Random.hpp>
+#include <mdk/tools/model/Topology.hpp>
 
 namespace mdk {
     class CoarseModel {
@@ -46,7 +48,10 @@ namespace mdk {
         StructuredPart& addSP();
 
     public:
-        void morphIntoLine(double tether0 = 3.8*angstrom);
-        void morphIntoSAW(Random *rand, double density, bool withPBC, double intersectionDist);
+        void morphIntoLine();
+        std::optional<Topology> morphIntoSAW(Random& rand, bool withPBC, double density, double intersectionDist);
+
+    private:
+        std::vector<std::pair<Residue*, Residue*>> nonlocalPairs();
     };
 }

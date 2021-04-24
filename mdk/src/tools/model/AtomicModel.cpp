@@ -10,7 +10,7 @@ AtomicModel::Atom& AtomicModel::addAtom(int serial, Residue *res) {
     atom.serial = serial;
     atom.res = res;
     if (res) {
-        atom.idx = res->atoms.size();
+        atom.idxInRes = res->atoms.size();
         res->atoms.push_back(&atom);
     }
     return atom;
@@ -21,7 +21,7 @@ AtomicModel::Residue& AtomicModel::addResidue(int serial, Chain *chain) {
     res.serial = serial;
     res.chain = chain;
     if (chain) {
-        res.idx = chain->residues.size();
+        res.idxInChain = chain->residues.size();
         chain->residues.push_back(&res);
     }
     return res;
@@ -63,7 +63,7 @@ AtomicModel::AtomicModel(CoarseModel const& coarse) {
             caAtom.pos = res.pos;
             caAtom.type = "CA";
 
-            resIdxMap[resIdx] = caAtom.idx;
+            resIdxMap[resIdx] = caAtom.idxInRes;
         }
     }
 
@@ -100,7 +100,7 @@ void AtomicModel::addNativeContacts(bool onlyCA) {
 
             if (atom1 >= atom2) continue;
             if (atom1->res == atom2->res) continue;
-            if (abs(atom1->res->idx - atom2->res->idx) < 3) continue;
+            if (abs(atom1->res->idxInChain - atom2->res->idxInChain) < 3) continue;
 
             auto dist = (atom1->pos - atom2->pos).norm();
             auto overlapR = info1.radius + info2.radius;
@@ -164,7 +164,7 @@ CoarseModel AtomicModel::coarsen() {
         contThere.type = cont.type;
         contThere.dist0 = cont.dist0;
         for (int i = 0; i < 2; ++i) {
-            contThere.res[i] = resIdxMap.at(cont.atom[i]->res->idx);
+            contThere.res[i] = resIdxMap.at(cont.atom[i]->res->idxInChain);
         }
     }
 

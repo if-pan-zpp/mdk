@@ -2,6 +2,14 @@
 using namespace mdk;
 using namespace std;
 
+double Random::uniform(double a, double b) {
+    return a + (b - a) * uniform();
+}
+
+double Random::normal(double mu, double sigma) {
+    return mu + sigma * normal();
+}
+
 double ModernRandom::uniform() {
     return unifDist(eng);
 }

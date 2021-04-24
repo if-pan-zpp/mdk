@@ -13,7 +13,7 @@ namespace mdk {
         struct Chain;
 
         struct Atom {
-            int serial, idx;
+            int serial, idxInRes;
             Residue *res;
             Eigen::Vector3d pos;
             std::string type;
@@ -23,7 +23,7 @@ namespace mdk {
         Atom& addAtom(int idx, Residue *res = nullptr);
 
         struct Residue {
-            int serial, idx;
+            int serial, idxInChain;
             Chain *chain;
             std::string type;
             std::vector<Atom*> atoms;
