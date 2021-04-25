@@ -10,14 +10,12 @@ int main() {
     model.addNativeContacts();
 
     auto coarsened = model.coarsen();
-    auto rand = FortranRandom(0);
 
+    auto rand = FortranRandom(0);
     auto density = 1e-4*atom/pow(angstrom, 3);
     auto ixDist = 4.56*angstrom;
     coarsened.morphIntoSAW(rand, false, density, ixDist);
-    for (int i = 0; i < 10; ++i) {
-        cout << rand.uniform() << endl;
-    }
+
     ofstream coarse_file("data/1ubq.saw.pdb");
     pdb::Parser().write(coarse_file, pdb::Data(AtomicModel(coarsened)));
 

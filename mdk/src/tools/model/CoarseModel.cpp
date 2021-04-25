@@ -100,7 +100,7 @@ std::optional<Topology> CoarseModel::morphIntoSAW(Random& rand, bool withPBC, do
                 residues[i].pos = pos;
                 pos += tether0 * dir;
 
-                double spread = rand.uniform(0, M_PI/3.0);
+                double spread = rand.uniform(M_PI/12.0, M_PI/2.0);
                 auto spreadRot = Eigen::AngleAxisd(spread, findPerp(dir));
 
                 double around = rand.uniform(-M_PI, M_PI);
@@ -118,7 +118,7 @@ std::optional<Topology> CoarseModel::morphIntoSAW(Random& rand, bool withPBC, do
 
         for (auto const& [res1, res2]: pairs) {
             Eigen::Vector3d dx;
-            if (withPBC) dx = res1->pos - res2->pos;
+            if (!withPBC) dx = res1->pos - res2->pos;
             else dx = top.pbc(res1->pos - res2->pos);
 
             if (dx.norm() < intersectionDist) {
