@@ -8,9 +8,10 @@ namespace mdk {
     private:
         Particles const* pts;
         Scalars Cnat, d0CubeInv;
-        double echi = 1.0*eps;
 
     public:
+        double echi = 1.0*eps;
+
         explicit Chirality(Particles const& pts);
         void localTerm(double& V, Vectors& gradV, int i, int beg, int end);
     };
