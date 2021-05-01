@@ -1,42 +1,43 @@
-#include "tools/model/CoarseModel.hpp"
+#include "tools/model/Model.hpp"
 #include <Eigen/Geometry>
 using namespace std;
 using namespace mdk;
 
-CoarseModel::Residue& CoarseModel::addResidue(Chain *chain) {
+Model::Residue& Model::addResidue(Chain *chain) {
     auto& res = residues.emplace_back();
     res.idx = residues.size()-1;
     if (chain) {
         res.chainIdx = chain->idx;
-        if (chain->first < 0) chain->first = 0;
-        chain->last = res.idx+1;
+        if (chain->start < 0) chain->start = res.idx;
+        chain->end = res.idx+1;
     }
     else {
         res.chainIdx = -1;
     }
+    ++n;
     return res;
 }
 
-CoarseModel::Chain& CoarseModel::addChain() {
+Model::Chain& Model::addChain() {
     auto& chain = chains.emplace_back();
     chain.idx = chains.size()-1;
-    chain.first = chain.last = -1;
+    chain.start = chain.end = -1;
     return chain;
 }
 
-CoarseModel::Contact &CoarseModel::addContact() {
+Model::Contact &Model::addContact() {
     auto& cont = contacts.emplace_back();
     cont.idx = contacts.size()-1;
     return cont;
 }
 
-CoarseModel::StructuredPart& CoarseModel::addSP() {
+Model::StructuredPart& Model::addSP() {
     auto& sp = structuredParts.emplace_back();
     sp.idx = structuredParts.size()-1;
     return sp;
 }
 
-void CoarseModel::morphIntoLine() {
+void Model::morphIntoLine() {
     double tether0 = 3.8*angstrom;
 
     Eigen::Vector3d dir = { 0.0, 0.0, tether0 };
@@ -68,7 +69,7 @@ static Eigen::Vector3d findPerp(Eigen::Vector3d const& v) {
     return perp.normalized();
 }
 
-std::optional<Topology> CoarseModel::morphIntoSAW(Random& rand, bool withPBC, double density, double intersectionDist) {
+std::optional<Topology> Model::morphIntoSAW(Random& rand, bool withPBC, double density, double intersectionDist) {
     Eigen::Vector3d minCorner, maxCorner;
     Eigen::AlignedBox3d box;
     Topology top;
@@ -96,7 +97,7 @@ std::optional<Topology> CoarseModel::morphIntoSAW(Random& rand, bool withPBC, do
             auto pos = sampleBox(box, rand);
             auto dir = sampleSphere(rand);
 
-            for (int i = chain.first; i < chain.last; ++i) {
+            for (int i = chain.start; i < chain.end; ++i) {
                 residues[i].pos = pos;
                 pos += tether0 * dir;
 
@@ -135,7 +136,7 @@ std::optional<Topology> CoarseModel::morphIntoSAW(Random& rand, bool withPBC, do
     return nullopt;
 }
 
-vector<pair<CoarseModel::Residue*, CoarseModel::Residue*>> CoarseModel::nonlocalPairs() {
+vector<pair<Model::Residue*, Model::Residue*>> Model::nonlocalPairs() {
     vector<pair<Residue*, Residue*>> pairs;
     for (auto& res1: residues) {
         for (auto& res2: residues) {

@@ -3,8 +3,8 @@ using namespace std;
 using namespace mdk;
 using namespace mdk::seq;
 
-CoarseModel Sequence::asModel() const {
-    CoarseModel model;
+Model Sequence::asModel() const {
+    Model model;
     std::unordered_map<std::string, int> cmapIdxMap;
 
     for (auto const& [cmapName, cmap]: contactMaps) {

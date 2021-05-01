@@ -22,8 +22,9 @@ target_include_directories(${TARGET}
     )
 
 target_compile_options(${TARGET}
-    PRIVATE
-        -Wall -Wextra -fPIC
+    PUBLIC
+        -fopenmp
+        -Wall -Wextra
         $<$<CONFIG:Debug>:-pg>
         $<$<CONFIG:Release>:-Ofast -march=native>
     )

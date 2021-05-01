@@ -4,11 +4,9 @@
 #include <optional>
 #include <mdk/utils/AminoAcid.hpp>
 #include <mdk/utils/TupleHash.hpp>
+#include <mdk/utils/PairType.hpp>
 
 namespace mdk::param {
-    enum Variants { GG, GP, GX, PG, PP, PX, XG, XP, XX };
-    std::vector<Variants> variants();
-
     class Parameters {
     public:
         Parameters();
@@ -17,10 +15,10 @@ namespace mdk::param {
         Coeffs defAngleParams;
 
         template<typename T>
-        using PerVariantData = std::unordered_map<Variants, T>;
+        using PerPTData = std::unordered_map<PairType, T>;
 
-        PerVariantData<Coeffs> angleParams;
-        PerVariantData<Coeffs> dihedralParams;
+        PerPTData<Coeffs> angleParams;
+        PerPTData<Coeffs> dihedralParams;
 
         struct SpecificityParams {
             enum { GLY_PRO, HYDROPHOBIC, POLAR, POS, NEG } polarization;

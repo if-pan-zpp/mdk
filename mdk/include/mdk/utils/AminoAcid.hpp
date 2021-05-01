@@ -5,28 +5,40 @@
 #include <unordered_set>
 
 namespace mdk {
+    enum class AAType: int8_t {
+        ALA, ARG, ASN, ASP, CYS, GLU, GLN, GLY, HIS, ILE,
+        LEU, LYS, MET, PHE, PRO, SER, THR, TRP, TYR, VAL
+    };
+
     class AminoAcid {
     public:
-        AminoAcid();
-        AminoAcid(char c);
-        AminoAcid(std::string const &s);
+        AminoAcid() = default;
+        static std::vector<AminoAcid> aminoAcids();
 
-        static bool isAminoAcid(std::string const& s);
+        static std::vector<AAType> types();
+        constexpr AminoAcid(AAType type): type{type} {};
+        explicit operator AAType const&() const;
 
-        explicit operator char() const;
-        explicit operator std::string() const;
+        static bool isProper(char code);
+        explicit AminoAcid(char code);
+        static std::string codes();
+        explicit operator char const&() const;
 
-        static std::unordered_map<std::string, char> nameToCode;
-        static std::unordered_map<char, std::string> codeToName;
-        static std::unordered_set<AminoAcid> allAminoAcids;
-        static std::unordered_set<std::string> allNames;
-        static constexpr int numAminoAcids = 20;
+        static bool isProper(std::string const& name);
+        explicit AminoAcid(std::string const& name);
+        static std::vector<std::string> names();
+        explicit operator std::string const&() const;
 
-        bool operator==(AminoAcid const &aminoAcid2) const;
+        bool operator==(AminoAcid const& other) const;
+        bool operator!=(AminoAcid const& other) const;
+        bool operator<(AminoAcid const& other) const;
+        bool operator<=(AminoAcid const& other) const;
+        bool operator>(AminoAcid const& other) const;
+        bool operator>=(AminoAcid const& other) const;
 
     private:
-        char code;
-        std::string name;
+        AAType type;
+        friend struct std::hash<AminoAcid>;
     };
 }
 
@@ -34,7 +46,7 @@ namespace std {
     template<>
     struct hash<mdk::AminoAcid> {
         size_t operator()(mdk::AminoAcid const &aminoAcid) const {
-            return std::hash<char>()((char)aminoAcid);
+            return std::hash<mdk::AminoAcid::Type>()(aminoAcid.type);
         }
     };
 }

@@ -49,7 +49,7 @@ AtomicModel::Contact& AtomicModel::addContact() {
     return cont;
 }
 
-AtomicModel::AtomicModel(CoarseModel const& coarse) {
+AtomicModel::AtomicModel(Model const& coarse) {
     unordered_map<int, int> resIdxMap;
 
     for (auto const& chain: coarse.chains) {
@@ -115,8 +115,8 @@ void AtomicModel::addNativeContacts(bool onlyCA) {
     }
 }
 
-CoarseModel AtomicModel::coarsen() {
-    CoarseModel model;
+Model AtomicModel::coarsen() {
+    Model model;
     std::unordered_map<int, int> resIdxMap;
     std::unordered_map<char, int> chainIdxMap;
 

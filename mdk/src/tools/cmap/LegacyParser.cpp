@@ -10,8 +10,8 @@ ContactMap LegacyParser::read(std::istream &is) {
 
     int numOfContacts, numOfResidues;
     is >> cmap.offset;
-    is >> numOfContacts;
     is >> numOfResidues;
+    is >> numOfContacts;
 
     cmap.contacts = vector<ContactMap::Contact>(numOfContacts);
     for (int i = 0; i < numOfContacts; ++i) {
@@ -37,8 +37,8 @@ ContactMap LegacyParser::read(std::istream &is) {
 
 std::ostream &LegacyParser::write(ostream &os, ContactMap const& cmap) {
     os << cmap.offset << endl;
-    os << cmap.contacts.size() << endl;
     os << cmap.len << endl;
+    os << cmap.contacts.size() << endl;
 
     for (auto& contact: cmap.contacts) {
         os << contact.res[0] + 1 << "\t";
@@ -46,7 +46,7 @@ std::ostream &LegacyParser::write(ostream &os, ContactMap const& cmap) {
         os << contact.dist0 / (5.0 * angstrom) << endl;
     }
 
-    for (size_t i = 0; i < cmap.len; ++i) {
+    for (int i = 0; i < cmap.len; ++i) {
         os << cmap.angle[i] / radian << "\t";
         os << cmap.dihedral[i] / radian << endl;
     }

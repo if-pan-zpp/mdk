@@ -1,102 +1,95 @@
 #include "utils/AminoAcid.hpp"
 #include <algorithm>
-
 using namespace mdk;
 using namespace std;
 
-unordered_map<char, string> AminoAcid::codeToName = {
-    {'A', "ALA"},
-    {'R', "ARG"},
-    {'N', "ASN"},
-    {'D', "ASP"},
-    {'C', "CYS"},
-    {'E', "GLU"},
-    {'Q', "GLN"},
-    {'G', "GLY"},
-    {'H', "HIS"},
-    {'I', "ILE"},
-    {'L', "LEU"},
-    {'K', "LYS"},
-    {'M', "MET"},
-    {'F', "PHE"},
-    {'P', "PRO"},
-    {'S', "SER"},
-    {'T', "THR"},
-    {'W', "TRP"},
-    {'Y', "TYR"},
-    {'V', "VAL"}
-};
+std::vector<AAType> AminoAcid::types() {
+    return {
+        AAType::ALA, AAType::ARG, AAType::ASN, AAType::ASP, AAType::CYS,
+        AAType::GLU, AAType::GLN, AAType::GLY, AAType::HIS, AAType::ILE,
+        AAType::LEU, AAType::LYS, AAType::MET, AAType::PHE, AAType::PRO,
+        AAType::SER, AAType::THR, AAType::TRP, AAType::TYR, AAType::VAL
+    };
+}
 
-unordered_map<string, char> AminoAcid::nameToCode = {
-    {"ALA", 'A'},
-    {"ARG", 'R'},
-    {"ASN", 'N'},
-    {"ASP", 'D'},
-    {"CYS", 'C'},
-    {"GLU", 'E'},
-    {"GLN", 'Q'},
-    {"GLY", 'G'},
-    {"HIS", 'H'},
-    {"ILE", 'I'},
-    {"LEU", 'L'},
-    {"LYS", 'K'},
-    {"MET", 'M'},
-    {"PHE", 'F'},
-    {"PRO", 'P'},
-    {"SER", 'S'},
-    {"THR", 'T'},
-    {"TRP", 'W'},
-    {"TYR", 'Y'},
-    {"VAL", 'V'}
-};
-
-unordered_set<string> AminoAcid::allNames = {
-    "ALA", "ARG", "ASN", "ASP", "CYS", "GLU", "GLN", "GLY", "HIS",
-    "ILE", "LEU", "LYS", "MET", "PHE", "PRO", "SER", "THR", "TRP",
-    "TYR", "VAL"
-};
-
-static unordered_set<AminoAcid> makeAllAminoAcids() {
-    unordered_set<AminoAcid> aminoAcids(AminoAcid::numAminoAcids);
-    string codes = "GPQCASVTILNDKEMHFRYW";
-
-    for (int i = 0; i < AminoAcid::numAminoAcids; ++i) {
-        aminoAcids.insert((AminoAcid)codes[i]);
+std::vector<AminoAcid> AminoAcid::aminoAcids() {
+    std::vector<AminoAcid> _aminoAcids;
+    for (auto code: codes()) {
+        _aminoAcids.emplace_back(code);
     }
-
-    return aminoAcids;
+    return _aminoAcids;
 }
 
-unordered_set<AminoAcid> AminoAcid::allAminoAcids = makeAllAminoAcids();
-
-AminoAcid::AminoAcid() {
-    code = 'A';
+AminoAcid::operator AAType const&() const {
+    return type;
 }
 
-AminoAcid::AminoAcid(char c) {
-    code = c;
-    name = codeToName[c];
+bool AminoAcid::isProper(char code) {
+    static const auto _codes = codes();
+    return _codes.find(code) != string::npos;
+};
+
+AminoAcid::AminoAcid(char code) {
+    static const auto _codes = codes();
+    type = (AAType)_codes.find(code);
 }
 
-AminoAcid::AminoAcid(const string &s) {
-    name = s;
-    code = nameToCode[s];
+std::string AminoAcid::codes() {
+    return "ARNDCEQGHILKMFPSTWYV";
 }
 
-AminoAcid::operator char() const {
-    return code;
+AminoAcid::operator char const&() const {
+    static const auto _codes = codes();
+    return _codes[(int8_t)type];
 }
 
-AminoAcid::operator std::string() const {
-    return name;
+bool AminoAcid::isProper(std::string const& name) {
+    static const auto _names = names();
+    return find(_names.begin(), _names.end(), name) != _names.end();
 }
 
-bool AminoAcid::operator==(AminoAcid const &aminoAcid2) const {
-    return code == aminoAcid2.code;
+AminoAcid::AminoAcid(std::string const& name) {
+    static const auto _names = names();
+    auto iter = find(_names.begin(), _names.end(), name);
+    if (iter != _names.end()) {
+        static const auto _types = types();
+        auto idx = distance(_names.begin(), iter);
+        type = _types[idx];
+    }
 }
 
-bool AminoAcid::isAminoAcid(const string &s) {
-    return allNames.find(s) != allNames.end();
+std::vector<std::string> AminoAcid::names() {
+    return {
+        "ALA", "ARG", "ASN", "ASP", "CYS", "GLU", "GLN", "GLY", "HIS", "ILE",
+        "LEU", "LYS", "MET", "PHE", "PRO", "SER", "THR", "TRP", "TYR", "VAL"
+    };
 }
 
+AminoAcid::operator string const&() const {
+    static const auto _names = names();
+    return _names[(int8_t)type];
+}
 
+bool AminoAcid::operator==(const AminoAcid &other) const {
+    return type == other.type;
+}
+
+bool AminoAcid::operator!=(const AminoAcid &other) const {
+    return type != other.type;
+}
+
+bool AminoAcid::operator<(const AminoAcid &other) const {
+    return type < other.type;
+}
+
+bool AminoAcid::operator<=(const AminoAcid &other) const {
+    return type <= other.type;
+}
+
+bool AminoAcid::operator>(const AminoAcid &other) const {
+    return type > other.type;
+}
+
+bool AminoAcid::operator>=(const AminoAcid &other) const {
+    return type >= other.type;
+}

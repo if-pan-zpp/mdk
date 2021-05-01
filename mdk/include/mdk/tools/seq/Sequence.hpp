@@ -1,7 +1,7 @@
 #pragma once
 #include <mdk/utils/AminoAcid.hpp>
 #include <mdk/tools/cmap/ContactMap.hpp>
-#include <mdk/tools/model/CoarseModel.hpp>
+#include <mdk/tools/model/Model.hpp>
 
 namespace mdk::seq {
     class Sequence {
@@ -16,6 +16,6 @@ namespace mdk::seq {
         std::unordered_map<std::string, cmap::ContactMap> contactMaps;
 
     public:
-        CoarseModel asModel() const;
+        Model asModel() const;
     };
 }

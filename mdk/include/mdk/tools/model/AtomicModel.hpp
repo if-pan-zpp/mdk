@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include <Eigen/Core>
-#include <mdk/tools/model/CoarseModel.hpp>
+#include <mdk/tools/model/Model.hpp>
 #include <optional>
 
 namespace mdk {
@@ -56,9 +56,9 @@ namespace mdk {
 
     public:
         AtomicModel() = default;
-        explicit AtomicModel(CoarseModel const& coarse);
+        explicit AtomicModel(Model const& coarse);
 
         void addNativeContacts(bool onlyCA = false);
-        CoarseModel coarsen();
+        Model coarsen();
     };
 }

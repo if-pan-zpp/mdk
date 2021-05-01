@@ -8,8 +8,10 @@
 #include <mdk/tools/model/Topology.hpp>
 
 namespace mdk {
-    class CoarseModel {
+    class Model {
     public:
+        int n;
+
         struct Residue;
         struct Chain;
 
@@ -23,8 +25,7 @@ namespace mdk {
 
         struct Chain {
             int idx;
-            int first, last;
-            std::vector<double> tethers;
+            int start, end;
             std::vector<int> structuredParts;
         };
         std::vector<Chain> chains;
@@ -49,7 +50,8 @@ namespace mdk {
 
     public:
         void morphIntoLine();
-        std::optional<Topology> morphIntoSAW(Random& rand, bool withPBC, double density, double intersectionDist);
+        std::optional<Topology> morphIntoSAW(Random& rand, bool withPBC,
+            double density, double intersectionDist);
 
     private:
         std::vector<std::pair<Residue*, Residue*>> nonlocalPairs();
