@@ -8,19 +8,26 @@
 #include "NativeBondAngles.hpp"
 #include "SimpleNativeDihedrals.hpp"
 #include "TabularizedBondAngles.hpp"
+#include "Chirality.hpp"
 
 namespace mdk {
     class LocalFF: public ForceField {
-    public:
-        std::optional<ComplexNativeDihedrals> cnd;
-        std::optional<HarmonicTethers> ht;
-        std::optional<HeuresticBondAngles> bha;
-        std::optional<HeuresticDihedrals> hd;
-        std::optional<NativeBondAngles> nba;
-        std::optional<SimpleNativeDihedrals> snd;
-        std::optional<TabularizedBondAngles> tba;
+    private:
+        Eigen::Matrix<int8_t, Eigen::Dynamic, 1> spIdx;
+        Scalars theta0, phi0;
+        Regions ranges;
 
-        LocalFF();
+    public:
+        std::optional<ComplexNativeDihedrals> compNativeDih;
+        std::optional<HarmonicTethers> harmonic;
+        std::optional<HeuresticBondAngles> heurBA;
+        std::optional<HeuresticDihedrals> heurDih;
+        std::optional<NativeBondAngles> nativeBA;
+        std::optional<SimpleNativeDihedrals> simpNativeDih;
+        std::optional<TabularizedBondAngles> tabBA;
+        std::optional<Chirality> chir;
+
+        explicit LocalFF(Model const& model);
         void compute(State const& state, double &V, Vectors &dV_dr) override;
     };
 }

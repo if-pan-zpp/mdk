@@ -9,16 +9,7 @@ namespace mdk {
         int n;
         double t;
         Vectors r, v;
-        Scalars q, m, m_inv;
-
-        Integers chainIdx;
-        Regions chains;
-
-        enum Types {
-            ALA, ARG, ASN, ASP, CYS, GLU, GLN, GLY, HIS, ILE,
-            LEU, LYS, MET, PHE, PRO, SER, THR, TRP, TYR, VAL
-        };
-        List<int8_t> types;
+        Scalars q;
 
     public:
         State() = default;

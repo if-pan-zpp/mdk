@@ -7,15 +7,15 @@ namespace mdk {
         double CBA = 30.0 * eps/pow(radian, 2);
 
     public:
-        void kernel(int i1, int i2, int i3,
+        void kernel(
             double theta, double theta0,
             double& V, double& dV_dth);
     };
 
-    inline void NativeBondAngles::kernel(int i1, int i2, int i3, double theta,
+    inline void NativeBondAngles::kernel(double theta,
         double theta0, double &V, double &dV_dth) {
         auto diff = theta - theta0;
-        V = CBA * diff * diff;
-        dV_dth = 2.0 * CBA * diff;
+        V += CBA * diff * diff;
+        dV_dth += 2.0 * CBA * diff;
     }
 }

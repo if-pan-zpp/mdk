@@ -11,13 +11,13 @@ namespace mdk {
 
     public:
         HarmonicTethers(Model const& model, bool fromNative);
-        void kernel(int i1, int i2, double r, double& V, double& dV_dl);
+        void kernel(int i, double r, double& V, double& dV_dl);
     };
 
-    inline void HarmonicTethers::kernel(int i1, int i2, double r, double& V, double &dV_dl) {
-        auto diff = r - dist0[i1];
+    inline void HarmonicTethers::kernel(int i, double r, double& V, double &dV_dl) {
+        auto diff = r - dist0[i];
         auto diff2 = diff * diff;
-        V = diff * diff * (H1 + H2 * diff2);
-        dV_dl = diff * (2.0 * H1 + 4.0 * H2 * diff2);
+        V += diff * diff * (H1 + H2 * diff2);
+        dV_dl += diff * (2.0 * H1 + 4.0 * H2 * diff2);
     }
 }

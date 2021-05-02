@@ -7,15 +7,15 @@ namespace mdk {
         double CDH = 3.33 * eps/pow(radian, 2);
 
     public:
-        void kernel(int i1, int i2, int i3, int i4,
+        void kernel(
             double phi, double phi0,
             double& V, double& dV_dp);
     };
 
-    inline void SimpleNativeDihedrals::kernel(int i1, int i2, int i3, int i4,
+    inline void SimpleNativeDihedrals::kernel(
         double phi, double phi0, double &V, double& dV_dp) {
         auto diff = phi - phi0;
-        V = 0.5 * CDH * diff * diff;
-        dV_dp = CDH * diff;
+        V += 0.5 * CDH * diff * diff;
+        dV_dp += CDH * diff;
     }
 }

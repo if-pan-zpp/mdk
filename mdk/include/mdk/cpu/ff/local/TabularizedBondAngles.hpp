@@ -18,14 +18,14 @@ namespace mdk {
         TabularizedBondAngles(Model const& model,
             tab::TabEnergy const& tabEnergy);
 
-        void kernel(int i1, int i2, int i3,
+        void kernel(int i,
             double theta, double& V, double& dV_dth);
     };
 
-    inline void TabularizedBondAngles::kernel(int i1, int i2, int i3,
+    inline void TabularizedBondAngles::kernel(int i,
         double theta, double &V, double &dV_dth) {
 
-        auto& tab = values[types[i2]];
+        auto& tab = values[types[i]];
 
         double x = (tab.n-1.0) * (theta - tab.theta_min) / (tab.theta_max - tab.theta_min);
         x = std::max(std::min(x, tab.n-1.0), 0.0);
@@ -33,7 +33,7 @@ namespace mdk {
         auto fx = x - x1;
 
         auto v1 = tab.values[x1], v2 = tab.values[x2];
-        V = fx * v1 + (1.0 - fx) * v2;
-        dV_dth = (v2 - v1) * (tab.n-1.0);
+        V += fx * v1 + (1.0 - fx) * v2;
+        dV_dth += (v2 - v1) * (tab.n-1.0);
     }
 }
