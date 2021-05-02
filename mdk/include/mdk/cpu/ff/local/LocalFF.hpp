@@ -9,6 +9,7 @@
 #include "SimpleNativeDihedrals.hpp"
 #include "TabularizedBondAngles.hpp"
 #include "Chirality.hpp"
+#include "LocalExclusion.hpp"
 
 namespace mdk {
     class LocalFF: public ForceField {
@@ -26,6 +27,7 @@ namespace mdk {
         std::optional<SimpleNativeDihedrals> simpNativeDih;
         std::optional<TabularizedBondAngles> tabBA;
         std::optional<Chirality> chir;
+        std::optional<LocalExclusion> locExcl;
 
         explicit LocalFF(Model const& model);
         void compute(State const& state, double &V, Vectors &dV_dr) override;

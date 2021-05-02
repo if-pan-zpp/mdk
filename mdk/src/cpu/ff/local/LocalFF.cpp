@@ -72,6 +72,18 @@ void LocalFF::compute(const State &state, double &V, Vectors &dV_dr) {
                 dV_dr[i4] += dV_dth * dth_dr4;
             }
 
+            if (locExcl) {
+                double dV_dl = 0.0, norm24 = 0.0;
+                auto r24 = r4 - r2;
+                auto norm24_sq = r24.squaredNorm();
+
+                if (locExcl->kernel(norm24_sq, norm24, V, dV_dl)) {
+                    r24 /= norm24;
+                    dV_dl[i2] -= dV_dl * r24;
+                    dV_dl[i3] += dV_dl * r24;
+                }
+            }
+
             if (i1 < start) continue;
 
             auto r1 = state.r[i1];
