@@ -14,7 +14,7 @@ static void fetchDefAngleParams(istream &is, Parameters &data) {
 
 static void fetchAngleParams(istream &is, Parameters &data) {
     skipLine(is);
-    for (auto var: variants()) {
+    for (auto var: pairTypes()) {
         auto ss = lineStream(is);
         for (auto& coeff: data.angleParams[var])
             ss >> coeff;
@@ -23,7 +23,7 @@ static void fetchAngleParams(istream &is, Parameters &data) {
 
 static void fetchDihedralParams(istream &is, Parameters &data) {
     skipLine(is);
-    for (auto var: variants()) {
+    for (auto var: pairTypes()) {
         auto ss = lineStream(is);
         for (auto& coeff: data.dihedralParams[var])
             ss >> coeff;
@@ -40,7 +40,7 @@ static void fetchSpecificity(istream &is, Parameters &data) {
 
     ss = lineStream(is);
     for (auto const& acid: order)
-        ss >> (int&)data.specificity[acid].polarization;
+        ss >> (int8_t&)data.specificity[acid].polarization;
 
     ss = lineStream(is);
     for (auto const& acid: order)
@@ -59,7 +59,7 @@ static void fetchRadii(istream &is, Parameters &data) {
     skipLine(is);
 
     auto ss = lineStream(is);
-    for (auto const& acid: AminoAcid::allAminoAcids)
+    for (auto const& acid: AminoAcid::aminoAcids())
         ss >> data.radius[acid];
 }
 
@@ -72,7 +72,7 @@ static void fetchPairwiseData(istream &is, Parameters &data) {
         data.mjMatrix = Parameters::PerPairData<double>();
     }
 
-    int numPairs = AminoAcid::numAminoAcids * (AminoAcid::numAminoAcids+1) / 2;
+    int numPairs = AminoAcid::n * (AminoAcid::n+1) / 2;
     for (int i = 0; i < numPairs; ++i) {
         auto ss = lineStream(is);
 

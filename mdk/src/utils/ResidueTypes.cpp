@@ -5,7 +5,7 @@ using namespace mdk;
 ResidueTypes mdk::createTypes() {
     ResidueTypes types;
 
-    for (auto const& acid: AminoAcid::allAminoAcids) {
+    for (auto const& acid: AminoAcid::aminoAcids()) {
         auto& acidInfo = types[acid];
         acidInfo.atomInfo["N"].radius = 1.64;
         acidInfo.atomInfo["CA"].radius = 1.88;

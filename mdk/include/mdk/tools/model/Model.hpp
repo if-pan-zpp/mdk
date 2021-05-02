@@ -10,7 +10,7 @@
 namespace mdk {
     class Model {
     public:
-        int n;
+        int n = 0;
 
         struct Residue;
         struct Chain;

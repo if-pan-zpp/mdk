@@ -4,9 +4,9 @@ using namespace mdk;
 HeuresticDihedrals::HeuresticDihedrals(Model const& model,
         const param::Parameters &params) {
     types = Eigen::Matrix<int8_t, Eigen::Dynamic, 1>(model.n);
-    for (auto const& [start, end]: model.chains) {
-        for (int i = start+2; i+1 < end; ++i) {
-            auto i1 = i-2, i2 = i-1, i3 = i, i4 = i+1;
+    for (auto const& chain: model.chains) {
+        for (int i = chain.start+2; i+1 < chain.end; ++i) {
+            auto i2 = i-1, i3 = i;
             auto type2 = model.residues[i2].type;
             auto type3 = model.residues[i3].type;
 

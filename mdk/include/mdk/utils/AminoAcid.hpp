@@ -36,6 +36,8 @@ namespace mdk {
         bool operator>(AminoAcid const& other) const;
         bool operator>=(AminoAcid const& other) const;
 
+        static constexpr const int n = 20;
+
     private:
         AAType type;
         friend struct std::hash<AminoAcid>;
@@ -46,7 +48,7 @@ namespace std {
     template<>
     struct hash<mdk::AminoAcid> {
         size_t operator()(mdk::AminoAcid const &aminoAcid) const {
-            return std::hash<mdk::AminoAcid::Type>()(aminoAcid.type);
+            return std::hash<mdk::AAType>()(aminoAcid.type);
         }
     };
 }

@@ -6,8 +6,8 @@ LocalFF::LocalFF(const Model &model) {
     spIdx = Eigen::Matrix<int8_t, Eigen::Dynamic, 1>(model.n, -1);
     theta0 = phi0 = Scalars(model.n);
 
-    for (auto const& [start, end]: model.chains) {
-        ranges.emplace_back(start, end);
+    for (auto const& chain: model.chains) {
+        ranges.emplace_back(chain.start, chain.end);
     }
 
     for (auto const& sp: model.structuredParts) {

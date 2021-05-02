@@ -54,7 +54,7 @@ AtomicModel::AtomicModel(Model const& coarse) {
 
     for (auto const& chain: coarse.chains) {
         auto& chainHere = addChain('A' + chain.idx);
-        for (int resIdx = chain.first; resIdx < chain.last; ++resIdx) {
+        for (int resIdx = chain.start; resIdx < chain.end; ++resIdx) {
             auto& res = coarse.residues[resIdx];
             auto& resHere = addResidue(res.idx, &chainHere);
             resHere.type = res.type;
@@ -82,19 +82,19 @@ void AtomicModel::addNativeContacts(bool onlyCA) {
     std::vector<Atom*> contactAtoms;
     for (auto& [idx, atom]: atoms) {
         if (!atom.res) continue;
-        if (!AminoAcid::isAminoAcid(atom.res->type)) continue;
+        if (!AminoAcid::isProper(atom.res->type)) continue;
         if (onlyCA && atom.type != "CA") continue;
         contactAtoms.emplace_back(&atom);
     }
 
     static const auto types = createTypes();
     for (auto* atom1: contactAtoms) {
-        auto const& info1 =types.at(atom1->res->type)
+        auto const& info1 = types.at((AminoAcid)atom1->res->type)
             .atomInfo.at(atom1->type);
         string type1 = info1.inBackbone ? "B" : "S";
 
         for (auto* atom2: contactAtoms) {
-            auto const& info2 = types.at(atom2->res->type)
+            auto const& info2 = types.at((AminoAcid)atom2->res->type)
                 .atomInfo.at(atom2->type);
             string type2 = info2.inBackbone ? "B" : "S";
 
@@ -139,13 +139,11 @@ Model AtomicModel::coarsen() {
         sp.off = 0;
         sp.angle = vector<double>(n);
         sp.dihedral = vector<double>(n);
-        chainThere.tethers = vector<double>(n);
 
         for (int resIdx = 0; resIdx < n; ++resIdx) {
             auto v4 = model.residues.at(resIdx).pos;
             if (resIdx > 0) {
                 auto v3 = model.residues.at(resIdx-1).pos;
-                chainThere.tethers[resIdx-1] = (v4 - v3).norm();
                 if (resIdx > 1) {
                     auto v2 = model.residues.at(resIdx-2).pos;
                     sp.angle[resIdx-1] = angle(v2, v3, v4);

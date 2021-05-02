@@ -25,9 +25,6 @@ Model Sequence::asModel() const {
             resThere.pos = { 0.0, 0.0, 0.0 };
         }
 
-        int n = chainThere.last - chainThere.first;
-        chainThere.tethers = vector<double>(n, 3.8*angstrom);
-
         for (auto const& cmapName: chain.contactMaps) {
             auto const& sp = contactMaps.at(cmapName);
             auto& spThere = model.structuredParts[cmapIdxMap.at(cmapName)];
@@ -38,7 +35,7 @@ Model Sequence::asModel() const {
                 contThere.type = "CMAP";
                 contThere.dist0 = cont.dist0;
                 for (int i = 0; i < 2; ++i) {
-                    contThere.res[i] = chainThere.first + sp.offset + cont.res[i];
+                    contThere.res[i] = chainThere.start + sp.offset + cont.res[i];
                 }
             }
         }

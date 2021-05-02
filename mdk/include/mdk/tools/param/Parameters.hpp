@@ -21,7 +21,10 @@ namespace mdk::param {
         PerPTData<Coeffs> dihedralParams;
 
         struct SpecificityParams {
-            enum { GLY_PRO, HYDROPHOBIC, POLAR, POS, NEG } polarization;
+            enum class Polarization: int8_t {
+                GLY_PRO, HYDROPHOBIC, POLAR, POS, NEG
+            };
+            Polarization polarization;
             int coordNum, hydrophobicCoordNum, polarCoordNum;
         };
 
