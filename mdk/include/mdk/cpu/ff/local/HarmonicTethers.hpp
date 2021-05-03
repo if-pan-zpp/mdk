@@ -1,5 +1,5 @@
 #pragma once
-#include <mdk/cpu/core/State.hpp>
+#include <cpu/data/State.hpp>
 
 namespace mdk {
     class HarmonicTethers {

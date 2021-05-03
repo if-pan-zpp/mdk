@@ -69,10 +69,11 @@ static Eigen::Vector3d findPerp(Eigen::Vector3d const& v) {
     return perp.normalized();
 }
 
-std::optional<Topology> Model::morphIntoSAW(Random& rand, bool withPBC, double density, double intersectionDist) {
+void Model::morphIntoSAW(Random& rand, bool useTop, double density,
+        double minDist) {
     Eigen::Vector3d minCorner, maxCorner;
     Eigen::AlignedBox3d box;
-    Topology top;
+
     double tether0 = 3.8*angstrom;
     auto pairs = nonlocalPairs();
     auto state0 = residues;
@@ -86,9 +87,8 @@ std::optional<Topology> Model::morphIntoSAW(Random& rand, bool withPBC, double d
     else {
         minCorner = maxCorner = Eigen::Vector3d { 0.0, 0.0, 0.0 };
     }
-
     box = Eigen::AlignedBox3d(minCorner, maxCorner);
-    top.setCell(maxCorner - minCorner);
+    if (useTop) top.setCell(box.max() - box.min());
 
     for (int attempt = 0; attempt < 9000; ++attempt) {
         bool failed = false;
@@ -118,22 +118,19 @@ std::optional<Topology> Model::morphIntoSAW(Random& rand, bool withPBC, double d
         }
 
         for (auto const& [res1, res2]: pairs) {
-            Eigen::Vector3d dx;
-            if (!withPBC) dx = res1->pos - res2->pos;
-            else dx = top.pbc(res1->pos - res2->pos);
+            Eigen::Vector3d dx = res1->pos - res2->pos;
+            if (useTop) top.fix(dx);
 
-            if (dx.norm() < intersectionDist) {
+            if (dx.norm() < minDist) {
                 failed = true;
                 break;
             }
         }
 
-        if (!failed)
-            return top;
+        if (!failed) return;
     }
 
     residues = state0;
-    return nullopt;
 }
 
 Model::StructuredPart& Model::addContactMap(cmap::ContactMap const& contactMap) {

@@ -181,6 +181,8 @@ void AtomicModel::addContactsFromResOverlap(const param::Parameters &params) {
 
 Model AtomicModel::coarsen() {
     Model model;
+    model.top = top;
+
     std::unordered_map<int, int> resIdxMap;
     std::unordered_map<char, int> chainIdxMap;
 

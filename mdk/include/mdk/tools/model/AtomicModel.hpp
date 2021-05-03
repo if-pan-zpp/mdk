@@ -53,7 +53,7 @@ namespace mdk {
 
         Contact& addContact();
 
-        std::optional<Eigen::Vector3d> cell;
+        Topology top;
 
     public:
         AtomicModel() = default;

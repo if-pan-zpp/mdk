@@ -5,7 +5,7 @@
 #include <Eigen/Core>
 #include <mdk/utils/Units.hpp>
 #include <mdk/utils/Random.hpp>
-#include <mdk/tools/model/Topology.hpp>
+#include <mdk/utils/Topology.hpp>
 #include <mdk/tools/cmap/ContactMap.hpp>
 
 namespace mdk {
@@ -49,10 +49,14 @@ namespace mdk {
         std::vector<StructuredPart> structuredParts;
         StructuredPart& addSP();
 
+        Topology top;
+
     public:
         void morphIntoLine();
-        std::optional<Topology> morphIntoSAW(Random& rand, bool withPBC,
-            double density, double intersectionDist);
+        void morphIntoSAW(Random& rand,
+            bool useTop = false,
+            double density = 1e-4 * atom / pow(angstrom, 3.0),
+            double minDist = 4.56 * angstrom);
 
         StructuredPart& addContactMap(cmap::ContactMap const& contactMap);
         void addCMapContacts(cmap::ContactMap const& contactMap, Chain& chain);

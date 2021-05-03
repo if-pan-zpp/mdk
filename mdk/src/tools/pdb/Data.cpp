@@ -54,7 +54,7 @@ AtomicModel Data::asModel() const {
         }
         else if (holds_alternative<Cryst1>(record)) {
             auto& data = get<Cryst1>(record);
-            model.cell = data.size;
+            model.top.setCell(data.size);
         }
         else if (holds_alternative<End>(record)) {
             break;
@@ -65,10 +65,10 @@ AtomicModel Data::asModel() const {
 }
 
 Data::Data(const AtomicModel &model) {
-    if (model.cell) {
+    if (model.top.cell != Vector { 0.0, 0.0, 0.0 }) {
         auto record = records.emplace_back(Cryst1());
         auto& data = get<Cryst1>(record);
-        data.size = model.cell.value();
+        data.size = model.top.cell;
         data.angles = { 0.0, 0.0, 0.0 };
     }
 

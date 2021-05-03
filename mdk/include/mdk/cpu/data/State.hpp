@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
-#include <mdk/cpu/core/Primitives.hpp>
+#include <cpu/data/Primitives.hpp>
 #include <mdk/tools/model/Model.hpp>
+#include <utils/Topology.hpp>
 
 namespace mdk {
     class State {
@@ -10,6 +11,8 @@ namespace mdk {
         double t;
         Vectors r, v;
         Scalars q;
+
+        Topology top;
 
     public:
         State() = default;

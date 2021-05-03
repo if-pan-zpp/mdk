@@ -1,6 +1,6 @@
 #pragma once
 #include <mdk/tools/tab/TabEnergy.hpp>
-#include <mdk/cpu/core/State.hpp>
+#include <cpu/data/State.hpp>
 
 namespace mdk {
     class TabularizedBondAngles {
