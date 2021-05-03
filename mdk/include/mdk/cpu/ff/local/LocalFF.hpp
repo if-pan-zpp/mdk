@@ -1,6 +1,5 @@
 #pragma once
 #include <optional>
-#include <mdk/cpu/ff/ForceField.hpp>
 #include "ComplexNativeDihedrals.hpp"
 #include "HarmonicTethers.hpp"
 #include "HeuresticBondAngles.hpp"
@@ -12,7 +11,7 @@
 #include "LocalExclusion.hpp"
 
 namespace mdk {
-    class LocalFF: public ForceField {
+    class LocalFF {
     private:
         Eigen::Matrix<int8_t, Eigen::Dynamic, 1> spIdx;
         Scalars theta0, phi0;
@@ -28,8 +27,9 @@ namespace mdk {
         std::optional<TabularizedBondAngles> tabBA;
         std::optional<Chirality> chir;
         std::optional<LocalExclusion> locExcl;
+        Vectors* rij_x_rjk_hat;
 
         explicit LocalFF(Model const& model);
-        void compute(State const& state, double &V, Vectors &dV_dr) override;
+        void compute(State const& state, double &V, Vectors &dV_dr);
     };
 }

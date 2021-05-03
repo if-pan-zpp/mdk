@@ -3,11 +3,10 @@
 
 namespace mdk {
     class ComplexNativeDihedrals {
-    private:
+    public:
         double CDA = 0.66 * eps / pow(radian, 2.0);
         double CDB = 0.66 * eps / pow(radian, 2.0);
 
-    public:
         void kernel(double phi, double phi0,
             double& V, double& dV_dp);
     };

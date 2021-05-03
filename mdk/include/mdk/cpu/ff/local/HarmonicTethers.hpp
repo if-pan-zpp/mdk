@@ -6,10 +6,10 @@ namespace mdk {
     private:
         Scalars dist0;
 
+    public:
         double H1 = 50.0 * eps/pow(angstrom, 2);
         double H2 = 0.0;
 
-    public:
         HarmonicTethers(Model const& model, bool fromNative);
         void kernel(int i, double l, double& V, double& dV_dl);
     };

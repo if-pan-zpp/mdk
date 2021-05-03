@@ -77,28 +77,37 @@ void LocalFF::compute(const State &state, double &V, Vectors &dV_dr) {
                 Vector r24 = r4 - r2;
                 auto norm24_sq = r24.squaredNorm();
 
-                if (locExcl->kernel(norm24_sq, norm24, V, dV_dl)) {
+                if (norm24_sq <= locExcl->cutoff2) {
+                    locExcl->kernel(norm24_sq, norm24, V, dV_dl);
                     r24 /= norm24;
                     dV_dr[i2] -= dV_dl * r24;
                     dV_dr[i3] += dV_dl * r24;
                 }
             }
 
+            auto r23_x_r34 = r23.cross(r34);
+            auto norm_r23_x_r34 = r23_x_r34.norm();
+
+            Vector r23_x_r34_hat;
+            if (norm_r23_x_r34 != 0.0) {
+                r23_x_r34_hat = r23_x_r34 / norm_r23_x_r34;
+            }
+
+            if (rij_x_rjk_hat)
+                (*rij_x_rjk_hat)[i3] = r23_x_r34_hat;
+
             if (i1 < start) continue;
 
             auto r1 = state.r[i1];
             auto r12 = r2 - r1;
-
-            auto r12_x_r23 = r12.cross(r23), r23_x_r34 = r23.cross(r34);
-            auto norm_r12_x_r23 = r12_x_r23.norm(),
-                 norm_r23_x_r34 = r23_x_r34.norm();
+            auto r12_x_r23 = r12.cross(r23);
+            auto norm_r12_x_r23 = r12_x_r23.norm();
 
             if (norm_r12_x_r23 != 0.0 && norm_r23_x_r34 != 0.0) {
                 Vector dp_dr1, dp_dr2, dp_dr3, dp_dr4;
 
-                auto r12_xn_r23 = r12_x_r23 / norm_r12_x_r23;
-                auto r23_xn_r34 = r23_x_r34 / norm_r23_x_r34;
-                auto cos_phi = r12_xn_r23.dot(r23_xn_r34);
+                auto r12_x_r23_hat = r12_x_r23 / norm_r12_x_r23;
+                auto cos_phi = r12_x_r23_hat.dot(r23_x_r34_hat);
                 cos_phi = max(min(cos_phi, 1.0), -1.0);
 
                 auto sgn = -r12.dot(r23_x_r34);
