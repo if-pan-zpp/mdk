@@ -4,6 +4,7 @@
 #include <Eigen/Core>
 #include <mdk/tools/model/Model.hpp>
 #include <optional>
+#include <mdk/tools/param/Parameters.hpp>
 
 namespace mdk {
     class AtomicModel {
@@ -58,7 +59,10 @@ namespace mdk {
         AtomicModel() = default;
         explicit AtomicModel(Model const& coarse);
 
-        void addNativeContacts(bool onlyCA = false);
+        void addContactsFromAtomOverlap();
+        void addContactsFromOnlyCA(double overlap = 7.5 * angstrom);
+        void addContactsFromResOverlap(param::Parameters const& params);
+
         Model coarsen();
     };
 }

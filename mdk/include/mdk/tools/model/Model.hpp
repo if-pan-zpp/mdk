@@ -6,6 +6,7 @@
 #include <mdk/utils/Units.hpp>
 #include <mdk/utils/Random.hpp>
 #include <mdk/tools/model/Topology.hpp>
+#include <mdk/tools/cmap/ContactMap.hpp>
 
 namespace mdk {
     class Model {
@@ -52,6 +53,9 @@ namespace mdk {
         void morphIntoLine();
         std::optional<Topology> morphIntoSAW(Random& rand, bool withPBC,
             double density, double intersectionDist);
+
+        StructuredPart& addContactMap(cmap::ContactMap const& contactMap);
+        void addCMapContacts(cmap::ContactMap const& contactMap, Chain& chain);
 
     private:
         std::vector<std::pair<Residue*, Residue*>> nonlocalPairs();

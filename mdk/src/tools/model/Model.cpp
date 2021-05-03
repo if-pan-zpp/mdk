@@ -136,6 +136,27 @@ std::optional<Topology> Model::morphIntoSAW(Random& rand, bool withPBC, double d
     return nullopt;
 }
 
+Model::StructuredPart& Model::addContactMap(cmap::ContactMap const& contactMap) {
+    auto& sp = addSP();
+    sp.off = contactMap.offset;
+    sp.len = contactMap.len;
+    sp.angle = contactMap.angle;
+    sp.dihedral = contactMap.dihedral;
+    return sp;
+}
+
+void Model::addCMapContacts(cmap::ContactMap const& contactMap, Chain &chain) {
+    for (auto const& cmapCont: contactMap.contacts) {
+        auto& modelCont = addContact();
+        modelCont.type = "CMAP";
+        modelCont.dist0 = cmapCont.dist0;
+        for (int i = 0; i < 2; ++i) {
+            auto resIdx = chain.start + contactMap.offset + cmapCont.res[i];
+            modelCont.res[i] = resIdx;
+        }
+    }
+}
+
 vector<pair<Model::Residue*, Model::Residue*>> Model::nonlocalPairs() {
     vector<pair<Residue*, Residue*>> pairs;
     for (auto& res1: residues) {

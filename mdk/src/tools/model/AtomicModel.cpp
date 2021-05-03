@@ -78,22 +78,23 @@ AtomicModel::AtomicModel(Model const& coarse) {
     }
 }
 
-void AtomicModel::addNativeContacts(bool onlyCA) {
+void AtomicModel::addContactsFromAtomOverlap() {
     std::vector<Atom*> contactAtoms;
     for (auto& [idx, atom]: atoms) {
         if (!atom.res) continue;
         if (!AminoAcid::isProper(atom.res->type)) continue;
-        if (onlyCA && atom.type != "CA") continue;
         contactAtoms.emplace_back(&atom);
     }
 
     static const auto types = createTypes();
-    for (auto* atom1: contactAtoms) {
+    for (int idx1 = 0; idx1 < contactAtoms.size(); ++idx1) {
+        auto *atom1 = contactAtoms[idx1];
         auto const& info1 = types.at((AminoAcid)atom1->res->type)
             .atomInfo.at(atom1->type);
         string type1 = info1.inBackbone ? "B" : "S";
 
-        for (auto* atom2: contactAtoms) {
+        for (int idx2 = idx1; idx2 < contactAtoms.size(); ++idx2) {
+            auto *atom2 = contactAtoms[idx2];
             auto const& info2 = types.at((AminoAcid)atom2->res->type)
                 .atomInfo.at(atom2->type);
             string type2 = info2.inBackbone ? "B" : "S";
@@ -108,6 +109,69 @@ void AtomicModel::addNativeContacts(bool onlyCA) {
                 auto& cont = addContact();
                 cont.dist0 = dist;
                 cont.type = type1 + type2;
+                cont.atom[0] = atom1;
+                cont.atom[1] = atom2;
+            }
+        }
+    }
+}
+
+void AtomicModel::addContactsFromOnlyCA(double overlap) {
+    vector<Atom*> contactAtoms;
+    for (auto& [idx, res]: residues) {
+        if (!AminoAcid::isProper(res.type)) continue;
+        auto *caAtom = res.find("CA");
+        if (caAtom) contactAtoms.emplace_back(caAtom);
+    }
+
+    for (int idx1 = 0; idx1 < contactAtoms.size(); ++idx1) {
+        auto *atom1 = contactAtoms[idx1];
+
+        for (int idx2 = idx1; idx1 < contactAtoms.size(); ++idx2) {
+            auto *atom2 = contactAtoms[idx2];
+
+            if (atom1 >= atom2) continue;
+            if (atom1->res == atom2->res) continue;
+            if (abs(atom1->res->idxInChain - atom2->res->idxInChain) < 3) continue;
+
+            auto dist = (atom1->pos - atom2->pos).norm();
+            if (dist <= overlap) {
+                auto& cont = addContact();
+                cont.dist0 = dist;
+                cont.type = "NATIVE";
+                cont.atom[0] = atom1;
+                cont.atom[1] = atom2;
+            }
+        }
+    }
+}
+
+void AtomicModel::addContactsFromResOverlap(const param::Parameters &params) {
+    vector<Atom*> contactAtoms;
+    for (auto& [idx, res]: residues) {
+        if (!AminoAcid::isProper(res.type)) continue;
+        auto *caAtom = res.find("CA");
+        if (caAtom) contactAtoms.emplace_back(caAtom);
+    }
+
+    for (int idx1 = 0; idx1 < contactAtoms.size(); ++idx1) {
+        auto *atom1 = contactAtoms[idx1];
+        auto rad1 = params.radius.at((AminoAcid)atom1->type);
+
+        for (int idx2 = idx1; idx1 < contactAtoms.size(); ++idx2) {
+            auto *atom2 = contactAtoms[idx2];
+            auto rad2 = params.radius.at((AminoAcid)atom2->type);
+
+            if (atom1 >= atom2) continue;
+            if (atom1->res == atom2->res) continue;
+            if (abs(atom1->res->idxInChain - atom2->res->idxInChain) < 3) continue;
+
+            auto dist = (atom1->pos - atom2->pos).norm();
+            auto overlap = rad1 + rad2;
+            if (dist <= overlap) {
+                auto& cont = addContact();
+                cont.dist0 = dist;
+                cont.type = "NATIVE";
                 cont.atom[0] = atom1;
                 cont.atom[1] = atom2;
             }
