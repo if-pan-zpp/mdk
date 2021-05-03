@@ -24,6 +24,7 @@ namespace mdk {
         void forCellPair(int cell1, int cell2);
         void traverseCellPairs();
         void completeLists();
+        void reconstruct();
 
     public:
         explicit VLFactory(State const& state);

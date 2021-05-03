@@ -107,9 +107,26 @@ void VLFactory::completeLists() {
     }
 }
 
-void VLFactory::update() {
+void VLFactory::reconstruct() {
     prepareCells();
     prepareLists();
     traverseCellPairs();
     completeLists();
+    r0 = state->r;
+    top0 = state->top;
+}
+
+void VLFactory::update() {
+    double maxMove2 = 0.0;
+    for (int i = 0; i < state->n; ++i) {
+        auto dr = state->r[i] - r0[i];
+        maxMove2 = max(maxMove2, dr.squaredNorm());
+    }
+
+    auto maxMove = sqrt(maxMove2);
+    auto pbcMove = (top0.cell - state->top.cell).norm();
+    auto maxAllowedMove = 0.5 * pad - 2.0 * pbcMove;
+    if (maxMove2 >= maxAllowedMove) {
+        reconstruct();
+    }
 }
