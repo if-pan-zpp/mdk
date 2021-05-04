@@ -1,5 +1,5 @@
 #pragma once
-#include <cpu/data/State.hpp>
+#include <mdk/cpu/data/State.hpp>
 
 namespace mdk {
     class NativeBondAngles {
@@ -9,11 +9,11 @@ namespace mdk {
     public:
         void kernel(
             double theta, double theta0,
-            double& V, double& dV_dth);
+            double& V, double& dV_dth) const;
     };
 
     inline void NativeBondAngles::kernel(double theta,
-        double theta0, double &V, double &dV_dth) {
+        double theta0, double &V, double &dV_dth) const {
         auto diff = theta - theta0;
         V += CBA * diff * diff;
         dV_dth += 2.0 * CBA * diff;

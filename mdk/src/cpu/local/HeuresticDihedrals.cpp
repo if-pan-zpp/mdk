@@ -1,4 +1,4 @@
-#include "cpu/ff/local/HeuresticDihedrals.hpp"
+#include "cpu/local/HeuresticDihedrals.hpp"
 using namespace mdk;
 
 HeuresticDihedrals::HeuresticDihedrals(Model const& model,

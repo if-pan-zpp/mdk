@@ -1,10 +1,11 @@
-#include "cpu/ff/local/LocalFF.hpp"
+#include "cpu/local/LocalPass.hpp"
 using namespace mdk;
 using namespace std;
 
-LocalFF::LocalFF(const Model &model) {
+LocalPass::LocalPass(const Model &model) {
     spIdx = Eigen::Matrix<int8_t, Eigen::Dynamic, 1>(model.n, -1);
     theta0 = phi0 = Scalars(model.n);
+    hat_rij_x_rjk = nullptr;
 
     for (auto const& chain: model.chains) {
         ranges.emplace_back(chain.start, chain.end);
@@ -19,7 +20,7 @@ LocalFF::LocalFF(const Model &model) {
     }
 }
 
-void LocalFF::compute(const State &state, double &V, Vectors &dV_dr) {
+void LocalPass::exec(const State &state, StateDiff& sd) const {
     for (auto const& [start, end]: ranges) {
         for (int i = start; i < end-1; ++i) {
             int i1 = i-2, i2 = i-1, i3 = i, i4 = i+1;
@@ -31,9 +32,9 @@ void LocalFF::compute(const State &state, double &V, Vectors &dV_dr) {
 
             if (harmonic) {
                 double dV_dl = 0.0;
-                harmonic->kernel(i, norm34, V, dV_dl);
-                dV_dr[i3] -= dV_dl * n34;
-                dV_dr[i4] += dV_dl * n34;
+                harmonic->kernel(i, norm34, sd.V, dV_dl);
+                sd.dV_dr[i3] -= dV_dl * n34;
+                sd.dV_dr[i4] += dV_dl * n34;
             }
 
             if (i2 < start) continue;
@@ -58,43 +59,42 @@ void LocalFF::compute(const State &state, double &V, Vectors &dV_dr) {
 
                 auto sp2 = spIdx[i2], sp4 = spIdx[i4];
                 if (sp2 == sp4 && sp2 >= 0 && nativeBA) {
-                    nativeBA->kernel(theta, theta0[i], V, dV_dth);
+                    nativeBA->kernel(theta, theta0[i], sd.V, dV_dth);
                 }
                 else if (tabBA) {
-                    tabBA->kernel(i, theta, V, dV_dth);
+                    tabBA->kernel(i, theta, sd.V, dV_dth);
                 }
                 else if (heurBA) {
-                    heurBA->kernel(i, theta, V, dV_dth);
+                    heurBA->kernel(i, theta, sd.V, dV_dth);
                 }
 
-                dV_dr[i2] += dV_dth * dth_dr2;
-                dV_dr[i3] += dV_dth * dth_dr3;
-                dV_dr[i4] += dV_dth * dth_dr4;
+                sd.dV_dr[i2] += dV_dth * dth_dr2;
+                sd.dV_dr[i3] += dV_dth * dth_dr3;
+                sd.dV_dr[i4] += dV_dth * dth_dr4;
             }
 
             if (locExcl) {
-                double dV_dl = 0.0, norm24 = 0.0;
-                Vector r24 = r4 - r2;
+                auto r24 = r4 - r2;
                 auto norm24_sq = r24.squaredNorm();
 
                 if (norm24_sq <= locExcl->cutoff2) {
-                    locExcl->kernel(norm24_sq, norm24, V, dV_dl);
+                    auto dV_dn = 0.0;
+                    auto norm24 = sqrt(norm24_sq);
+                    locExcl->kernel(norm24, sd.V, dV_dn);
                     r24 /= norm24;
-                    dV_dr[i2] -= dV_dl * r24;
-                    dV_dr[i3] += dV_dl * r24;
+                    sd.dV_dr[i2] -= dV_dn * r24;
+                    sd.dV_dr[i3] += dV_dn * r24;
                 }
             }
 
             auto r23_x_r34 = r23.cross(r34);
             auto norm_r23_x_r34 = r23_x_r34.norm();
+            Vector hat_r23_x_r34 = r23_x_r34;
+            if (norm_r23_x_r34 != 0.0)
+                hat_r23_x_r34 /= norm_r23_x_r34;
 
-            Vector r23_x_r34_hat;
-            if (norm_r23_x_r34 != 0.0) {
-                r23_x_r34_hat = r23_x_r34 / norm_r23_x_r34;
-            }
-
-            if (rij_x_rjk_hat)
-                (*rij_x_rjk_hat)[i3] = r23_x_r34_hat;
+            if (hat_rij_x_rjk)
+                (*hat_rij_x_rjk)[i3] = hat_r23_x_r34;
 
             if (i1 < start) continue;
 
@@ -106,8 +106,8 @@ void LocalFF::compute(const State &state, double &V, Vectors &dV_dr) {
             if (norm_r12_x_r23 != 0.0 && norm_r23_x_r34 != 0.0) {
                 Vector dp_dr1, dp_dr2, dp_dr3, dp_dr4;
 
-                auto r12_x_r23_hat = r12_x_r23 / norm_r12_x_r23;
-                auto cos_phi = r12_x_r23_hat.dot(r23_x_r34_hat);
+                auto hat_r12_x_r23 = r12_x_r23 / norm_r12_x_r23;
+                auto cos_phi = hat_r12_x_r23.dot(hat_r23_x_r34);
                 cos_phi = max(min(cos_phi, 1.0), -1.0);
 
                 auto sgn = -r12.dot(r23_x_r34);
@@ -117,21 +117,21 @@ void LocalFF::compute(const State &state, double &V, Vectors &dV_dr) {
                 auto sp1 = spIdx[i1], sp4 = spIdx[i4];
                 if (sp1 == sp4 && sp1 >= 0) {
                     if (compNativeDih) {
-                        compNativeDih->kernel(phi, phi0[i], V, dV_dp);
+                        compNativeDih->kernel(phi, phi0[i], sd.V, dV_dp);
                     }
                     else if (simpNativeDih) {
-                        simpNativeDih->kernel(phi, phi0[i], V, dV_dp);
+                        simpNativeDih->kernel(phi, phi0[i], sd.V, dV_dp);
                     }
                 }
                 else if (heurDih) {
-                    heurDih->kernel(i, phi, V, dV_dp);
+                    heurDih->kernel(i, phi, sd.V, dV_dp);
                 }
             }
 
             if (chir) {
                 auto r12_x_r34 = r12.cross(r34);
                 chir->kernel(i, r12, r12_x_r23, r12_x_r34, r23_x_r34,
-                    V, dV_dr);
+                    sd.V, sd.dV_dr);
             }
         }
     }

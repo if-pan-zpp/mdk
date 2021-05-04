@@ -1,5 +1,5 @@
 #pragma once
-#include <utils/Units.hpp>
+#include <mdk/utils/Units.hpp>
 
 namespace mdk {
     class SimpleNativeDihedrals {
@@ -9,11 +9,11 @@ namespace mdk {
     public:
         void kernel(
             double phi, double phi0,
-            double& V, double& dV_dp);
+            double& V, double& dV_dp) const;
     };
 
     inline void SimpleNativeDihedrals::kernel(
-        double phi, double phi0, double &V, double& dV_dp) {
+        double phi, double phi0, double &V, double& dV_dp) const {
         auto diff = phi - phi0;
         V += 0.5 * CDH * diff * diff;
         dV_dp += CDH * diff;

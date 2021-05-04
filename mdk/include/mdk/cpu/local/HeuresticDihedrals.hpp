@@ -6,19 +6,19 @@
 namespace mdk {
     class HeuresticDihedrals {
     private:
-        double coeff[9][6];
+        double coeff[numOfPTs][6];
         Eigen::Matrix<int8_t, Eigen::Dynamic, 1> types;
 
     public:
         HeuresticDihedrals(Model const& model,
-            param::Parameters const& params);
+            param::Parameters const& params) const;
 
         void kernel(int i,
-            double phi, double& V, double &dV_dp);
+            double phi, double& V, double &dV_dp) const;
     };
 
     inline void HeuresticDihedrals::kernel(int i,
-        double phi, double &V, double &dV_dp) {
+        double phi, double &V, double &dV_dp) const {
         auto sin_phi = sin(phi), cos_phi = cos(phi);
 
         auto* C = coeff[types[i]];

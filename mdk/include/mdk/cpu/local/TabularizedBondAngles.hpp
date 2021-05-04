@@ -1,6 +1,6 @@
 #pragma once
 #include <mdk/tools/tab/TabEnergy.hpp>
-#include <cpu/data/State.hpp>
+#include <mdk/cpu/data/State.hpp>
 
 namespace mdk {
     class TabularizedBondAngles {
@@ -10,7 +10,7 @@ namespace mdk {
             int n;
             Scalars values;
         };
-        PTValues values[9];
+        PTValues values[numOfPTs];
 
         Eigen::Matrix<int8_t, Eigen::Dynamic, 1> types;
 
@@ -18,12 +18,11 @@ namespace mdk {
         TabularizedBondAngles(Model const& model,
             tab::TabEnergy const& tabEnergy);
 
-        void kernel(int i,
-            double theta, double& V, double& dV_dth);
+        void kernel(int i, double theta, double& V, double& dV_dth) const;
     };
 
     inline void TabularizedBondAngles::kernel(int i,
-        double theta, double &V, double &dV_dth) {
+        double theta, double &V, double &dV_dth) const {
 
         auto& tab = values[types[i]];
 

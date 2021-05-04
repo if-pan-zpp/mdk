@@ -1,8 +1,9 @@
 #pragma once
 #include <vector>
-#include <cpu/data/Primitives.hpp>
+#include <Eigen/Geometry>
+#include <mdk/cpu/data/Primitives.hpp>
 #include <mdk/tools/model/Model.hpp>
-#include <utils/Topology.hpp>
+#include <mdk/utils/Topology.hpp>
 
 namespace mdk {
     class State {
@@ -13,9 +14,5 @@ namespace mdk {
         Scalars q;
 
         Topology top;
-
-    public:
-        State() = default;
-        State(Model const& model);
     };
 }

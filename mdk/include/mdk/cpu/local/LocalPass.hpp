@@ -1,5 +1,7 @@
 #pragma once
 #include <optional>
+#include <mdk/cpu/data/State.hpp>
+#include <mdk/cpu/data/StateDiff.hpp>
 #include "ComplexNativeDihedrals.hpp"
 #include "HarmonicTethers.hpp"
 #include "HeuresticBondAngles.hpp"
@@ -8,10 +10,10 @@
 #include "SimpleNativeDihedrals.hpp"
 #include "TabularizedBondAngles.hpp"
 #include "Chirality.hpp"
-#include "LocalExclusion.hpp"
+#include <cpu/local/LocalExclusion.hpp>
 
 namespace mdk {
-    class LocalFF {
+    class LocalPass {
     private:
         Eigen::Matrix<int8_t, Eigen::Dynamic, 1> spIdx;
         Scalars theta0, phi0;
@@ -27,9 +29,11 @@ namespace mdk {
         std::optional<TabularizedBondAngles> tabBA;
         std::optional<Chirality> chir;
         std::optional<LocalExclusion> locExcl;
-        Vectors* rij_x_rjk_hat;
+        Vectors* hat_rij_x_rjk;
 
-        explicit LocalFF(Model const& model);
-        void compute(State const& state, double &V, Vectors &dV_dr);
+        explicit LocalPass(Model const& model);
+
+        void init();
+        void exec(State const& state, StateDiff& sd) const;
     };
 }

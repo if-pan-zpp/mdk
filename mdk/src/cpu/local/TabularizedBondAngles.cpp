@@ -1,8 +1,8 @@
-#include "cpu/ff/local/HeuresticBondAngles.hpp"
+#include "cpu/local/TabularizedBondAngles.hpp"
 using namespace mdk;
 
-HeuresticBondAngles::HeuresticBondAngles(Model const& model,
-        const param::Parameters &params) {
+TabularizedBondAngles::TabularizedBondAngles(Model const& model,
+        const tab::TabEnergy &tabEnergy) {
     types = Eigen::Matrix<int8_t, Eigen::Dynamic, 1>(model.n);
     for (auto const& chain: model.chains) {
         for (int i = chain.start+1; i+1 < chain.end; ++i) {
@@ -18,9 +18,13 @@ HeuresticBondAngles::HeuresticBondAngles(Model const& model,
         }
     }
 
-    for (auto const& [pt, coeffs]: params.angleParams) {
-        for (int d = 0; d < 7; ++d) {
-            coeff[(int8_t)pt][d] = coeffs[d];
+    for (auto const& [pt, vals]: tabEnergy.angleV) {
+        auto& tab = values[(int8_t)pt];
+
+        tab.n = vals.values.size();
+        tab.values = Scalars(tab.n);
+        for (int i = 0; i < tab.n; ++i) {
+            tab.values[i] = vals.values[i];
         }
     }
 }

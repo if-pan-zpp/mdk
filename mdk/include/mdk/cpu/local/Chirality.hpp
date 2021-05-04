@@ -1,5 +1,5 @@
 #pragma once
-#include <cpu/data/State.hpp>
+#include <mdk/cpu/data/State.hpp>
 
 namespace mdk {
     class Chirality {
@@ -11,11 +11,11 @@ namespace mdk {
 
         Chirality(Model const& model);
         void kernel(int i, VRef r12, Vector r12_x_r23, Vector r12_x_r34,
-            Vector r23_x_r34, double &V, Vectors &dV_dr);
+            Vector r23_x_r34, double &V, Vectors &dV_dr) const;
     };
 
     inline void Chirality::kernel(int i, VRef r12, Vector r12_x_r23,
-            Vector r12_x_r34, Vector r23_x_r34, double &V, Vectors &dV_dr) {
+            Vector r12_x_r34, Vector r23_x_r34, double &V, Vectors &dV_dr) const {
         auto i1 = i-2, i2 = i-1, i3 = i, i4 = i+1;
 
         auto d0_cube_inv = d0_cube_invs[i];

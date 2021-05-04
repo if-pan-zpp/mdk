@@ -8,11 +8,11 @@ namespace mdk {
         double CDB = 0.66 * eps / pow(radian, 2.0);
 
         void kernel(double phi, double phi0,
-            double& V, double& dV_dp);
+            double& V, double& dV_dp) const;
     };
 
     inline void ComplexNativeDihedrals::kernel(double phi, double phi0,
-            double &V, double &dV_dp) {
+            double &V, double &dV_dp) const {
         V += CDA * (1.0 - cos(phi - phi0)) + CDB * (1.0 - cos(3.0 * (phi - phi0)));
         dV_dp += CDA * sin(phi - phi0) + 3.0 * CDB * sin(3.0 * (phi - phi0));
     }
