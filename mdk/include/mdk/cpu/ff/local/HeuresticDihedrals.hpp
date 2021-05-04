@@ -11,13 +11,12 @@ namespace mdk {
 
     public:
         HeuresticDihedrals(Model const& model,
-            param::Parameters const& params) const;
+            param::Parameters const& params);
 
-        void kernel(int i,
-            double phi, double& V, double &dV_dp) const;
+        void dihTerm(int i, double phi, double& V, double &dV_dp) const;
     };
 
-    inline void HeuresticDihedrals::kernel(int i,
+    inline void HeuresticDihedrals::dihTerm(int i,
         double phi, double &V, double &dV_dp) const {
         auto sin_phi = sin(phi), cos_phi = cos(phi);
 

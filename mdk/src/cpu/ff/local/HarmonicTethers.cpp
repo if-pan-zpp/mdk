@@ -1,4 +1,4 @@
-#include "cpu/local/HarmonicTethers.hpp"
+#include "cpu/ff/local/HarmonicTethers.hpp"
 using namespace mdk;
 
 HarmonicTethers::HarmonicTethers(const Model &model, bool fromNative) {

@@ -12,11 +12,10 @@ namespace mdk {
         HeuresticBondAngles(Model const& model,
             param::Parameters const& params);
 
-        void kernel(int i, double theta,
-            double& V, double& dV_dth) const;
+        void angleTerm(int i, double theta, double& V, double& dV_dth) const;
     };
 
-    inline void HeuresticBondAngles::kernel(int i,
+    inline void HeuresticBondAngles::angleTerm(int i,
         double theta, double &V, double &dV_dth) const{
         auto* coeffs = coeff[types[i]];
 

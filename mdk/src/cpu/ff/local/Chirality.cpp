@@ -1,4 +1,4 @@
-#include "cpu/local/Chirality.hpp"
+#include "cpu/ff/local/Chirality.hpp"
 using namespace mdk;
 
 Chirality::Chirality(const Model &model) {

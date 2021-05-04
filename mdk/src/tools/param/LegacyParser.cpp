@@ -72,7 +72,7 @@ static void fetchPairwiseData(istream &is, Parameters &data) {
         data.mjMatrix = Parameters::PerPairData<double>();
     }
 
-    int numPairs = AminoAcid::n * (AminoAcid::n+1) / 2;
+    int numPairs = AminoAcid::numAAs * (AminoAcid::numAAs+1) / 2;
     for (int i = 0; i < numPairs; ++i) {
         auto ss = lineStream(is);
 
