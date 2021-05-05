@@ -7,6 +7,11 @@
 #include <mdk/utils/PairType.hpp>
 
 namespace mdk::param {
+    enum class Polarization: int8_t {
+        GLY_PRO, HYDROPHOBIC, MISSING,
+        POLAR, POLAR_NEG, POLAR_POS
+    };
+
     class Parameters {
     public:
         Parameters();
@@ -21,11 +26,8 @@ namespace mdk::param {
         PerPTData<Coeffs> dihedralParams;
 
         struct SpecificityParams {
-            enum class Polarization: int8_t {
-                GLY_PRO, HYDROPHOBIC, POLAR, POS, NEG
-            };
             Polarization polarization;
-            int coordNum, hydrophobicCoordNum, polarCoordNum;
+            int maxSidechain, maxHydrophobicSS, maxPolarSS;
         };
 
         template<typename T>

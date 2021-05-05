@@ -10,6 +10,7 @@ namespace mdk {
         double e_chi = 1.0 * eps;
 
         Chirality(Model const& model);
+
         void eval(int i, VRef r12, Vector r12_x_r23, Vector r12_x_r34,
             Vector r23_x_r34, double &V, Vectors &dV_dr) const;
     };

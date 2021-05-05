@@ -44,15 +44,15 @@ static void fetchSpecificity(istream &is, Parameters &data) {
 
     ss = lineStream(is);
     for (auto const& acid: order)
-        ss >> data.specificity[acid].coordNum;
+        ss >> data.specificity[acid].maxSidechain;
 
     ss = lineStream(is);
     for (auto const& acid: order)
-        ss >> data.specificity[acid].hydrophobicCoordNum;
+        ss >> data.specificity[acid].maxHydrophobicSS;
 
     ss = lineStream(is);
     for (auto const& acid: order)
-        ss >> data.specificity[acid].polarCoordNum;
+        ss >> data.specificity[acid].maxPolarSS;
 }
 
 static void fetchRadii(istream &is, Parameters &data) {
