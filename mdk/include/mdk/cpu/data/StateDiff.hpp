@@ -7,7 +7,5 @@ namespace mdk {
     public:
         double V;
         Vectors dV_dr;
-
-        void clear();
     };
 }

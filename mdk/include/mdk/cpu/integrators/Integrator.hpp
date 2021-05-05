@@ -1,9 +1,9 @@
 #pragma once
-#include <mdk/cpu/data/StateDiff.hpp>
+#include <mdk/cpu/data/Primitives.hpp>
 
 namespace mdk {
     class Integrator {
     public:
-        virtual void step(State& state, StateDiff const& sd) = 0;
+        virtual void step(Vectors& r, Vectors& v, Vectors& dV_dr) = 0;
     };
 }

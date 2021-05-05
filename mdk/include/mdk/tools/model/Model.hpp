@@ -7,6 +7,8 @@
 #include <mdk/utils/Random.hpp>
 #include <mdk/utils/Topology.hpp>
 #include <mdk/tools/cmap/ContactMap.hpp>
+#include <mdk/utils/ResType.hpp>
+#include <mdk/utils/ContactType.hpp>
 
 namespace mdk {
     class Model {
@@ -19,7 +21,7 @@ namespace mdk {
         struct Residue {
             int idx, chainIdx;
             Eigen::Vector3d pos;
-            std::string type;
+            ResType type;
         };
         std::vector<Residue> residues;
         Residue& addResidue(Chain *chain = nullptr);
@@ -35,7 +37,7 @@ namespace mdk {
         struct Contact {
             int idx;
             int res[2];
-            std::string type;
+            ContactType type;
             double dist0;
         };
         std::vector<Contact> contacts;

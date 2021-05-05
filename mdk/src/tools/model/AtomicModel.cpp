@@ -1,6 +1,6 @@
 #include "tools/model/AtomicModel.hpp"
 #include "utils/AminoAcid.hpp"
-#include "utils/ResidueTypes.hpp"
+#include "utils/ResidueData.hpp"
 #include "utils/Math.hpp"
 using namespace std;
 using namespace mdk;
@@ -57,7 +57,7 @@ AtomicModel::AtomicModel(Model const& coarse) {
         for (int resIdx = chain.start; resIdx < chain.end; ++resIdx) {
             auto& res = coarse.residues[resIdx];
             auto& resHere = addResidue(res.idx, &chainHere);
-            resHere.type = res.type;
+            resHere.type = (string)res.type;
 
             auto& caAtom = addAtom(atoms.size(), &resHere);
             caAtom.pos = res.pos;
@@ -69,8 +69,8 @@ AtomicModel::AtomicModel(Model const& coarse) {
 
     for (auto const& contact: coarse.contacts) {
         auto& contactHere = addContact();
-        contactHere.type = contact.type;
         contactHere.dist0 = contact.dist0;
+        contactHere.type = (string)contact.type;
 
         for (int i = 0; i < 2; ++i) {
             contactHere.atom[i] = &atoms[resIdxMap[contact.res[i]]];
@@ -86,7 +86,7 @@ void AtomicModel::addContactsFromAtomOverlap() {
         contactAtoms.emplace_back(&atom);
     }
 
-    static const auto types = createTypes();
+    static const auto types = createResData();
     for (int idx1 = 0; idx1 < contactAtoms.size(); ++idx1) {
         auto *atom1 = contactAtoms[idx1];
         auto const& info1 = types.at((AminoAcid)atom1->res->type)
@@ -99,16 +99,19 @@ void AtomicModel::addContactsFromAtomOverlap() {
                 .atomInfo.at(atom2->type);
             string type2 = info2.inBackbone ? "B" : "S";
 
-            if (atom1 >= atom2) continue;
-            if (atom1->res == atom2->res) continue;
-            if (abs(atom1->res->idxInChain - atom2->res->idxInChain) < 3) continue;
+            if (atom1 >= atom2)
+                continue;
+            if (atom1->res == atom2->res)
+                continue;
+            if (abs(atom1->res->idxInChain - atom2->res->idxInChain) < 3)
+                continue;
 
             auto dist = (atom1->pos - atom2->pos).norm();
             auto overlapR = info1.radius + info2.radius;
             if (dist <= overlapR) {
                 auto& cont = addContact();
                 cont.dist0 = dist;
-                cont.type = type1 + type2;
+                cont.type = "NAT_" + type1 + type2;
                 cont.atom[0] = atom1;
                 cont.atom[1] = atom2;
             }
@@ -138,7 +141,7 @@ void AtomicModel::addContactsFromOnlyCA(double overlap) {
             if (dist <= overlap) {
                 auto& cont = addContact();
                 cont.dist0 = dist;
-                cont.type = "NATIVE";
+                cont.type = "NAT";
                 cont.atom[0] = atom1;
                 cont.atom[1] = atom2;
             }
@@ -171,7 +174,7 @@ void AtomicModel::addContactsFromResOverlap(const param::Parameters &params) {
             if (dist <= overlap) {
                 auto& cont = addContact();
                 cont.dist0 = dist;
-                cont.type = "NATIVE";
+                cont.type = "NAT";
                 cont.atom[0] = atom1;
                 cont.atom[1] = atom2;
             }
@@ -195,7 +198,7 @@ Model AtomicModel::coarsen() {
             auto& res = chain.residues[resIdx];
             auto& resThere = model.addResidue(&chainThere);
             resIdxMap[res->serial] = resThere.idx;
-            resThere.type = res->type;
+            resThere.type = ResType(res->type);
             resThere.pos = res->find("CA")->pos;
         }
 
@@ -225,7 +228,7 @@ Model AtomicModel::coarsen() {
     for (auto const& cont: contacts) {
         if (!cont.atom[0]->res || !cont.atom[1]->res) continue;
         auto& contThere = model.addContact();
-        contThere.type = cont.type;
+        contThere.type = ContactType(cont.type);
         contThere.dist0 = cont.dist0;
         for (int i = 0; i < 2; ++i) {
             contThere.res[i] = resIdxMap.at(cont.atom[i]->res->idxInChain);

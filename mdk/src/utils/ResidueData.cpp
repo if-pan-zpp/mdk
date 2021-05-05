@@ -1,9 +1,9 @@
-#include "utils/ResidueTypes.hpp"
+#include "utils/ResidueData.hpp"
 #include "utils/Units.hpp"
 using namespace mdk;
 
-ResidueTypes mdk::createTypes() {
-    ResidueTypes types;
+ResidueData mdk::createResData() {
+    ResidueData types;
 
     for (auto const& acid: AminoAcid::aminoAcids()) {
         auto& acidInfo = types[acid];

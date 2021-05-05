@@ -1,5 +1,5 @@
 #pragma once
-#include <mdk/cpu/ff/generic/Harmonic.hpp>
+#include <cpu/generic/Harmonic.hpp>
 #include <mdk/cpu/data/State.hpp>
 
 namespace mdk {

@@ -1,13 +1,17 @@
 #pragma once
 #include <optional>
+#include <memory>
 #include "Kernels.hpp"
+#include <mdk/cpu/integrators/Integrator.hpp>
 
 namespace mdk {
-    class ForceField {
+    class System {
     private:
         Eigen::Matrix<int8_t, Eigen::Dynamic, 1> spIdx;
         Ranges chains;
         void localPass(State const& state, StateDiff& sd) const;
+
+
 
     public:
         template<typename T>
@@ -26,9 +30,11 @@ namespace mdk {
         opt<PseudoImproperDihedral> pid;
         opt<QuasiAdiabatic> quasiAd;
 
-    public:
-        explicit ForceField(Model const& model);
+        std::unique_ptr<Integrator> integrator;
 
-        void eval(State const& state, StateDiff& sd) const;
+    public:
+        explicit System(Model const& model);
+
+        void step(double t);
     };
 }

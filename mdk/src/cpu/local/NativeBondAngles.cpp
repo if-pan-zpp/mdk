@@ -1,4 +1,4 @@
-#include "cpu/ff/local/NativeBondAngles.hpp"
+#include "cpu/local/NativeBondAngles.hpp"
 using namespace mdk;
 
 NativeBondAngles::NativeBondAngles(const Model &model) {

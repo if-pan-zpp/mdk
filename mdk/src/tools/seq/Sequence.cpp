@@ -17,7 +17,7 @@ Model Sequence::asModel() const {
 
         for (auto const& code: chain.codes) {
             auto& resThere = model.addResidue(&chainThere);
-            resThere.type = (string)(AminoAcid)code;
+            resThere.type = ResType((int8_t)code);
             resThere.pos = { 0.0, 0.0, 0.0 };
         }
 

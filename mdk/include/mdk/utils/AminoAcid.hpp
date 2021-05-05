@@ -16,8 +16,11 @@ namespace mdk {
         static std::vector<AminoAcid> aminoAcids();
 
         static std::vector<AAType> types();
-        constexpr AminoAcid(AAType type): type{type} {};
+        constexpr explicit AminoAcid(AAType type): type{type} {};
         explicit operator AAType const&() const;
+
+        constexpr explicit AminoAcid(int8_t x): AminoAcid((AAType)x) {};
+        explicit operator int8_t() const;
 
         static bool isProper(char code);
         explicit AminoAcid(char code);
@@ -27,7 +30,7 @@ namespace mdk {
         static bool isProper(std::string const& name);
         explicit AminoAcid(std::string const& name);
         static std::vector<std::string> names();
-        explicit operator std::string const&() const;
+        explicit operator std::string() const;
 
         bool operator==(AminoAcid const& other) const;
         bool operator!=(AminoAcid const& other) const;

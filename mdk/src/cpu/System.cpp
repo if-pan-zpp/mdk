@@ -1,8 +1,8 @@
-#include "cpu/ff/ForceField.hpp"
+#include "cpu/System.hpp"
 using namespace mdk;
 using namespace std;
 
-void ForceField::localPass(const State &state, StateDiff &sd) const {
+void System::localPass(const State &state, StateDiff &sd) const {
     for (auto const& [start, end]: chains) {
         for (int i = start; i < end-1; ++i) {
             int i1 = i-2, i2 = i-1, i3 = i, i4 = i+1;
@@ -110,7 +110,7 @@ void ForceField::localPass(const State &state, StateDiff &sd) const {
     }
 }
 
-ForceField::ForceField(const Model &model) {
+System::System(const Model &model) {
     spIdx.resize(model.n);
 
     for (auto const& ch: model.chains) {
@@ -126,6 +126,6 @@ ForceField::ForceField(const Model &model) {
     }
 }
 
-void ForceField::eval(const State &state, StateDiff &sd) const {
-    localPass(state, sd);
+void System::step(double t) {
+
 }

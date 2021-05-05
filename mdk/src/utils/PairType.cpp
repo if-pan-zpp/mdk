@@ -11,8 +11,8 @@ vector<PairType> mdk::pairTypes() {
 }
 
 static int8_t encode(AminoAcid const& acid) {
-    if (acid == AAType::GLY) return 0;
-    else if (acid == AAType::PRO) return 1;
+    if ((AAType)acid == AAType::GLY) return 0;
+    else if ((AAType)acid == AAType::PRO) return 1;
     else return 2;
 }
 

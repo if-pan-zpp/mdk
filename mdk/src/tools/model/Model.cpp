@@ -145,7 +145,7 @@ Model::StructuredPart& Model::addContactMap(cmap::ContactMap const& contactMap) 
 void Model::addCMapContacts(cmap::ContactMap const& contactMap, Chain &chain) {
     for (auto const& cmapCont: contactMap.contacts) {
         auto& modelCont = addContact();
-        modelCont.type = "CMAP";
+        modelCont.type = ContactType(ContCode::NAT);
         modelCont.dist0 = cmapCont.dist0;
         for (int i = 0; i < 2; ++i) {
             auto resIdx = chain.start + contactMap.offset + cmapCont.res[i];

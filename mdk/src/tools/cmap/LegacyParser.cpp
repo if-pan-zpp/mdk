@@ -43,7 +43,7 @@ std::ostream &LegacyParser::write(ostream &os, ContactMap const& cmap) {
     for (auto& contact: cmap.contacts) {
         os << contact.res[0] + 1 << "\t";
         os << contact.res[1] + 1 << "\t";
-        os << contact.dist0 / (5.0 * angstrom) << endl;
+        os << contact.dist0 / f77unit << endl;
     }
 
     for (int i = 0; i < cmap.len; ++i) {

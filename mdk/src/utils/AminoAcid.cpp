@@ -24,6 +24,10 @@ AminoAcid::operator AAType const&() const {
     return type;
 }
 
+AminoAcid::operator int8_t() const {
+    return (int8_t)type;
+}
+
 bool AminoAcid::isProper(char code) {
     static const auto _codes = codes();
     return _codes.find(code) != string::npos;
@@ -65,7 +69,7 @@ std::vector<std::string> AminoAcid::names() {
     };
 }
 
-AminoAcid::operator string const&() const {
+AminoAcid::operator string() const {
     static const auto _names = names();
     return _names[(int8_t)type];
 }

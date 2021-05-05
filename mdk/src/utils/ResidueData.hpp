@@ -15,7 +15,7 @@ namespace mdk {
         std::unordered_map<std::string, AtomTypeInfo> atomInfo;
     };
 
-    using ResidueTypes = std::unordered_map<AminoAcid, ResidueTypeInfo>;
+    using ResidueData = std::unordered_map<AminoAcid, ResidueTypeInfo>;
 
-    ResidueTypes createTypes();
+    ResidueData createResData();
 }

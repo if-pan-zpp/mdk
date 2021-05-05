@@ -1,4 +1,4 @@
-#include "cpu/ff/local/NativeDihedralsBase.hpp"
+#include "cpu/local/NativeDihedralsBase.hpp"
 using namespace mdk;
 
 NativeDihedralsBase::NativeDihedralsBase(const Model &model) {

@@ -1,4 +1,4 @@
-#include "cpu/ff/local/HeuresticDihedrals.hpp"
+#include "cpu/local/HeuresticDihedrals.hpp"
 using namespace mdk;
 
 HeuresticDihedrals::HeuresticDihedrals(Model const& model,
@@ -7,14 +7,11 @@ HeuresticDihedrals::HeuresticDihedrals(Model const& model,
     for (auto const& chain: model.chains) {
         for (int i = chain.start+2; i+1 < chain.end; ++i) {
             auto i2 = i-1, i3 = i;
-            auto type2 = model.residues[i2].type;
-            auto type3 = model.residues[i3].type;
+            AminoAcid acid2(int8_t(model.residues[i2].type));
+            AminoAcid acid3(int8_t(model.residues[i3].type));
 
-            if (AminoAcid::isProper(type2) && AminoAcid::isProper(type3)) {
-                AminoAcid acid2(type2), acid3(type3);
-                PairType pt = pairType(acid2, acid3);
-                types[i] = (int8_t)pt;
-            }
+            PairType pt = pairType(acid2, acid3);
+            types[i] = (int8_t)pt;
         }
     }
 
