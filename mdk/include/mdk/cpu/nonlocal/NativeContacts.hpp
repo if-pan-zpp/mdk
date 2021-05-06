@@ -28,13 +28,14 @@ namespace mdk {
 
     inline void NativeContacts::perPair(NativeContact& nc, VRef unit,
             double norm, double &V, Vector &dV_dri, Vector &dV_drj) {
-        auto diff = norm - nc.dist0;
 
         if (!nc.isDisulfide || useLJForSS) {
-            ljV.perPair(unit, diff, V, dV_dri, dV_drj);
+            ljV.r_min = nc.dist0;
+            ljV.asForce(unit, norm, V, dV_dri, dV_drj);
         }
         else {
-            harmV.compute(unit, diff, V, dV_dri, dV_drj);
+            auto diff = norm - nc.dist0;
+            harmV.asForce(unit, diff, V, dV_dri, dV_drj);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace mdk {
     class HarmonicTethers {
     private:
         Scalars dist0;
-        Harmonic baseV;
+        Harmonic base;
 
     public:
         double H1 = 50.0 * eps/pow(angstrom, 2);
@@ -18,6 +18,6 @@ namespace mdk {
 
     inline void HarmonicTethers::perPair(int i, VRef unit, double norm, double &V,
             Vectors &dV_dr) const {
-        baseV.compute(unit, norm - dist0[i], V, dV_dr[i], dV_dr[i + 1]);
+        base.asForce(unit, norm - dist0[i], V, dV_dr[i], dV_dr[i + 1]);
     }
 }

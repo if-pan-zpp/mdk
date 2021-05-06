@@ -8,6 +8,7 @@ namespace mdk {
     public:
         double V;
         Vectors dV_dr;
+        Vectors n, h;
         qa::Diffs qaDiffs;
     };
 }

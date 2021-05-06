@@ -3,6 +3,6 @@
 
 namespace mdk::qa {
     enum class ContactType: int8_t {
-        NONE, BB, BS, SB, SS
+        NONE, BB, BS, SB, SS, DISULFIDE
     };
 }

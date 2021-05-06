@@ -5,6 +5,8 @@ namespace mdk::vl {
     template<typename Data>
     struct Pair {
         int i1, i2;
+        Vector unit;
+        double norm;
         Data data;
 
         inline bool operator<(Pair<Data> const& other) const {

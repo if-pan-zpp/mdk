@@ -13,8 +13,10 @@ namespace mdk {
         double t;
         Vectors r, v;
         Topology top;
+
         qa::Stats qaStats;
-        Eigen::VectorXi neighbours;
+        Eigen::VectorXi cysNeigh;
+        Eigen::Matrix<int8_t, Eigen::Dynamic, 1> cysTaken;
 
         State() = default;
         State(Model const& model);

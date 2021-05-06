@@ -39,7 +39,7 @@ namespace mdk {
         bool operator>(AminoAcid const& other) const;
         bool operator>=(AminoAcid const& other) const;
 
-        static constexpr const int numAAs = 20;
+        static constexpr const int N = 20;
 
     private:
         AAType type;

@@ -54,7 +54,7 @@ void System::localPass(StateDiff& sd) const {
             if (norm24_sq <= pauliExcl->cutoff2) {
                 double norm24 = sqrt(norm24_sq);
                 r24 /= norm24;
-                pauliExcl->perPair(r24, norm24, sd.V,
+                pauliExcl->asForce(r24, norm24, sd.V,
                     sd.dV_dr[i2], sd.dV_dr[i3]);
             }
         }
@@ -64,11 +64,11 @@ void System::localPass(StateDiff& sd) const {
             if (!unit_r23_x_r34.isZero())
                 unit_r23_x_r34.normalize();
 
-            quasiAd->n[i3] = r34-r23;
-            if (!quasiAd->n[i3].isZero())
-                quasiAd->n[i3].normalize();
+            sd.n[i3] = r34-r23;
+            if (!sd.n[i3].isZero())
+                sd.n[i3].normalize();
 
-            quasiAd->h[i3] = unit_r23_x_r34;
+            sd.h[i3] = unit_r23_x_r34;
         }
 
         if (i1 < 0 || !isConnected[i1]) continue;
