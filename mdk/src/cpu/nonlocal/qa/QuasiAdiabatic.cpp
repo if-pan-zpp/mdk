@@ -1,4 +1,4 @@
-#include "cpu/qa/QuasiAdiabatic.hpp"
+#include "cpu/nonlocal/qa/QuasiAdiabatic.hpp"
 #include "cpu/generic/LennardJones.hpp"
 using namespace mdk;
 using namespace mdk::qa;
@@ -198,14 +198,14 @@ void QuasiAdiabatic::perPair(const vl::Pair<NormalData> &p, VRef unit12,
             ljV.rmin = p.data.r_min;
             double stage = std::min(1.0, (state.t - p.data.time0) / formationTime);
             ljV.depth = maxDepth * stage;
-            ljV.eval(unit12, norm, sd.V, sd.dV_dr[p.i1], sd.dV_dr[p.i2]);
+            ljV.perPair(unit12, norm, sd.V, sd.dV_dr[p.i1], sd.dV_dr[p.i2]);
         }
         else {
             ljV.rmin = p.data.r_min;
             double stage = std::max(0.0, (p.data.time0 - state.t) / breakingTime);
             if (stage > 0.0) {
                 ljV.depth = maxDepth * stage;
-                ljV.eval(unit12, norm, sd.V, sd.dV_dr[p.i1], sd.dV_dr[p.i2]);
+                ljV.perPair(unit12, norm, sd.V, sd.dV_dr[p.i1], sd.dV_dr[p.i2]);
             }
             else {
                 removePair(p, state, sd);

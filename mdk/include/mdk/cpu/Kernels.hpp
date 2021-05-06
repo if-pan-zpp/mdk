@@ -14,4 +14,4 @@
 
 #include "cpu/nonlocal/NativeContacts.hpp"
 #include "cpu/nonlocal/PseudoImproperDihedral.hpp"
-#include "cpu/qa/QuasiAdiabatic.hpp"
+#include "cpu/nonlocal/qa/QuasiAdiabatic.hpp"

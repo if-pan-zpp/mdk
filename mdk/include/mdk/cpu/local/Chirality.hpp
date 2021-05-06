@@ -9,13 +9,13 @@ namespace mdk {
     public:
         double e_chi = 1.0 * eps;
 
-        Chirality(Model const& model);
+        explicit Chirality(Model const& model);
 
-        void eval(int i, VRef r12, Vector r12_x_r23, Vector r12_x_r34,
+        void perQuad(int i, VRef r12, Vector r12_x_r23, Vector r12_x_r34,
             Vector r23_x_r34, double &V, Vectors &dV_dr) const;
     };
 
-    inline void Chirality::eval(int i, VRef r12, Vector r12_x_r23,
+    inline void Chirality::perQuad(int i, VRef r12, Vector r12_x_r23,
             Vector r12_x_r34, Vector r23_x_r34, double &V, Vectors &dV_dr) const {
         auto i1 = i-2, i2 = i-1, i3 = i, i4 = i+1;
 

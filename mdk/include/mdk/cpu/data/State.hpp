@@ -4,7 +4,7 @@
 #include <mdk/cpu/data/Primitives.hpp>
 #include <mdk/tools/model/Model.hpp>
 #include <mdk/utils/Topology.hpp>
-#include <cpu/qa/Stats.hpp>
+#include <cpu/nonlocal/qa/Stats.hpp>
 
 namespace mdk {
     class State {
@@ -14,6 +14,7 @@ namespace mdk {
         Vectors r, v;
         Topology top;
         qa::Stats qaStats;
+        Eigen::VectorXi neighbours;
 
         State() = default;
         State(Model const& model);

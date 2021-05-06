@@ -8,11 +8,11 @@ namespace mdk {
         double H1 = 50.0 * eps/pow(angstrom, 2.0);
         double H2 = 0.0;
 
-        void eval(VRef unit, double diff, double& V,
+        void compute(VRef unit, double diff, double& V,
             Vector& dV_dr1, Vector& dV_dr2) const;
     };
 
-    inline void Harmonic::eval(VRef unit, double diff, double &V,
+    inline void Harmonic::compute(VRef unit, double diff, double &V,
             Vector &dV_dr1, Vector &dV_dr2) const {
         auto diff2 = diff*diff;
         V += diff2 * (H1 + H2 * diff2);

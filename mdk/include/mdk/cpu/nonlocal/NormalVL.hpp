@@ -1,6 +1,6 @@
 #pragma once
 #include <mdk/cpu/verlet/Factory.hpp>
-#include <mdk/cpu/qa/ContactType.hpp>
+#include <mdk/cpu/nonlocal/qa/ContactType.hpp>
 
 namespace mdk {
     class System;
@@ -17,8 +17,6 @@ namespace mdk {
 
     class NormalVL: public vl::List<NormalData> {
     public:
-        System const* owner;
-
         explicit NormalVL(System const& system);
         double finish() override;
     };

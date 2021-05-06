@@ -4,7 +4,9 @@
 #include <mdk/tools/param/Parameters.hpp>
 #include <mdk/cpu/data/State.hpp>
 #include <mdk/cpu/data/StateDiff.hpp>
-#include <cpu/qa/ContactType.hpp>
+#include <mdk/cpu/verlet/List.hpp>
+#include <cpu/nonlocal/NormalVL.hpp>
+#include "Stats.hpp"
 
 namespace mdk {
     using namespace param;

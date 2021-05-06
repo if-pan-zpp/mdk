@@ -4,6 +4,7 @@
 namespace mdk {
     class Integrator {
     public:
-        virtual void step(Vectors& r, Vectors& v, Vectors& dV_dr) = 0;
+        virtual void step(Vectors const& dV_dr, double& t, Vectors& r,
+            Vectors& v) = 0;
     };
 }

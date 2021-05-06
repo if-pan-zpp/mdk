@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <mdk/cpu/nonlocal/NormalVL.hpp>
-#include <cpu/qa/Stats.hpp>
+#include <cpu/nonlocal/qa/Stats.hpp>
 
 namespace mdk::qa {
     struct Diff {

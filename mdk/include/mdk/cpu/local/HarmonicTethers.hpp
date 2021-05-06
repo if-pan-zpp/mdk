@@ -13,11 +13,11 @@ namespace mdk {
         double H2 = 0.0;
 
         HarmonicTethers(Model const& model, bool fromNative);
-        void eval(int i, VRef unit, double norm, double& V, Vectors& dV_dr) const;
+        void perPair(int i, VRef unit, double norm, double& V, Vectors& dV_dr) const;
     };
 
-    inline void HarmonicTethers::eval(int i, VRef unit, double norm, double &V,
+    inline void HarmonicTethers::perPair(int i, VRef unit, double norm, double &V,
             Vectors &dV_dr) const {
-        baseV.eval(unit, norm - dist0[i], V, dV_dr[i], dV_dr[i+1]);
+        baseV.compute(unit, norm - dist0[i], V, dV_dr[i], dV_dr[i + 1]);
     }
 }

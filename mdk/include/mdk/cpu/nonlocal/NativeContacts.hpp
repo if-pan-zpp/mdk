@@ -17,23 +17,24 @@ namespace mdk {
         LennardJones ljV;
         Harmonic harmV;
         bool useLJForSS;
+
         std::vector<NativeContact> contacts;
 
-        NativeContacts(Model const& model);
+        explicit NativeContacts(Model const& model);
 
-        void eval(NativeContact& nc, VRef unit, double norm, double& V,
+        void perPair(NativeContact& nc, VRef unit, double norm, double& V,
             Vector& dV_dri, Vector& dV_drj);
     };
 
-    inline void NativeContacts::eval(NativeContact& nc, VRef unit,
+    inline void NativeContacts::perPair(NativeContact& nc, VRef unit,
             double norm, double &V, Vector &dV_dri, Vector &dV_drj) {
         auto diff = norm - nc.dist0;
 
         if (!nc.isDisulfide || useLJForSS) {
-            ljV.eval(unit, diff, V, dV_dri, dV_drj);
+            ljV.perPair(unit, diff, V, dV_dri, dV_drj);
         }
         else {
-            harmV.eval(unit, diff, V, dV_dri, dV_drj);
+            harmV.compute(unit, diff, V, dV_dri, dV_drj);
         }
     }
 }

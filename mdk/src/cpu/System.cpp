@@ -14,7 +14,7 @@ void System::localPass(StateDiff& sd) const {
         Vector u34 = r34 / norm34;
 
         if (harm) {
-            harm->eval(i3, u34, norm34, sd.V, sd.dV_dr);
+            harm->perPair(i3, u34, norm34, sd.V, sd.dV_dr);
         }
 
         if (i2 < 0 || !isConnected[i2])
@@ -24,16 +24,6 @@ void System::localPass(StateDiff& sd) const {
         double norm23 = r23.norm();
         Vector u23 = r23 / norm23, r23_x_r34 = r23.cross(r34),
             u23_x_u34 = r23_x_r34 / (norm23 * norm34);
-
-        if (quasiAd) {
-            quasiAd->n[i3] = r34-r23;
-            if (!quasiAd->n[i3].isZero())
-                quasiAd->n[i3].normalize();
-
-            quasiAd->h[i3] = -r23_x_r34;
-            if (!quasiAd->h[i3].isZero())
-                quasiAd->h[i3].normalize();
-        }
 
         double cos_theta = u23.dot(u34);
         cos_theta = max(min(cos_theta, 1.0), -1.0);
@@ -64,9 +54,21 @@ void System::localPass(StateDiff& sd) const {
             if (norm24_sq <= pauliExcl->cutoff2) {
                 double norm24 = sqrt(norm24_sq);
                 r24 /= norm24;
-                pauliExcl->eval(r24, norm24, sd.V,
+                pauliExcl->perPair(r24, norm24, sd.V,
                     sd.dV_dr[i2], sd.dV_dr[i3]);
             }
+        }
+
+        if (quasiAd) {
+            Vector unit_r23_x_r34;
+            if (!unit_r23_x_r34.isZero())
+                unit_r23_x_r34.normalize();
+
+            quasiAd->n[i3] = r34-r23;
+            if (!quasiAd->n[i3].isZero())
+                quasiAd->n[i3].normalize();
+
+            quasiAd->h[i3] = unit_r23_x_r34;
         }
 
         if (i1 < 0 || !isConnected[i1]) continue;
@@ -113,7 +115,7 @@ void System::localPass(StateDiff& sd) const {
 
         if (chir) {
             Vector r12_x_r34 = r12.cross(r34);
-            chir->eval(i, r12, r12_x_r23, r12_x_r34, r23_x_r34, sd.V, sd.dV_dr);
+            chir->perQuad(i, r12, r12_x_r23, r12_x_r34, r23_x_r34, sd.V, sd.dV_dr);
         }
     }
 }
@@ -138,8 +140,4 @@ System::System(const Model &model) {
             }
         }
     }
-}
-
-void System::step(double t) {
-
 }
