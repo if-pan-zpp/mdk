@@ -46,8 +46,8 @@ namespace mdk
     Unit Ampere = Coulomb / second;
     Unit cspeed = 299792458.0 * meter / second;
     Unit Henry = kilogram * meter * meter / (second * second * Ampere * Ampere);
-    Unit mu_0 = 1.25663706212e-6 * Henry / meter;
-    Unit varepsilon_0 = 1.0 / (mu_0 * cspeed * cspeed);
+    Unit vacuumMPerm = 1.25663706212e-6 * Henry / meter;
+    Unit vacuumEPerm = 1.0 / (vacuumMPerm * cspeed * cspeed);
 
     /* Degrees */
     Unit radian = 1.0;
