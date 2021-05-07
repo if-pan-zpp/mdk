@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <vector>
 
-namespace mdk::qa {
+namespace mdk {
     struct Stat {
         int8_t backbone = 0;
         int8_t sidechain = 0;
@@ -15,6 +15,4 @@ namespace mdk::qa {
         Stat& operator-=(Stat const& other);
         Stat operator-(Stat const& other) const;
     };
-
-    using Stats = std::vector<Stat>;
 }

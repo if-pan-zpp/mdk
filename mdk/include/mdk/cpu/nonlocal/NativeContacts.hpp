@@ -1,41 +1,41 @@
 #pragma once
 #include <mdk/tools/model/Model.hpp>
 #include <mdk/cpu/generic/LennardJones.hpp>
-#include <mdk/cpu/generic/Harmonic.hpp>
+#include <mdk/cpu/generic/DisulfideV.hpp>
+#include <mdk/cpu/verlet/List.hpp>
 #include <vector>
+#include <optional>
 
 namespace mdk {
-    struct NativeContact {
-        int i, j;
-        double dist0;
-        bool isDisulfide;
-    };
 
     class NativeContacts {
     public:
-        double effCutoff2;
-        LennardJones ljV;
-        Harmonic harmV;
-        bool useLJForSS;
+        double cutoff2 = 0.0 * angstrom;
+        DisulfideV disulfideV;
 
-        std::vector<NativeContact> contacts;
+        std::vector<std::tuple<int, int, NormalNC>> normals;
+        std::vector<std::tuple<int, int, DisulfideNC>> disulfides;
 
-        explicit NativeContacts(Model const& model);
+        explicit NativeContacts(Model const& model,
+            DisulfideV const& disulfideV);
 
-        void perPair(NativeContact& nc, VRef unit, double norm, double& V,
-            Vector& dV_dri, Vector& dV_drj);
+        void perNormal(vl::Base const& p, NormalNC& normal,
+            double& V, Vector& dV_dr1, Vector& dV_dr2) const;
+
+        void perDisulfide(vl::Base const& p, DisulfideNC& disulfide,
+            double& V, Vector& dV_dr1, Vector& dV_dr2) const;
     };
 
-    inline void NativeContacts::perPair(NativeContact& nc, VRef unit,
-            double norm, double &V, Vector &dV_dri, Vector &dV_drj) {
+    inline void NativeContacts::perNormal(vl::Base const& p, NormalNC& normal,
+        double& V, Vector& dV_dr1, Vector& dV_dr2) const {
 
-        if (!nc.isDisulfide || useLJForSS) {
-            ljV.r_min = nc.dist0;
-            ljV.asForce(unit, norm, V, dV_dri, dV_drj);
-        }
-        else {
-            auto diff = norm - nc.dist0;
-            harmV.asForce(unit, diff, V, dV_dri, dV_drj);
-        }
+        normal.ff.asForce(p.unit, p.norm, V, dV_dr1, dV_dr2);
+    }
+
+    inline void NativeContacts::perDisulfide(const vl::Base &p,
+        DisulfideNC &disulfide, double &V, Vector &dV_dr1,
+        Vector &dV_dr2) const {
+
+        disulfideV.asForce(p.unit, p.norm, V, dV_dr1, dV_dr2);
     }
 }

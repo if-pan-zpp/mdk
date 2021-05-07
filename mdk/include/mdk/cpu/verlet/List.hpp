@@ -1,25 +1,23 @@
 #pragma once
-#include <vector>
+#include <mdk/utils/Metavector.hpp>
 
 namespace mdk::vl {
-    template<typename Data>
-    struct Pair {
+    struct Base {
         int i1, i2;
         Vector unit;
         double norm;
-        Data data;
 
-        inline bool operator<(Pair<Data> const& other) const {
-            return std::make_pair(i1, i2) < std::make_pair(other.i1, other.i2);
+        inline bool operator<(Base const& other) const {
+            auto p1 = std::make_pair(i1, i2);
+            auto p2 = std::make_pair(other.i1, other.i2);
+            return p1 < p2;
         }
     };
 
-    template<typename Data>
-    class List {
+    template<typename... Xs>
+    class List: public Metavector<vl::Base, Xs...> {
     public:
-        std::vector<vl::Pair<Data>> pairs;
-        double cutoff2;
-
-        virtual double finish() = 0;
+        virtual double cutoff2() = 0;
+        virtual double refine() = 0;
     };
 }

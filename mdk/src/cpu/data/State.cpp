@@ -6,7 +6,7 @@ State::State(const Model &model) {
     t = 0.0;
     r = v = Vectors(n);
     top = model.top;
-    qaStats = qa::Stats(n);
+    stats = std::vector<Stat>(n);
     cysNeigh = Eigen::VectorXi(n);
     cysTaken = Eigen::Matrix<int8_t, Eigen::Dynamic, 1>(n);
 

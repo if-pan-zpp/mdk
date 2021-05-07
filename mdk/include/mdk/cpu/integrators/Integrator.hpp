@@ -1,10 +1,10 @@
 #pragma once
-#include <mdk/cpu/data/Primitives.hpp>
+#include <mdk/cpu/data/State.hpp>
+#include <mdk/cpu/data/Dynamics.hpp>
 
 namespace mdk {
     class Integrator {
     public:
-        virtual void step(Vectors const& dV_dr, double& t, Vectors& r,
-            Vectors& v) = 0;
+        virtual void step(State& state, Dynamics const& dyn) = 0;
     };
 }

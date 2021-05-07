@@ -1,5 +1,5 @@
-#include "cpu/nonlocal/qa/Stats.hpp"
-using namespace mdk::qa;
+#include "cpu/data/Stat.hpp"
+using namespace mdk;
 
 Stat& Stat::operator+=(const Stat &other) {
     backbone += other.backbone;

@@ -2,7 +2,7 @@
 #include <cpu/data/Primitives.hpp>
 #include <tools/model/Model.hpp>
 #include <tools/param/Parameters.hpp>
-#include <cpu/nonlocal/NormalVL.hpp>
+#include <cpu/verlet/List.hpp>
 
 namespace mdk {
     class DebyeHueckel {
@@ -16,11 +16,11 @@ namespace mdk {
 
         DebyeHueckel(Model const& model, param::Parameters const& params);
 
-        void asForce(vl::Pair<NormalData> const& p, double& V,
+        void asForce(vl::Base const& p, double& V,
             Vector& dV_dr1, Vector& dV_dr2) const;
     };
 
-    inline void DebyeHueckel::asForce(vl::Pair<NormalData> const& p, double& V,
+    inline void DebyeHueckel::asForce(vl::Base const& p, double& V,
             Vector& dV_dr1, Vector& dV_dr2) const {
         double C = charge[p.i1] * charge[p.i2];
         if (C != 0.0) {

@@ -1,11 +1,13 @@
 #pragma once
 #include <mdk/cpu/data/Primitives.hpp>
-#include <mdk/cpu/data/StateDiff.hpp>
 #include <mdk/tools/model/Model.hpp>
 #include <mdk/tools/param/Parameters.hpp>
 #include <mdk/cpu/generic/LennardJones.hpp>
 #include <cpu/generic/SinkLJ.hpp>
+#include <cpu/verlet/List.hpp>
+#include <cpu/data/State.hpp>
 #include <array>
+#include <cpu/data/Dynamics.hpp>
 
 namespace mdk {
     class Lambda {
@@ -19,7 +21,7 @@ namespace mdk {
 
     class PseudoImproperDihedral {
     private:
-        void deriveAngles(vl::Pair<NormalData> const& p, State const& state,
+        void deriveAngles(vl::Base const& p, State const& state,
             double psi[2], Vector dpsi_dr[2][6]) const;
 
         Eigen::Matrix<int8_t, Eigen::Dynamic, 1> types;
@@ -32,7 +34,7 @@ namespace mdk {
         PseudoImproperDihedral(Model const& model,
             param::Parameters const& params);
 
-        void perPair(vl::Pair<NormalData> const& p,
-            State const& state, StateDiff& sd) const;
+        void perPair(vl::Base const& p,
+            State const& state, Dynamics& dyn) const;
     };
 }

@@ -51,7 +51,7 @@ PseudoImproperDihedral::PseudoImproperDihedral(const Model &model,
     }
 }
 
-void PseudoImproperDihedral::deriveAngles(vl::Pair<NormalData> const& p,
+void PseudoImproperDihedral::deriveAngles(vl::Base const& p,
         State const& state, double psi[2], Vector dpsi_dr[2][6]) const {
     int idx[2] = { p.i1, p.i2 };
     for (int m = 0; m < 2; ++m) {
@@ -112,8 +112,8 @@ void perLambda(Lambda const& lambda, LJ const& lj, double psi[2],
     }
 }
 
-void PseudoImproperDihedral::perPair(const vl::Pair<NormalData> &p,
-        const State &state, StateDiff &sd) const {
+void PseudoImproperDihedral::perPair(vl::Base const&p,
+        const State &state, Dynamics& dyn) const {
     double psi[2];
     Vector dpsi_dr[2][6];
     deriveAngles(p, state, psi, dpsi_dr);
@@ -122,19 +122,19 @@ void PseudoImproperDihedral::perPair(const vl::Pair<NormalData> &p,
     int8_t type1 = types[p.i1], type2 = types[p.i2];
 
     perLambda(bb_pos, bb_pos_lj,
-        psi, p.norm, A, B, C, sd.V);
+        psi, p.norm, A, B, C, dyn.V);
 
     perLambda(bb_neg, bb_neg_lj,
-        psi, p.norm, A, B, C, sd.V);
+        psi, p.norm, A, B, C, dyn.V);
 
     perLambda(ss, ss_ljs[type1][type2],
-        psi, p.norm, A, B, C, sd.V);
+        psi, p.norm, A, B, C, dyn.V);
 
     int idx[6] = { p.i1-1, p.i1, p.i1 + 1, p.i2-1, p.i2, p.i2+1 };
     for (int i = 0; i < 6; ++i) {
-        sd.dV_dr[idx[i]] += A * dpsi_dr[0][i];
-        sd.dV_dr[idx[i]] += B * dpsi_dr[1][i];
+        dyn.dV_dr[idx[i]] += A * dpsi_dr[0][i];
+        dyn.dV_dr[idx[i]] += B * dpsi_dr[1][i];
     }
-    sd.dV_dr[p.i1] -= C * p.unit;
-    sd.dV_dr[p.i2] += C * p.unit;
+    dyn.dV_dr[p.i1] -= C * p.unit;
+    dyn.dV_dr[p.i2] += C * p.unit;
 }
