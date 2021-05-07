@@ -7,13 +7,14 @@
 #include <optional>
 #include "cpu/data/Stat.hpp"
 #include <mdk/cpu/generic/DisulfideV.hpp>
-#include <mdk/cpu/data/Dynamics.hpp>
+#include <cpu/integrators/Dynamics.hpp>
 #include "cpu/sys/VL.hpp"
+#include <cpu/data/Types.hpp>
 
 namespace mdk {
     class QuasiAdiabatic {
     private:
-        Eigen::Matrix<int8_t, Eigen::Dynamic, 1> types;
+        Types types;
         param::Parameters::SpecificityParams specs[AminoAcid::N];
 
         double bb_cutoff, bs_cutoff;
@@ -40,6 +41,8 @@ namespace mdk {
 
         void tryBreaking(vl::Base const& p, State const& state,
             qa::Contact& cont) const;
+
+        void destroy(sys::VLItem& item, State& state) const;
 
     public:
         Vectors n, h;

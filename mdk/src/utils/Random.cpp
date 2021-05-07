@@ -2,12 +2,26 @@
 using namespace mdk;
 using namespace std;
 
+double Random::normal() {
+    double r1 = uniform();
+    double r2 = uniform();
+    return sqrt(-2.0  * log(r1)) * cos(2.0 * M_PI * r2);
+}
+
 double Random::uniform(double a, double b) {
     return a + (b - a) * uniform();
 }
 
 double Random::normal(double mu, double sigma) {
     return mu + sigma * normal();
+}
+
+Eigen::Vector3d Random::sphere() {
+    Eigen::Vector3d res;
+    res.x() = normal();
+    res.y() = normal();
+    res.z() = normal();
+    return res.normalized();
 }
 
 double ModernRandom::uniform() {

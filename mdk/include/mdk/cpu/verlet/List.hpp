@@ -18,6 +18,6 @@ namespace mdk::vl {
     class List: public Metavector<vl::Base, Xs...> {
     public:
         virtual double cutoff2() = 0;
-        virtual double refine() = 0;
+        virtual void refine() = 0;
     };
 }

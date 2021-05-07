@@ -7,7 +7,7 @@
 #include <cpu/verlet/List.hpp>
 #include <cpu/data/State.hpp>
 #include <array>
-#include <cpu/data/Dynamics.hpp>
+#include <cpu/integrators/Dynamics.hpp>
 
 namespace mdk {
     class Lambda {
@@ -23,8 +23,6 @@ namespace mdk {
     private:
         void deriveAngles(vl::Base const& p, State const& state,
             double psi[2], Vector dpsi_dr[2][6]) const;
-
-        Eigen::Matrix<int8_t, Eigen::Dynamic, 1> types;
 
     public:
         Lambda bb_pos, bb_neg, ss;

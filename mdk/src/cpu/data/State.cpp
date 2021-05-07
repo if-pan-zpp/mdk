@@ -7,13 +7,9 @@ State::State(const Model &model) {
     r = v = Vectors(n);
     top = model.top;
     stats = std::vector<Stat>(n);
-    cysNeigh = Eigen::VectorXi(n);
-    cysTaken = Eigen::Matrix<int8_t, Eigen::Dynamic, 1>(n);
 
     for (int i = 0; i < model.n; ++i) {
         r[i] = model.residues[i].pos;
         v[i] = { 0.0, 0.0, 0.0 };
-        cysNeigh[i] = 0;
-        cysTaken[i] = 0;
     }
 }

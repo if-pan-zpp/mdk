@@ -4,6 +4,6 @@
 namespace mdk {
     struct Dynamics {
         double V;
-        Vectors dV_dr;
+        Vectors F;
     };
 }

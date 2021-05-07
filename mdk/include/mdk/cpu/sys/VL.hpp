@@ -1,38 +1,29 @@
 #pragma once
 #include <cstdint>
-#include <cpu/generic/LennardJones.hpp>
-#include <cpu/verlet/List.hpp>
 #include <cpu/verlet/Factory.hpp>
+#include <cpu/nonlocal/QAContacts.hpp>
+#include <cpu/nonlocal/NativeContacts.hpp>
 
 namespace mdk {
     struct NoContact {};
 
-    namespace qa {
-        enum class Status: int8_t {
-            FORMING, BREAKING
-        };
+    class System;
 
-        enum class Type: int8_t {
-            BB, BS, SB, SS
-        };
+    class SysVL: public vl::List<NoContact, qa::Contact,
+        NativeNormal, NativeDisulfide> {
+    private:
+        System const* owner;
 
-        struct Contact {
-            Status status;
-            Type type;
-            double time0, r_min;
-        };
-    }
+    public:
+        SysVL() = default;
+        SysVL(System const& sys);
 
-    struct NormalNC {
-        LennardJones ff;
+        double cutoff2() override;
+        void refine() override;
     };
 
-    struct DisulfideNC {};
+    using SysVLItem = typename SysVL::Item;
 
-    namespace sys {
-        using VL = vl::List<NoContact, qa::Contact, NormalNC, DisulfideNC>;
-        using VLFactory = vl::Factory<NoContact, NoContact, qa::Contact,
-            NormalNC, DisulfideNC>;
-        using VLItem = typename VL::Item;
-    }
+    using SysVLFactory = vl::Factory<NoContact, qa::Contact, NativeNormal,
+    NativeDisulfide>;
 }

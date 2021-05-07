@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <random>
+#include <Eigen/Core>
 
 namespace mdk {
     class Random {
@@ -8,12 +9,10 @@ namespace mdk {
         virtual double uniform() = 0;
         double uniform(double a, double b);
 
-        virtual double normal() {
-            double r1 = uniform();
-            double r2 = uniform();
-            return sqrt(-2.0  * log(r1)) * cos(2.0 * M_PI * r2);
-        }
+        virtual double normal();
         double normal(double mu, double sigma);
+
+        virtual Eigen::Vector3d sphere();
     };
 
     class ModernRandom: public Random {

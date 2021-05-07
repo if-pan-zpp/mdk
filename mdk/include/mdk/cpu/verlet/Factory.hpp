@@ -6,9 +6,11 @@
 #include <memory>
 
 namespace mdk::vl {
-    template<typename X0, typename... Xs>
+    template<typename... Xs>
     class Factory {
     private:
+        using X0 = typename std::tuple_element<0, std::tuple<Xs...>>::type;
+
         vl::List<Xs...> cur, prev;
         using IType = typename vl::List<Xs...>::Item;
         Pairs pairs;

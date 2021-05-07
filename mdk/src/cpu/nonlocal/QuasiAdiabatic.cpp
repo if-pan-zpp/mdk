@@ -5,10 +5,7 @@ using namespace mdk::param;
 
 QuasiAdiabatic::QuasiAdiabatic(Model const& model,
         const Parameters &params) {
-    types = Eigen::Matrix<int8_t, Eigen::Dynamic, 1>(model.n, -1);
-    for (int i = 0; i < model.n; ++i) {
-        types[i] = (int8_t)model.residues[i].type;
-    }
+    types = Types(model);
 
     for (auto const& acid: AminoAcid::aminoAcids()) {
         auto const& spec = params.specificity.at(acid);
@@ -67,7 +64,8 @@ bool QuasiAdiabatic::distancePhase(const vl::Base &p, const State &state,
         cont.r_min = bb_cutoff;
     }
     else {
-        cont.r_min = ss_cutoff[types[p.i1]][types[p.i2]];
+        auto type1 = (int8_t)types[p.i1], type2 = (int8_t)types[p.i2];
+        cont.r_min = ss_cutoff[type1][type2];
     }
 
     double min_dist = (1.0 + formationTolerance) * cont.r_min;
@@ -156,7 +154,7 @@ void QuasiAdiabatic::tryBreaking(const vl::Base &p, State const& state,
     }
 }
 
-void QuasiAdiabatic::tryForming(typename StandardVL::Item &item,
+void QuasiAdiabatic::tryForming(typename sys::VLItem &item,
     State &state) const {
 
     qa::Contact cont;
@@ -175,7 +173,18 @@ void QuasiAdiabatic::tryForming(typename StandardVL::Item &item,
     state.stats[p.i2] = stats[1];
 }
 
-void QuasiAdiabatic::perPair(typename StandardVL::Item &item,
+void QuasiAdiabatic::destroy(sys::VLItem &item, State &state) const {
+    Stat diffs[2];
+    vl::Base const& p = item.base();
+    qa::Contact& cont = item.template data<qa::Contact>();
+    forwardStatDiff(p, cont, diffs);
+
+    state.stats[p.i1] -= diffs[0];
+    state.stats[p.i2] -= diffs[1];
+    item.template morph<NoContact>();
+}
+
+void QuasiAdiabatic::perPair(typename sys::VLItem &item,
     State &state, Dynamics &dyn) const {
 
     thread_local LennardJones ljV;
@@ -198,7 +207,7 @@ void QuasiAdiabatic::perPair(typename StandardVL::Item &item,
                 dyn.V, dyn.dV_dr[p.i1], dyn.dV_dr[p.i2]);
         }
         else {
-            item.template morph<NoContact>();
+            destroy(item, state);
             return;
         }
     }
