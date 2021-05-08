@@ -9,21 +9,21 @@ namespace mdk {
 
     class System;
 
-    class SysVL: public vl::List<NoContact, qa::Contact,
+    class SystemVL: public vl::List<NoContact, qa::Contact,
         NativeNormal, NativeDisulfide> {
     private:
-        System const* owner;
+        System const* owner = nullptr;
 
     public:
-        SysVL() = default;
-        SysVL(System const& sys);
+        SystemVL() = default;
+        SystemVL(System const& sys);
 
         double cutoff2() override;
         void refine() override;
     };
 
-    using SysVLItem = typename SysVL::Item;
+    using SystemVLItem = typename SystemVL::Item;
 
-    using SysVLFactory = vl::Factory<NoContact, qa::Contact, NativeNormal,
-    NativeDisulfide>;
+    using SystemVLFactory = vl::List<NoContact, qa::Contact, NativeNormal,
+        NativeDisulfide>;
 }

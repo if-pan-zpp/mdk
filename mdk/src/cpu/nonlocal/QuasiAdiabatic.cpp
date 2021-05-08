@@ -151,11 +151,11 @@ void QuasiAdiabatic::tryBreaking(const vl::Base &p, State const& state,
 
     if (p.norm > breakingTolerance * pow(2.0, -1.0/6.0) * cont.r_min) {
         cont.status = qa::Status::BREAKING;
+        cont.time0 = state.t;
     }
 }
 
-void QuasiAdiabatic::tryForming(typename sys::VLItem &item,
-    State &state) const {
+void QuasiAdiabatic::tryForming(SystemVLItem &item, State &state) const {
 
     qa::Contact cont;
     vl::Base const& p = item.base();
@@ -173,7 +173,7 @@ void QuasiAdiabatic::tryForming(typename sys::VLItem &item,
     state.stats[p.i2] = stats[1];
 }
 
-void QuasiAdiabatic::destroy(sys::VLItem &item, State &state) const {
+void QuasiAdiabatic::destroy(SystemVLItem &item, State &state) const {
     Stat diffs[2];
     vl::Base const& p = item.base();
     qa::Contact& cont = item.template data<qa::Contact>();
@@ -184,8 +184,8 @@ void QuasiAdiabatic::destroy(sys::VLItem &item, State &state) const {
     item.template morph<NoContact>();
 }
 
-void QuasiAdiabatic::perPair(typename sys::VLItem &item,
-    State &state, Dynamics &dyn) const {
+void QuasiAdiabatic::perPair(SystemVLItem &item, State &state,
+    Dynamics &dyn) const {
 
     thread_local LennardJones ljV;
     vl::Base const& p = item.base();

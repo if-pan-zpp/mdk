@@ -34,8 +34,11 @@ namespace mdk::vl {
                         ++iprev;
 
                     auto icur = cur.template add<X0>(ix);
-                    if (*iprev == ix) (..., tryMove<Xs>(icur, iprev));
+                    if (*iprev == ix)
+                        (..., tryMove<Xs>(icur, iprev));
                 }
+
+                cur.refine();
             }
         }
     };

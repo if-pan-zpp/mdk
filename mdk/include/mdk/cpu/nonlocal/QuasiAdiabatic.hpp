@@ -7,7 +7,7 @@
 #include <optional>
 #include "cpu/data/Stat.hpp"
 #include <mdk/cpu/generic/DisulfideV.hpp>
-#include <cpu/integrators/Dynamics.hpp>
+#include <cpu/dynamics/Dynamics.hpp>
 #include "cpu/sys/VL.hpp"
 #include <cpu/data/Types.hpp>
 
@@ -42,15 +42,14 @@ namespace mdk {
         void tryBreaking(vl::Base const& p, State const& state,
             qa::Contact& cont) const;
 
-        void destroy(sys::VLItem& item, State& state) const;
+        void destroy(SystemVLItem& item, State& state) const;
 
     public:
         Vectors n, h;
 
         QuasiAdiabatic(Model const& model, param::Parameters const& params);
 
-        void tryForming(sys::VLItem& item, State& state) const;
-
-        void perPair(sys::VLItem& item, State& state, Dynamics& dyn) const;
+        void tryForming(SystemVLItem& item, State& state) const;
+        void perPair(SystemVLItem& item, State& state, Dynamics& dyn) const;
     };
 }
