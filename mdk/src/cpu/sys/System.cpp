@@ -22,16 +22,19 @@ void System::localPass() {
 
         Vector r2 = state.r[i2], r23 = r3 - r2;
         double norm23 = r23.norm();
-        Vector u23 = r23 / norm23, r23_x_r34 = r23.cross(r34),
-            u23_x_u34 = r23_x_r34 / (norm23 * norm34);
+        Vector u23 = r23 / norm23, r23_x_r34 = r23.cross(r34);
 
-        double cos_theta = u23.dot(u34);
+        Vector u_r23_x_r34 = r23_x_r34;
+        if (!u_r23_x_r34.isZero())
+            u_r23_x_r34.normalize();
+
+        double cos_theta = -u23.dot(u34);
         cos_theta = max(min(cos_theta, 1.0), -1.0);
         if (cos_theta != 0.0) {
             Vector dth_dr2, dth_dr3, dth_dr4;
 
-            dth_dr2 = -u34.cross(u23_x_u34) / norm23;
-            dth_dr4 = -u23.cross(u23_x_u34) / norm34;
+            dth_dr2 = u34.cross(u_r23_x_r34) / norm23;
+            dth_dr4 = u23.cross(u_r23_x_r34) / norm34;
             dth_dr3 = -dth_dr2-dth_dr4;
 
             double theta = acos(cos_theta), dV_dth = 0.0;
@@ -59,15 +62,11 @@ void System::localPass() {
         }
 
         if (quasiAd) {
-            Vector unit_r23_x_r34;
-            if (!unit_r23_x_r34.isZero())
-                unit_r23_x_r34.normalize();
-
             quasiAd->n[i3] = r34-r23;
             if (!quasiAd->n[i3].isZero())
                 quasiAd->n[i3].normalize();
 
-            quasiAd->h[i3] = unit_r23_x_r34;
+            quasiAd->h[i3] = u_r23_x_r34;
         }
 
         if (i1 < 0 || !seqs.isConnected[i1]) continue;
@@ -75,23 +74,20 @@ void System::localPass() {
         Vector r1 = state.r[i1];
         Vector r12 = r2 - r1;
         Vector r12_x_r23 = r12.cross(r23);
-        double norm_r12_x_r23 = r12_x_r23.norm();
 
         if (!r12_x_r23.isZero() && !r23_x_r34.isZero()) {
+            double norm_r12_x_r23 = r12_x_r23.norm();
             Vector u_r12_x_r23 = r12_x_r23 / norm_r12_x_r23;
 
-            double norm_r23_x_r34 = r23_x_r34.norm();
-            Vector u_r23_x_r34 = r23_x_r34 / norm_r23_x_r34;
-
+            // TODO: figure out why the fuck this
             Vector dp_dr1 = -u_r12_x_r23 * norm23;
             Vector dp_dr4 = u_r23_x_r34 * norm23;
             Vector df = (-dp_dr1*r12.dot(r23)+dp_dr4*r23.dot(r34))/(norm23*norm23);
             Vector dp_dr2 = -dp_dr1 + df;
             Vector dp_dr3 = -dp_dr4 - df;
 
-            double cos_phi = u_r12_x_r23.dot(u_r23_x_r34);
-            double sgn = -r12.dot(r23_x_r34);
-            auto phi = sgn < 0.0 ? -acos(cos_phi) : acos(cos_phi);
+            double phi = acos(u_r12_x_r23.dot(u_r23_x_r34));
+            if (r12_x_r23.dot(r34) < 0) phi = -phi;
 
             double dV_dp = 0.0;
             if (seqs.isNative[i1] && seqs.isNative[i4]) {
@@ -164,7 +160,6 @@ void System::verletPass() {
 System::System(const Model &model):
     factory(*this), state(model), dyn(model.n) {
 
-    state = State(model);
     seqs = Sequences(model);
 }
 

@@ -10,6 +10,7 @@ Parser::Parser() {
         { ((Record)Atom()).index(), make_shared<AtomParser>() },
         { ((Record)SSBond()).index(), make_shared<SSBondParser>() },
         { ((Record)Cryst1()).index(), make_shared<Cryst1Parser>() },
+        { ((Record)Link()).index(), make_shared<LinkParser>() },
         { ((Record)Ter()).index(), make_shared<TerParser>() },
         { ((Record)End()).index(), make_shared<EndParser>() },
     };

@@ -5,7 +5,7 @@ namespace mdk {
     using VRef = Eigen::Vector3d const&;
 
     inline double angle(VRef v1, VRef v2, VRef v3) {
-        auto u1 = v2 - v1, u2 = v3 - v2;
+        auto u1 = v2 - v1, u2 = v2 - v3;
         return acos(u1.dot(u2) / (u1.norm() * u2.norm()));
     }
 

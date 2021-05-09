@@ -19,15 +19,19 @@ void Pairs::prepCells() {
     for (auto const& pt: state0->r) {
         bbox.extend(state0->top(pt));
     }
-    Vector space = bbox.sizes();
 
     auto effCutoff = cutoff + 2.0 * pad;
-    grid = floor(space / effCutoff);
+    grid = floor(bbox.sizes() / effCutoff);
     ++grid.x(), ++grid.y(), ++grid.z();
 
-    first.resize(grid.x() * grid.y() * grid.z(), -1);
-    last.resize(grid.x() * grid.y() * grid.z(), -1);
-    next.resize(state0->n, -1);
+    first.resize(grid.x() * grid.y() * grid.z());
+    std::fill(first.begin(), first.end(), -1);
+
+    last.resize(grid.x() * grid.y() * grid.z());
+    std::fill(last.begin(), last.end(), -1);
+
+    next.resize(state0->n);
+    std::fill(next.begin(), next.end(), -1);
 
     for (int i = 0; i < state0->n; ++i) {
         auto r = state0->top(state0->r[i]);

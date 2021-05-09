@@ -34,12 +34,12 @@ int main() {
     sys.natCont = NativeContacts(model, DisulfideV());
     sys.constDH = ConstDH(Charges(model, params));
 
-    sys.hooks.emplace_back(make_shared<ExportPDB>(model));
+    sys.hooks.emplace_back(make_shared<ExportPDB>(model,
+       10*nanosecond, "model.pdb"));
 
     auto simul = 15000.0*tau;
     sys.hooks.emplace_back(make_shared<ProgressBar>(simul));
 
-    sys.equilibrationPhase = false;
     sys.step(simul);
 
     return 0;

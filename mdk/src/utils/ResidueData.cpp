@@ -163,6 +163,9 @@ ResidueData mdk::createResData() {
     LEU.atomInfo["CD1"].radius = 1.88;
     LEU.atomInfo["CD2"].radius = 1.88;
 
+    auto& GLY = types[(AminoAcid)"GLY"];
+    GLY.mass = 57.021463735;
+
     for (auto& [acid, acidInfo]: types) {
         acidInfo.mass *= au;
         for (auto& [atomType, atomInfo]: acidInfo.atomInfo) {

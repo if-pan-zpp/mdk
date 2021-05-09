@@ -23,7 +23,7 @@ namespace mdk {
         Dynamics dyn;
 
         bool initialized = false;
-        bool equilibrationPhase = true;
+        bool equilibrationPhase = false;
         void localPass();
         void verletPass();
 

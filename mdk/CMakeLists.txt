@@ -25,7 +25,7 @@ target_compile_options(${TARGET}
     PUBLIC
         -Wall -Wextra
         $<$<CONFIG:Debug>:-pg>
-        $<$<CONFIG:Release>:-Ofast -march=native>
+        $<$<CONFIG:Release>:-Ofast -march=native -fno-omit-frame-pointer>
     )
 
 target_compile_features(${TARGET}
