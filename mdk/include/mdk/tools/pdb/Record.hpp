@@ -52,6 +52,21 @@ namespace mdk::pdb::records {
         char insertionCode = ' ';
     };
 
+    class Link {
+    public:
+        struct PerResidueData {
+            std::string atomName;
+            char altLocation;
+            std::string residueName;
+            char chainId = 'A';
+            int residueSeqNum;
+            char insertionCode = ' ';
+            std::string symmetryOp;
+        };
+        PerResidueData res[2];
+        double linkLength;
+    };
+
     class Model {
     public:
         int serialNum = 0;
@@ -62,5 +77,5 @@ namespace mdk::pdb::records {
     };
 
     using Record = std::variant<std::monostate,
-        Atom, SSBond, Cryst1, End, Model, Ter>;
+        Atom, SSBond, Cryst1, End, Link, Model, Ter>;
 }

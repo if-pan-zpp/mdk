@@ -23,14 +23,17 @@ void Lambda::eval(double psi, double &L, double &dL_dpsi) const {
 
 PseudoImproperDihedral::PseudoImproperDihedral(const Model &model,
         const param::Parameters &params) {
+    types = Types(model);
+    seqs = Sequences(model);
+
     bb_neg_lj.r_min = 6.2 * angstrom;
     bb_neg_lj.depth = 1.0 * eps;
     bb_pos_lj.r_min = 5.6 * angstrom;
     bb_pos_lj.depth = 1.0 * eps;
 
-    bb_pos.alpha = 6.4; bb_pos.psi0 = 1.05 * radian;
-    bb_neg.alpha = 6.0; bb_neg.psi0 = -1.44 * radian;
-    ss.alpha = 1.2; ss.psi0 = -0.23 * radian;
+    bb_pos.alpha = 6.4; bb_pos.psi0 = 1.05 * rad;
+    bb_neg.alpha = 6.0; bb_neg.psi0 = -1.44 * rad;
+    ss.alpha = 1.2; ss.psi0 = -0.23 * rad;
 
     for (auto const& type1: AminoAcid::aminoAcids()) {
         auto code1 = (int8_t)type1;
@@ -46,9 +49,22 @@ PseudoImproperDihedral::PseudoImproperDihedral(const Model &model,
         }
     }
 
-    for (int i = 0; i < model.n; ++i) {
-        types[i] = (int8_t)model.residues[i].type;
+    types = Types(model);
+}
+
+double PseudoImproperDihedral::cutoff() const {
+    double maxCutoff = 0.0;
+    maxCutoff = std::max(maxCutoff, bb_pos_lj.cutoff());
+    maxCutoff = std::max(maxCutoff, bb_neg_lj.cutoff());
+
+    for (int8_t acid1 = 0; acid1 < AminoAcid::N; ++acid1) {
+        for (int8_t acid2 = 0; acid2 < AminoAcid::N; ++acid2) {
+            maxCutoff = std::max(maxCutoff, ss_ljs[acid1][acid2].cutoff());
+        }
     }
+
+    _cutoff = maxCutoff;
+    return maxCutoff;
 }
 
 void PseudoImproperDihedral::deriveAngles(vl::Base const& p,
@@ -97,7 +113,7 @@ void PseudoImproperDihedral::deriveAngles(vl::Base const& p,
 
 template<typename LJ>
 void perLambda(Lambda const& lambda, LJ const& lj, double psi[2],
-        double norm, double& A, double& B, double& C, double& V) {
+        double norm, double& A, double& B, double& C) {
     if (lambda.supp(psi[0]) && lambda.supp(psi[1])) {
         double L[2], dL_dpsi[2];
         for (int m = 0; m < 2; ++m)
@@ -114,27 +130,33 @@ void perLambda(Lambda const& lambda, LJ const& lj, double psi[2],
 
 void PseudoImproperDihedral::perPair(vl::Base const&p,
         const State &state, Dynamics& dyn) const {
+    if (seqs.isTerminal[p.i1] || seqs.isTerminal[p.i2])
+        return;
+
+    if (!include4 && seqs.sepByN(p.i1, p.i2, 4))
+        return;
+
     double psi[2];
     Vector dpsi_dr[2][6];
     deriveAngles(p, state, psi, dpsi_dr);
 
     double A = 0.0, B = 0.0, C = 0.0;
-    int8_t type1 = types[p.i1], type2 = types[p.i2];
+    auto type1 = (int8_t)types[p.i1], type2 = (int8_t)types[p.i2];
 
     perLambda(bb_pos, bb_pos_lj,
-        psi, p.norm, A, B, C, dyn.V);
+        psi, p.norm, A, B, C);
 
     perLambda(bb_neg, bb_neg_lj,
-        psi, p.norm, A, B, C, dyn.V);
+        psi, p.norm, A, B, C);
 
     perLambda(ss, ss_ljs[type1][type2],
-        psi, p.norm, A, B, C, dyn.V);
+        psi, p.norm, A, B, C);
 
     int idx[6] = { p.i1-1, p.i1, p.i1 + 1, p.i2-1, p.i2, p.i2+1 };
     for (int i = 0; i < 6; ++i) {
-        dyn.dV_dr[idx[i]] += A * dpsi_dr[0][i];
-        dyn.dV_dr[idx[i]] += B * dpsi_dr[1][i];
+        dyn.F[idx[i]] -= A * dpsi_dr[0][i];
+        dyn.F[idx[i]] -= B * dpsi_dr[1][i];
     }
-    dyn.dV_dr[p.i1] -= C * p.unit;
-    dyn.dV_dr[p.i2] += C * p.unit;
+    dyn.F[p.i1] += C * p.unit;
+    dyn.F[p.i2] -= C * p.unit;
 }

@@ -89,6 +89,30 @@ Cryst1Parser::Cryst1Parser() {
     };
 }
 
+LinkParser::LinkParser() {
+    record = Link();
+    auto& link = get<Link>(record);
+
+    fields = {
+        make_shared<Literal>(1, 6, "LINK  "),
+        make_shared<String>(13, 16, link.res[0].atomName),
+        make_shared<Char>(17, link.res[0].altLocation),
+        make_shared<String>(18, 20, link.res[0].residueName),
+        make_shared<Char>(22, link.res[0].chainId),
+        make_shared<Integer>(23, 26, link.res[0].residueSeqNum),
+        make_shared<Char>(27, link.res[0].insertionCode),
+        make_shared<SymOp>(60, 65, link.res[0].symmetryOp),
+        make_shared<String>(43, 46, link.res[1].atomName),
+        make_shared<Char>(47, link.res[1].altLocation),
+        make_shared<String>(48, 50, link.res[1].residueName),
+        make_shared<Char>(52, link.res[1].chainId),
+        make_shared<Integer>(53, 56, link.res[1].residueSeqNum),
+        make_shared<Char>(57, link.res[1].insertionCode),
+        make_shared<SymOp>(67, 72, link.res[1].symmetryOp),
+        make_shared<Real>(74, 78, 5, 2, link.linkLength, angstrom),
+    };
+}
+
 EndParser::EndParser() {
     record = End();
     fields = {

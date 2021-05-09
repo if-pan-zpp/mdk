@@ -18,6 +18,8 @@ namespace mdk
     Unit nanosecond = 1.0;
     Unit picosecond = nanosecond / 1.0e3;
     Unit femtosecond = nanosecond / 1.0e6;
+    Unit microsecond = nanosecond * 1.0e3;
+    Unit millisecond = nanosecond * 1.0e6;
     Unit second = nanosecond * 1.0e9;
 
     /* Quantity */
@@ -27,18 +29,18 @@ namespace mdk
 
     /* Energy */
     Unit eps = 1.0; /* \approx 1.5kcal/mol */
-    Unit kcal = eps * mol / 1.5;
+    Unit kcal = eps * mol / 1.57824959;
     Unit Joule = kcal / 4184.0;
     Unit eV = 1.602176634e-19 * Joule;
 
     /* Temperature */
-    Unit epsDivkB = 1.0;
+    Unit eps_kB = 1.0;
     Unit kB = eps;
     Unit Kelvin = 1.380649e-23 * Joule / kB;
 
     /* Mass */
-    Unit dalton = 1.0;
-    Unit kilogram = dalton * mol / 0.99999999965e-3;
+    Unit au = 1.0;
+    Unit kilogram = au * mol / 0.99999999965e-3;
 
     /* EM stuff */
     Unit echarge = 1.0;
@@ -46,12 +48,12 @@ namespace mdk
     Unit Ampere = Coulomb / second;
     Unit cspeed = 299792458.0 * meter / second;
     Unit Henry = kilogram * meter * meter / (second * second * Ampere * Ampere);
-    Unit vacuumMPerm = 1.25663706212e-6 * Henry / meter;
-    Unit vacuumEPerm = 1.0 / (vacuumMPerm * cspeed * cspeed);
+    Unit mu_0 = 1.25663706212e-6 * Henry / meter;
+    Unit epsilon_0 = 1.0 / (mu_0 * cspeed * cspeed);
 
     /* Degrees */
-    Unit radian = 1.0;
-    Unit degree = (2.0 * M_PI / 360.0) * radian;
+    Unit rad = 1.0;
+    Unit degree = (2.0 * M_PI / 360.0) * rad;
 
 #undef Unit
 }

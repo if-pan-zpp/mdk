@@ -2,11 +2,11 @@
 using namespace mdk;
 using namespace std;
 
-void System::localPass(StateDiff& sd) const {
-    for (int i = 0; i < state.n; ++i) {
+void System::localPass() {
+    for (int i = 0; i+1 < state.n; ++i) {
         int i1 = i-2, i2 = i-1, i3 = i, i4 = i+1;
 
-        if (i3 < 0 || !isConnected[i3])
+        if (i3 < 0 || !seqs.isConnected[i3])
             continue;
 
         Vector r3 = state.r[i3], r4 = state.r[i4], r34 = r4 - r3;
@@ -14,10 +14,10 @@ void System::localPass(StateDiff& sd) const {
         Vector u34 = r34 / norm34;
 
         if (harm) {
-            harm->perPair(i3, u34, norm34, sd.V, sd.dV_dr);
+            harm->perPair(i3, u34, norm34, dyn.V, dyn.F[i3], dyn.F[i4]);
         }
 
-        if (i2 < 0 || !isConnected[i2])
+        if (i2 < 0 || !seqs.isConnected[i2])
             continue;
 
         Vector r2 = state.r[i2], r23 = r3 - r2;
@@ -35,16 +35,16 @@ void System::localPass(StateDiff& sd) const {
             dth_dr3 = -dth_dr2-dth_dr4;
 
             double theta = acos(cos_theta), dV_dth = 0.0;
-            if (isNative[i2] && isNative[i4]) {
-                nativeBA->angleTerm(i, theta, sd.V, dV_dth);
+            if (seqs.isNative[i2] && seqs.isNative[i4] && nativeBA) {
+                nativeBA->angleTerm(i, theta, dyn.V, dV_dth);
             }
             else if (heurBA) {
-                heurBA->angleTerm(i, theta, sd.V, dV_dth);
+                heurBA->angleTerm(i, theta, dyn.V, dV_dth);
             }
 
-            sd.dV_dr[i2] += dV_dth * dth_dr2;
-            sd.dV_dr[i3] += dV_dth * dth_dr3;
-            sd.dV_dr[i4] += dV_dth * dth_dr4;
+            dyn.F[i2] -= dV_dth * dth_dr2;
+            dyn.F[i3] -= dV_dth * dth_dr3;
+            dyn.F[i4] -= dV_dth * dth_dr4;
         }
 
         if (pauliExcl) {
@@ -54,8 +54,7 @@ void System::localPass(StateDiff& sd) const {
             if (norm24_sq <= pauliExcl->cutoff2) {
                 double norm24 = sqrt(norm24_sq);
                 r24 /= norm24;
-                pauliExcl->asForce(r24, norm24, sd.V,
-                    sd.dV_dr[i2], sd.dV_dr[i3]);
+                pauliExcl->asForce(r24, norm24, dyn.V, dyn.F[i2], dyn.F[i4]);
             }
         }
 
@@ -64,14 +63,14 @@ void System::localPass(StateDiff& sd) const {
             if (!unit_r23_x_r34.isZero())
                 unit_r23_x_r34.normalize();
 
-            sd.n[i3] = r34-r23;
-            if (!sd.n[i3].isZero())
-                sd.n[i3].normalize();
+            quasiAd->n[i3] = r34-r23;
+            if (!quasiAd->n[i3].isZero())
+                quasiAd->n[i3].normalize();
 
-            sd.h[i3] = unit_r23_x_r34;
+            quasiAd->h[i3] = unit_r23_x_r34;
         }
 
-        if (i1 < 0 || !isConnected[i1]) continue;
+        if (i1 < 0 || !seqs.isConnected[i1]) continue;
 
         Vector r1 = state.r[i1];
         Vector r12 = r2 - r1;
@@ -95,49 +94,142 @@ void System::localPass(StateDiff& sd) const {
             auto phi = sgn < 0.0 ? -acos(cos_phi) : acos(cos_phi);
 
             double dV_dp = 0.0;
-            if (isNative[i1] && isNative[i4]) {
+            if (seqs.isNative[i1] && seqs.isNative[i4]) {
                 if (compNativeDih) {
-                    compNativeDih->dihTerm(i, phi, sd.V, dV_dp);
+                    compNativeDih->dihTerm(i, phi, dyn.V, dV_dp);
                 }
                 else if (simpNativeDih) {
-                    simpNativeDih->dihTerm(i, phi, sd.V, dV_dp);
+                    simpNativeDih->dihTerm(i, phi, dyn.V, dV_dp);
                 }
             }
             else if (heurDih) {
-                heurDih->dihTerm(i, phi, sd.V, dV_dp);
+                heurDih->dihTerm(i, phi, dyn.V, dV_dp);
             }
 
-            sd.dV_dr[i1] += dV_dp * dp_dr1;
-            sd.dV_dr[i2] += dV_dp * dp_dr2;
-            sd.dV_dr[i3] += dV_dp * dp_dr3;
-            sd.dV_dr[i4] += dV_dp * dp_dr4;
+            dyn.F[i1] -= dV_dp * dp_dr1;
+            dyn.F[i2] -= dV_dp * dp_dr2;
+            dyn.F[i3] -= dV_dp * dp_dr3;
+            dyn.F[i4] -= dV_dp * dp_dr4;
         }
 
         if (chir) {
             Vector r12_x_r34 = r12.cross(r34);
-            chir->perQuad(i, r12, r12_x_r23, r12_x_r34, r23_x_r34, sd.V, sd.dV_dr);
+            chir->perQuad(i, r12, r12_x_r23, r12_x_r34, r23_x_r34, dyn);
         }
     }
 }
 
-System::System(const Model &model) {
-    isNative = Eigen::Matrix<int8_t, Eigen::Dynamic, 1>(model.n, 0);
-    isConnected = Eigen::Matrix<int8_t, Eigen::Dynamic, 1>(model.n, 0);
-    state = State(model);
+void System::verletPass() {
+    factory.update(state);
+    for (auto& item: factory.cur) {
+        auto r12 = state.top(state.r[item->i2] - state.r[item->i1]);
+        auto norm12_sq = r12.squaredNorm();
 
-    for (auto const& ch: model.chains) {
-        for (int i = ch.start; i < ch.end-1; ++i) {
-            isConnected[i] = 1;
-        }
+        if (norm12_sq <= cutoff2) {
+            auto norm12 = sqrt(norm12_sq);
+            item->unit = r12 / norm12;
+            item->norm = norm12;
 
-        for (auto const& curSpIdx: ch.structuredParts) {
-            auto const& sp = model.structuredParts[curSpIdx];
+            auto const& base = item.base();
+            if (item.holds<NoContact>()) {
+                if (quasiAd && norm12 <= quasiAd->_cutoff)
+                    quasiAd->tryForming(item, state);
 
-            auto istart = ch.start + sp.off;
-            auto iend = istart + sp.len;
-            for (int i = istart; i < iend; ++i) {
-                isNative[i] = 1;
+                if (pid && norm12 <= pid->_cutoff)
+                    pid->perPair(base, state, dyn);
             }
+            else if (item.holds<qa::Contact>()) {
+                quasiAd->perPair(item, state, dyn);
+            }
+            else if (item.holds<NativeNormal>() && norm12 <= natCont->_cutoff) {
+                auto& nn = item.data<NativeNormal>();
+                natCont->perNormal(base, nn, dyn);
+            }
+            else if (item.holds<NativeDisulfide>()) {
+                natCont->perDisulfide(base, dyn);
+            }
+
+            if (constDH && norm12 <= constDH->_cutoff)
+                constDH->perPair(base, dyn);
+
+            if (relativeDH && norm12 <= relativeDH->_cutoff)
+                relativeDH->perPair(base, dyn);
+
+            if (pauliExcl && norm12 <= pauliExcl->_cutoff)
+                pauliExcl->perPair(base, dyn);
         }
     }
+}
+
+System::System(const Model &model):
+    factory(*this), state(model), dyn(model.n) {
+
+    state = State(model);
+    seqs = Sequences(model);
+}
+
+bool System::coherencyCheck() const {
+    if (!(pc.has_value() ^ leapfrog.has_value()))
+        return false;
+
+    if (simpNativeDih.has_value() && compNativeDih.has_value())
+        return false;
+
+    if (constDH.has_value() && relativeDH.has_value())
+        return false;
+
+    if (pid.has_value() && quasiAd.has_value())
+        return false;
+
+    if (!pauliExcl)
+        return false;
+
+    return true;
+}
+
+void System::init() {
+    if (!coherencyCheck()) throw;
+
+    factory.update(state);
+    cutoff2 = pow(factory.cur.cutoff(), 2.0);
+    dyn = Dynamics(state.n);
+
+    if (langDyn) langDyn->initVel(state);
+    if (pc) pc->init(state);
+
+    initialized = true;
+}
+
+void System::step(int n) {
+    if (!initialized)
+        init();
+
+    for (int i = 0; i < n && !interrupt; ++i) {
+        dyn.reset();
+        if (pc) pc->predict(state);
+
+        if (!equilibrationPhase) {
+            localPass();
+            verletPass();
+        }
+        if (langDyn) langDyn->eval(state, dyn);
+
+        if (pc) pc->correct(state, dyn);
+        if (leapfrog) leapfrog->step(state, dyn);
+
+        for (auto& hook: hooks) {
+            hook->execute(*this);
+        }
+    }
+}
+
+void System::step(double t) {
+    if (!initialized)
+        init();
+
+    double dt = 0.0;
+    if (pc) dt = pc->dt;
+    else dt = leapfrog->dt;
+
+    step((int)std::floor(t / dt));
 }

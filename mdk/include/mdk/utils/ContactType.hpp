@@ -15,8 +15,8 @@ namespace mdk {
         constexpr explicit ContactType(ContCode code): code {code} {};
         explicit operator ContCode const&() const;
 
-        constexpr explicit ContactType(int8_t x): ContactType((ContCode)x) {};
-        explicit operator int8_t() const;
+        constexpr ContactType(int8_t x): ContactType((ContCode)x) {};
+        operator int8_t() const;
 
         explicit ContactType(std::string const& name);
         explicit operator std::string() const;

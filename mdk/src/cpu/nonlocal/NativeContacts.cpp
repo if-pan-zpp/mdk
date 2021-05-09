@@ -7,19 +7,24 @@ NativeContacts::NativeContacts(const Model &model,
     for (auto const& cont: model.contacts) {
         auto isDisulfide = (ContCode)cont.type == ContCode::SSBOND;
 
-        double r_min;
+        auto ix = std::make_pair(cont.res[0], cont.res[1]);
         if (isDisulfide) {
-            disulfides.emplace_back(cont.idx[0], cont.idx[1], NativeDisulfide {});
-            r_min = disulfideV.dist0;
+            disulfides.emplace_back(ix, NativeDisulfide {});
         }
         else {
-            NativeNormal normal;
-            normal.ff.depth = 1.0 * eps;
-            normal.ff.r_min = cont.dist0;
-            normals.emplace_back(cont.idx[0], cont.idx[1], normal);
-            r_min = cont.dist0;
+            NativeNormal normal { .r_min = cont.dist0 };
+            normals.emplace_back(ix, normal);
         }
-
-        cutoff2 = std::max(cutoff2, r_min * r_min);
     }
+}
+
+double NativeContacts::cutoff() const {
+    double maxCutoff = 0.0;
+    for (auto const& [ix, nn]: normals) {
+        maxCutoff = std::max(maxCutoff, nn.r_min);
+    }
+    maxCutoff = std::max(maxCutoff, disulfideV.cutoff());
+
+    _cutoff = maxCutoff;
+    return maxCutoff;
 }

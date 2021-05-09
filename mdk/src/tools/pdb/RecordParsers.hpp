@@ -37,6 +37,11 @@ namespace mdk::pdb {
         Cryst1Parser();
     };
 
+    class LinkParser: public RecordParser {
+    public:
+        LinkParser();
+    };
+
     class EndParser: public RecordParser {
     public:
         EndParser();

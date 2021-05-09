@@ -52,6 +52,19 @@ AtomicModel Data::asModel() const {
                 ssbond.atom[i] = res.find("SG");
             }
         }
+        else if (holds_alternative<Link>(record)) {
+            auto& data = get<Link>(record);
+
+            auto& link = model.addContact();
+            link.type = "NATIVE";
+            link.dist0 = data.linkLength;
+
+            for (int i = 0; i < 2; ++i) {
+                auto& info = data.res[i];
+                auto &res = model.residues[info.residueSeqNum];
+                link.atom[i] = res.find(info.atomName);
+            }
+        }
         else if (holds_alternative<Cryst1>(record)) {
             auto& data = get<Cryst1>(record);
             model.top.setCell(data.size);
@@ -101,15 +114,28 @@ Data::Data(const AtomicModel &model) {
     }
 
     for (auto const& cont: model.contacts) {
-        if (cont.type != "SSBOND") continue;
+        if (cont.type == "SSBOND") {
+            auto& record = records.emplace_back(SSBond());
+            auto& data = get<SSBond>(record);
+            data.dist0 = cont.dist0;
+            data.serialNum = cont.idx;
+            for (int i = 0; i < 2; ++i) {
+                data.res[i].chainId = cont.atom[i]->res->chain->serial;
+                data.res[i].residueSeqNum = cont.atom[i]->res->serial;
+            }
+        }
+        else {
+            auto& record = records.emplace_back(Link());
+            auto& data = get<Link>(record);
 
-        auto& record = records.emplace_back(SSBond());
-        auto& data = get<SSBond>(record);
-        data.dist0 = cont.dist0;
-        data.serialNum = cont.idx;
-        for (int i = 0; i < 2; ++i) {
-            data.res[i].chainId = cont.atom[i]->res->chain->serial;
-            data.res[i].residueSeqNum = cont.atom[i]->res->serial;
+            data.linkLength = cont.dist0;
+            for (int i = 0; i < 2; ++i) {
+                auto& info = data.res[i];
+                info.atomName = cont.atom[i]->type;
+                info.residueName = cont.atom[i]->res->type[i];
+                info.residueSeqNum = cont.atom[i]->res->serial;
+                info.chainId = cont.atom[i]->res->chain->serial;
+            }
         }
     }
 

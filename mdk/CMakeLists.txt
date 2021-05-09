@@ -23,7 +23,6 @@ target_include_directories(${TARGET}
 
 target_compile_options(${TARGET}
     PUBLIC
-        -fopenmp
         -Wall -Wextra
         $<$<CONFIG:Debug>:-pg>
         $<$<CONFIG:Release>:-Ofast -march=native>
@@ -32,6 +31,10 @@ target_compile_options(${TARGET}
 target_compile_features(${TARGET}
     PRIVATE
         cxx_std_17)
+
+target_compile_definitions(${TARGET}
+    PUBLIC
+    $<$<CONFIG:Debug>:EIGEN_NO_DEBUG>)
 
 #add_subdirectory(vendor)
 

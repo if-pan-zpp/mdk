@@ -3,20 +3,9 @@
 #include <mdk/cpu/data/State.hpp>
 
 namespace mdk {
-    class Masses {
+    class Masses: public Scalars {
     public:
-        Scalars mass;
-
         Masses() = default;
         explicit Masses(Model const& model);
-        Masses(Model const& model, double mass0);
-
-        double& operator[](int idx) {
-            return mass[idx];
-        }
-
-        double const& operator[](int idx) const {
-            return mass[idx];
-        }
     };
 }

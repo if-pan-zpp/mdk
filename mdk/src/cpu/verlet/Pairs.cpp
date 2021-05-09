@@ -7,7 +7,11 @@ int Pairs::index(const Eigen::Vector3i &loc) const {
 }
 
 static Eigen::Vector3i floor(const Vector &v) {
-    return { std::floor(v.x()), std::floor(v.y()), std::floor(v.z()) };
+    return {
+        (int)std::floor(v.x()),
+        (int)std::floor(v.y()),
+        (int)std::floor(v.z())
+    };
 }
 
 void Pairs::prepCells() {
@@ -15,9 +19,11 @@ void Pairs::prepCells() {
     for (auto const& pt: state0->r) {
         bbox.extend(state0->top(pt));
     }
+    Vector space = bbox.sizes();
 
     auto effCutoff = cutoff + 2.0 * pad;
-    grid = floor(bbox.sizes() / effCutoff);
+    grid = floor(space / effCutoff);
+    ++grid.x(), ++grid.y(), ++grid.z();
 
     first.resize(grid.x() * grid.y() * grid.z(), -1);
     last.resize(grid.x() * grid.y() * grid.z(), -1);
@@ -88,7 +94,10 @@ void Pairs::genPairList() {
     std::sort(pairs.begin(), pairs.end());
 }
 
-bool Pairs::needToReset() const {
+bool Pairs::needToReset(State const& state) const {
+    if (&state != state0) return true;
+    if (t0 == state.t) return false;
+
     double maxMoveSq = 0.0;
     for (int i = 0; i < state0->n; ++i) {
         double moveSq = (state0->r[i] - r0[i]).squaredNorm();
@@ -101,12 +110,12 @@ bool Pairs::needToReset() const {
 }
 
 bool Pairs::update(State const& state) {
-    auto reset = needToReset();
+    auto reset = needToReset(state);
 
-    if (needToReset()) {
+    if (needToReset(state)) {
         this->state0 = &state;
-        prepCells();
         genPairList();
+        t0 = state.t;
         r0 = state.r;
         top0 = state.top;
     }

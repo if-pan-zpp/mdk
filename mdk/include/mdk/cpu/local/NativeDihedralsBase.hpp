@@ -7,6 +7,6 @@ namespace mdk {
         Scalars phi0;
 
     public:
-        NativeDihedralsBase(Model const& model);
+        explicit NativeDihedralsBase(Model const& model);
     };
 }

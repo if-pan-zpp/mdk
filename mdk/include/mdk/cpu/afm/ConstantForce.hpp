@@ -1,15 +1,20 @@
 #pragma once
-#include <cpu/data/State.hpp>
-#include <cpu/dynamics/Dynamics.hpp>
+#include <mdk/cpu/data/State.hpp>
+#include <mdk/cpu/dynamics/Dynamics.hpp>
 #include <vector>
 
 namespace mdk {
     class ConstantForce {
-    private:
-        std::vector<std::tuple<int, Vector>> afms;
-
     public:
-        void add(int idx, VRef force);
-        void eval(State const& state, Dynamics& dyn) const;
+        ConstantForce(int idx, Vector force):
+            idx(idx), force(std::move(force)) {};
+
+        inline void eval(Dynamics& dyn) const {
+            dyn.F[idx] += force;
+        }
+
+    private:
+        int idx;
+        Vector force;
     };
 }

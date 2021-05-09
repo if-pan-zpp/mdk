@@ -4,7 +4,7 @@
 #include <mdk/cpu/data/Primitives.hpp>
 #include <mdk/tools/model/Model.hpp>
 #include <mdk/utils/Topology.hpp>
-#include "Stat.hpp"
+#include <mdk/cpu/data/Stat.hpp>
 
 namespace mdk {
     class State {
@@ -16,7 +16,7 @@ namespace mdk {
         Topology top;
         std::vector<Stat> stats;
 
-        State() = default;
-        State(Model const& model);
+        explicit State(Model const& model);
+        void saveTo(Model& model);
     };
 }

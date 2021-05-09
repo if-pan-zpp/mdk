@@ -1,23 +1,20 @@
 #pragma once
-#include <cpu/generic/Harmonic.hpp>
+#include <mdk/cpu/generic/Harmonic.hpp>
 #include <mdk/cpu/data/State.hpp>
+#include <mdk/cpu/dynamics/Dynamics.hpp>
 
 namespace mdk {
     class HarmonicTethers {
     private:
         Scalars dist0;
-        Harmonic base;
+        Harmonic harm;
 
     public:
-        double H1 = 50.0 * eps/pow(angstrom, 2);
-        double H2 = 0.0;
-
         HarmonicTethers(Model const& model, bool fromNative);
-        void perPair(int i, VRef unit, double norm, double& V, Vectors& dV_dr) const;
-    };
 
-    inline void HarmonicTethers::perPair(int i, VRef unit, double norm, double &V,
-            Vectors &dV_dr) const {
-        base.asForce(unit, norm - dist0[i], V, dV_dr[i], dV_dr[i + 1]);
-    }
+        inline void perPair(int i, VRef unit, double norm, double& V,
+            Vector& F1, Vector& F2) const {
+            harm.asForce(unit, norm - dist0[i], V, F1, F2);
+        }
+    };
 }

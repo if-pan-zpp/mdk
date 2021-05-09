@@ -16,8 +16,8 @@ namespace mdk {
         constexpr explicit ResType(RTCode code): code {code} {};
         explicit operator RTCode const&() const;
 
-        constexpr explicit ResType(int8_t x): ResType((RTCode)x) {};
-        explicit operator int8_t() const;
+        constexpr ResType(int8_t x): ResType((RTCode)x) {};
+        operator int8_t() const;
 
         explicit ResType(std::string const& name);
         explicit operator std::string() const;

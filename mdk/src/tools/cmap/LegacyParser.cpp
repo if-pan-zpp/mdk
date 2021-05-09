@@ -28,8 +28,8 @@ ContactMap LegacyParser::read(std::istream &is) {
 
     for (int i = 0; i < numOfResidues; ++i) {
         is >> cmap.angle[i] >> cmap.dihedral[i];
-        cmap.angle[i] *= radian;
-        cmap.dihedral[i] *= radian;
+        cmap.angle[i] *= rad;
+        cmap.dihedral[i] *= rad;
     }
 
     return cmap;
@@ -47,8 +47,8 @@ std::ostream &LegacyParser::write(ostream &os, ContactMap const& cmap) {
     }
 
     for (int i = 0; i < cmap.len; ++i) {
-        os << cmap.angle[i] / radian << "\t";
-        os << cmap.dihedral[i] / radian << endl;
+        os << cmap.angle[i] / rad << "\t";
+        os << cmap.dihedral[i] / rad << endl;
     }
 
     return os;

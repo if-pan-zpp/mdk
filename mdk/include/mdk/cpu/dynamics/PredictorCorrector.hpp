@@ -1,6 +1,6 @@
 #pragma once
 #include <mdk/cpu/data/State.hpp>
-#include <cpu/dynamics/Dynamics.hpp>
+#include <mdk/cpu/dynamics/Dynamics.hpp>
 #include <mdk/cpu/data/Masses.hpp>
 
 namespace mdk {
@@ -11,8 +11,7 @@ namespace mdk {
 
     public:
         double dt;
-        PredictorCorrector() = default;
-        explicit PredictorCorrector(Masses const& m, double dt = 0.002*nanosecond);
+        explicit PredictorCorrector(Masses m, double dt = 0.005*nanosecond);
 
         void init(State& state);
         void predict(State& state);

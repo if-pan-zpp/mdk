@@ -1,45 +1,62 @@
 #pragma once
 #include <optional>
 #include <memory>
-#include "Kernels.hpp"
-#include <mdk/cpu/sys/VL.hpp>
+#include <mdk/cpu/sys/SystemVL.hpp>
+#include <mdk/cpu/sys/Imports.hpp>
 #include <mdk/cpu/dynamics/Dynamics.hpp>
 #include <mdk/cpu/dynamics/LangevinDynamics.hpp>
 #include <mdk/cpu/dynamics/PredictorCorrector.hpp>
 #include <mdk/cpu/dynamics/Leapfrog.hpp>
+#include <mdk/cpu/data/Sequences.hpp>
 
 namespace mdk {
     class System {
-    private:
-        Eigen::Matrix<int8_t, Eigen::Dynamic, 1> isNative, isConnected;
+    public:
+        friend class SystemVL;
 
+        Sequences seqs;
+        SystemVLFactory factory;
+        double cutoff2 = 0.0;
+
+        bool interrupt = false;
         State state;
+        Dynamics dyn;
 
+        bool initialized = false;
+        bool equilibrationPhase = true;
         void localPass();
         void verletPass();
 
-    public:
-        template<typename T>
-        using opt = std::optional<T>;
-
-        opt<HarmonicTethers> harm;
-        opt<Chirality> chir;
-        opt<NativeBondAngles> nativeBA;
-        opt<HeuresticBondAngles> heurBA;
-        opt<SimpleNativeDihedrals> simpNativeDih;
-        opt<ComplexNativeDihedrals> compNativeDih;
-        opt<HeuresticDihedrals> heurDih;
-
-        opt<ShiftedTruncatedLJ> pauliExcl;
-        opt<NativeContacts> nativeCont;
-        opt<PseudoImproperDihedral> pid;
-        opt<QuasiAdiabatic> quasiAd;
+        bool coherencyCheck() const;
 
     public:
-        System() = default;
+        std::optional<HarmonicTethers> harm;
+        std::optional<Chirality> chir;
+        std::optional<NativeBondAngles> nativeBA;
+        std::optional<HeuresticBondAngles> heurBA;
+        std::optional<SimpleNativeDihedrals> simpNativeDih;
+        std::optional<ComplexNativeDihedrals> compNativeDih;
+        std::optional<HeuresticDihedrals> heurDih;
+        std::vector<SolidWall> walls;
+
+        std::optional<PauliExclusion> pauliExcl;
+        std::optional<NativeContacts> natCont;
+        std::optional<PseudoImproperDihedral> pid;
+        std::optional<QuasiAdiabatic> quasiAd;
+        std::optional<ConstDH> constDH;
+        std::optional<RelativeDH> relativeDH;
+
+        std::optional<LangevinDynamics> langDyn;
+        std::optional<PredictorCorrector> pc;
+        std::optional<Leapfrog> leapfrog;
+
+        std::vector<std::shared_ptr<Hook>> hooks;
+
+    public:
         explicit System(Model const& model);
 
         void init();
+        void step(int n = 1);
         void step(double t);
     };
 }

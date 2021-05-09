@@ -1,18 +1,23 @@
 #pragma once
 #include <mdk/cpu/data/Masses.hpp>
-#include <cpu/dynamics/Dynamics.hpp>
+#include <mdk/cpu/dynamics/Dynamics.hpp>
+#include <memory>
 
 namespace mdk {
     class LangevinDynamics {
     private:
         Masses m;
+        std::shared_ptr<Random> random;
         double gamma;
-        double T;
 
     public:
-        explicit LangevinDynamics(Masses const& m, double gamma);
+        double T;
 
-        void init(Random &random, State& state);
-        void eval(Random& random, State const& state, Dynamics& dyn);
+        explicit LangevinDynamics(Masses m, std::shared_ptr<Random> random,
+            double gamma, double T): m(std::move(m)), random(std::move(random)),
+            gamma(gamma), T(T) {};
+
+        void initVel(State& state);
+        void eval(State const& state, Dynamics& dyn);
     };
 }

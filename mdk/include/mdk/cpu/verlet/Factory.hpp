@@ -1,18 +1,18 @@
 #pragma once
 #include <mdk/cpu/data/State.hpp>
-#include <mdk/cpu/verlet/List.hpp>
+#include <mdk/cpu/verlet/VL.hpp>
 #include <mdk/cpu/verlet/Pairs.hpp>
 #include <unordered_map>
 #include <memory>
 
 namespace mdk::vl {
-    template<typename... Xs>
+    template<typename VL, typename... Xs>
     class Factory {
     private:
         using X0 = typename std::tuple_element<0, std::tuple<Xs...>>::type;
 
-        vl::List<Xs...> cur, prev;
-        using IType = typename vl::List<Xs...>::Item;
+        VL prev;
+        using IType = typename VL::Item;
         Pairs pairs;
 
         template<typename X>
@@ -23,22 +23,32 @@ namespace mdk::vl {
         }
 
     public:
+        VL cur;
+
+        template<typename... Args>
+        explicit Factory(Args&&... args): prev{args...}, cur{args...} {};
+
         void update(State const& state) {
-            if (pairs.update(state)) {
+            if (pairs.needToReset(state)) {
+                pairs.cutoff = cur.cutoff();
+                pairs.update(state);
+
                 std::swap(cur, prev);
                 cur.clear();
 
                 auto iprev = prev.begin();
-                for (auto const& ix: pairs.pairs) {
-                    while (iprev != prev.end() && *iprev < ix)
+                for (auto const&[i1, i2]: pairs.pairs) {
+                    vl::Base base;
+                    base.i1 = i1;
+                    base.i2 = i2;
+
+                    while (iprev != prev.end() && iprev.base() < base)
                         ++iprev;
 
-                    auto icur = cur.template add<X0>(ix);
-                    if (*iprev == ix)
+                    auto icur = cur.template add<X0>(base);
+                    if (iprev != prev.end() && iprev.base() == base)
                         (..., tryMove<Xs>(icur, iprev));
                 }
-
-                cur.refine();
             }
         }
     };

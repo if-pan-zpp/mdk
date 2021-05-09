@@ -19,8 +19,8 @@ namespace mdk {
         constexpr explicit AminoAcid(AAType type): type{type} {};
         explicit operator AAType const&() const;
 
-        constexpr explicit AminoAcid(int8_t x): AminoAcid((AAType)x) {};
-        explicit operator int8_t() const;
+        constexpr AminoAcid(int8_t x): AminoAcid((AAType)x) {};
+        operator int8_t() const;
 
         static bool isProper(char code);
         explicit AminoAcid(char code);

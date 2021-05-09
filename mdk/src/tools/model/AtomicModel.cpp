@@ -87,13 +87,13 @@ void AtomicModel::addContactsFromAtomOverlap() {
     }
 
     static const auto types = createResData();
-    for (int idx1 = 0; idx1 < contactAtoms.size(); ++idx1) {
+    for (int idx1 = 0; idx1 < (int)contactAtoms.size(); ++idx1) {
         auto *atom1 = contactAtoms[idx1];
         auto const& info1 = types.at((AminoAcid)atom1->res->type)
             .atomInfo.at(atom1->type);
         string type1 = info1.inBackbone ? "B" : "S";
 
-        for (int idx2 = idx1; idx2 < contactAtoms.size(); ++idx2) {
+        for (int idx2 = idx1; idx2 < (int)contactAtoms.size(); ++idx2) {
             auto *atom2 = contactAtoms[idx2];
             auto const& info2 = types.at((AminoAcid)atom2->res->type)
                 .atomInfo.at(atom2->type);
@@ -127,10 +127,10 @@ void AtomicModel::addContactsFromOnlyCA(double overlap) {
         if (caAtom) contactAtoms.emplace_back(caAtom);
     }
 
-    for (int idx1 = 0; idx1 < contactAtoms.size(); ++idx1) {
+    for (int idx1 = 0; idx1 < (int)contactAtoms.size(); ++idx1) {
         auto *atom1 = contactAtoms[idx1];
 
-        for (int idx2 = idx1; idx1 < contactAtoms.size(); ++idx2) {
+        for (int idx2 = idx1; idx1 < (int)contactAtoms.size(); ++idx2) {
             auto *atom2 = contactAtoms[idx2];
 
             if (atom1 >= atom2) continue;
@@ -157,11 +157,11 @@ void AtomicModel::addContactsFromResOverlap(const param::Parameters &params) {
         if (caAtom) contactAtoms.emplace_back(caAtom);
     }
 
-    for (int idx1 = 0; idx1 < contactAtoms.size(); ++idx1) {
+    for (int idx1 = 0; idx1 < (int)contactAtoms.size(); ++idx1) {
         auto *atom1 = contactAtoms[idx1];
         auto rad1 = params.radius.at((AminoAcid)atom1->type);
 
-        for (int idx2 = idx1; idx1 < contactAtoms.size(); ++idx2) {
+        for (int idx2 = idx1; idx1 < (int)contactAtoms.size(); ++idx2) {
             auto *atom2 = contactAtoms[idx2];
             auto rad2 = params.radius.at((AminoAcid)atom2->type);
 

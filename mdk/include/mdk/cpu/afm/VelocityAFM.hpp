@@ -1,16 +1,29 @@
 #pragma once
-#include <cpu/data/State.hpp>
-#include <cpu/generic/Harmonic.hpp>
-#include <cpu/dynamics/Dynamics.hpp>
+#include <mdk/cpu/data/State.hpp>
+#include <mdk/cpu/generic/Harmonic.hpp>
+#include <mdk/cpu/dynamics/Dynamics.hpp>
 
 namespace mdk {
     class VelocityAFM {
-    private:
-        Harmonic harm;
-        std::vector<std::tuple<int, Vector, Vector>> afms;
-
     public:
-        void add(int idx, Vector r0, Vector v);
-        void eval(State const& state, Dynamics& dyn);
+        Harmonic harm = Harmonic();
+
+        VelocityAFM(int idx, Vector afmInitPos, Vector afmVel):
+            idx(idx), afmInitPos(std::move(afmInitPos)),
+            afmVel(std::move(afmVel)) {};
+
+        inline void eval(State const& state, Dynamics& dyn) const {
+            auto afmPos = afmInitPos + afmVel * state.t;
+            auto diff = state.r[idx] - afmPos;
+            auto diffNorm = diff.norm();
+
+            Vector afmForce;
+            harm.asForce(diff / diffNorm, diffNorm, dyn.V,
+                dyn.F[idx], afmForce);
+        }
+
+    private:
+        int idx;
+        Vector afmInitPos, afmVel;
     };
 }

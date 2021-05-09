@@ -164,7 +164,7 @@ ResidueData mdk::createResData() {
     LEU.atomInfo["CD2"].radius = 1.88;
 
     for (auto& [acid, acidInfo]: types) {
-        acidInfo.mass *= dalton;
+        acidInfo.mass *= au;
         for (auto& [atomType, atomInfo]: acidInfo.atomInfo) {
             acidInfo.heavyAtoms.insert(atomType);
             atomInfo.radius *= angstrom;

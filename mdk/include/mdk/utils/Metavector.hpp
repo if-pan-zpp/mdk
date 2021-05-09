@@ -30,6 +30,10 @@ namespace mdk {
         int8_t type;
         int dataIdx;
 
+        Boxed() = default;
+        Boxed(Base x, int8_t type, int dataIdx):
+            x(std::move(x)), type(type), dataIdx(dataIdx) {};
+
         bool operator<(Boxed const& other) {
             return x < other.x;
         }
@@ -38,7 +42,7 @@ namespace mdk {
     template<typename Base, typename... Xs>
     class Metavector {
     public:
-        std::vector<Boxed<Base>> base;
+        std::vector<Boxed<Base>> basis;
         std::tuple<Extras<Xs>...> extras;
 
         class Item {
@@ -46,7 +50,7 @@ namespace mdk {
             friend class Metavector;
             Metavector* owner;
 
-            using TrueIter = typename decltype(base)::iterator;
+            using TrueIter = typename decltype(basis)::iterator;
             TrueIter iter;
 
             explicit Item(Metavector& owner, TrueIter const& iter):
@@ -77,7 +81,7 @@ namespace mdk {
             }
 
             Base* operator->() {
-                return iter->base;
+                return &iter->x;
             }
 
         public:
@@ -87,7 +91,7 @@ namespace mdk {
             }
 
             Base& base() {
-                return iter->base;
+                return iter->x;
             }
 
             template<typename X>
@@ -102,35 +106,37 @@ namespace mdk {
                 auto& dataY = std::get<indY>(owner->extras);
 
                 iter->type = indY;
-                auto iterY = dataY.emplace_back(std::forward<Args>(args)...);
-                iter->dataIdx = iterY - dataY->begin();
+                auto iterY = dataY.emplace(dataY.end(), std::forward<Args>(args)...);
+                iter->dataIdx = iterY - dataY.begin();
                 return *iterY;
             }
         };
 
         Item begin() {
-            return Item(*this, base.begin());
+            return Item(*this, basis.begin());
         }
 
         Item end() {
-            return Item(*this, base.end());
+            return Item(*this, basis.end());
         }
 
         template<typename X>
         Item add(Base const& b = Base(), X const& x = X()) {
             constexpr int8_t indX = Index<X, Xs...>::value;
             auto& dataX = std::get<indX>(extras);
-            auto xIter = dataX.emplace(x);
-            auto baseIter = base.emplace(base.end(), b, indX, xIter - dataX->begin());
+            auto xIter = dataX.emplace(dataX.end(), x);
+
+            auto baseIter = basis.emplace(basis.end(),
+                std::move(b), indX, xIter - dataX.begin());
             return Item(*this, baseIter);
         }
 
         Item operator[](int idx) {
-            return Item(*this, base.begin() + idx);
+            return Item(*this, basis.begin() + idx);
         }
 
         void clear() {
-            base.clear();
+            basis.clear();
             (..., std::get<Index<Xs, Xs...>::value>(extras).clear());
         }
     };

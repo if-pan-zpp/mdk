@@ -1,19 +1,15 @@
 #include "cpu/dynamics/PredictorCorrector.hpp"
 using namespace mdk;
 
-PredictorCorrector::PredictorCorrector(Masses const& m, double dt) {
-    this->m = m;
+PredictorCorrector::PredictorCorrector(Masses m, double dt):
+    m(std::move(m)){
+
     this->dt = dt;
+    auto n = this->m.size();
+    y0 = y1 = y2 = y3 = y4 = y5 = Vectors(n, Vector::Zero());
 }
 
 void PredictorCorrector::init(State &state) {
-    y0 = Vectors(state.n, Vector::Zero());
-    y1 = Vectors(state.n, Vector::Zero());
-    y2 = Vectors(state.n, Vector::Zero());
-    y3 = Vectors(state.n, Vector::Zero());
-    y4 = Vectors(state.n, Vector::Zero());
-    y5 = Vectors(state.n, Vector::Zero());
-
     for (int i = 0; i < state.n; ++i) {
         y0[i] = state.r[i];
         y1[i] = state.v[i] * dt;

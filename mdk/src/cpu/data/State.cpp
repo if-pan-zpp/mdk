@@ -13,3 +13,10 @@ State::State(const Model &model) {
         v[i] = { 0.0, 0.0, 0.0 };
     }
 }
+
+void State::saveTo(Model &model) {
+    for (int i = 0; i < n; ++i) {
+        model.residues[i].pos = r[i];
+    }
+    model.top = top;
+}

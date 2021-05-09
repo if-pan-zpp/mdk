@@ -10,6 +10,10 @@ namespace mdk {
         double dist0 = 6.0 * angstrom;
         std::variant<Harmonic, LennardJones, ShiftedTruncatedLJ> ff;
 
+        inline double cutoff() const {
+            return 0.0;
+        }
+
         template<typename T>
         T& setVersion() {
             if constexpr (std::is_same_v<T, Harmonic>) {
@@ -22,7 +26,7 @@ namespace mdk {
                 auto& lj = std::get<LennardJones>(ff);
                 lj.r_min = dist0;
                 lj.depth = 1.0 * eps;
-                return lj
+                return lj;
             }
             else if constexpr (std::is_same_v<T, ShiftedTruncatedLJ>) {
                 ff = ShiftedTruncatedLJ();
@@ -33,33 +37,30 @@ namespace mdk {
             }
         }
 
-        void kernel(double norm, double& V, double& dV_dn) const;
-        void asForce(VRef unit, double norm, double& V,
-            Vector& dV_dn1, Vector& dV_dn2) const;
+        inline void kernel(double norm, double& V, double& dV_dn) const {
+            if (std::holds_alternative<Harmonic>(ff)) {
+                std::get<Harmonic>(ff).kernel(norm - dist0, V, dV_dn);
+            }
+            else if (std::holds_alternative<LennardJones>(ff)) {
+                std::get<LennardJones>(ff).kernel(norm, V, dV_dn);
+            }
+            else {
+                std::get<ShiftedTruncatedLJ>(ff).kernel(norm, V, dV_dn);
+            }
+        }
+
+        inline void asForce(VRef unit, double norm, double& V,
+            Vector& F1, Vector& F2) const {
+
+            if (std::holds_alternative<Harmonic>(ff)) {
+                std::get<Harmonic>(ff).asForce(unit, norm - dist0, V, F1, F2);
+            }
+            else if (std::holds_alternative<LennardJones>(ff)) {
+                std::get<LennardJones>(ff).asForce(unit, norm, V, F1, F2);
+            }
+            else {
+                std::get<ShiftedTruncatedLJ>(ff).asForce(unit, norm, V, F1, F2);
+            }
+        }
     };
-
-    void DisulfideV::kernel(double norm, double &V, double &dV_dn) const {
-        if (std::holds_alternative<Harmonic>(ff)) {
-            std::get<Harmonic>(ff).kernel(norm - dist0, V, dV_dn);
-        }
-        else if (std::holds_alternative<LennardJones>(ff)) {
-            std::get<LennardJones>(ff).kernel(norm, V, dV_dn);
-        }
-        else {
-            std::get<ShiftedTruncatedLJ>(ff).kernel(norm, V, dV_dn);
-        }
-    }
-
-    void DisulfideV::asForce(VRef unit, double norm, double &V, Vector &dV_dn1,
-            Vector &dV_dn2) const {
-        if (std::holds_alternative<Harmonic>(ff)) {
-            std::get<Harmonic>(ff).asForce(unit, norm - dist0, V, dV_dn1, dV_dn2);
-        }
-        else if (std::holds_alternative<LennardJones>(ff)) {
-            std::get<LennardJones>(ff).asForce(unit, norm, V, dV_dn1, dV_dn2);
-        }
-        else {
-            std::get<ShiftedTruncatedLJ>(ff).asForce(unit, norm, V, dV_dn1, dV_dn2);
-        }
-    }
 }
