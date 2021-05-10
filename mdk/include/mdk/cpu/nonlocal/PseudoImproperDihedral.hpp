@@ -5,7 +5,7 @@
 #include <mdk/cpu/generic/LennardJones.hpp>
 #include <mdk/cpu/generic/SinkLJ.hpp>
 #include <mdk/cpu/verlet/VL.hpp>
-#include <mdk/cpu/data/State.hpp>
+#include <mdk/cpu/simul/State.hpp>
 #include <array>
 #include <mdk/cpu/dynamics/Dynamics.hpp>
 #include <mdk/cpu/data/Types.hpp>

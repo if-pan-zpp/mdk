@@ -1,6 +1,6 @@
 #pragma once
 #include <mdk/tools/param/Parameters.hpp>
-#include <mdk/cpu/data/State.hpp>
+#include <mdk/cpu/simul/State.hpp>
 
 namespace mdk {
     class HeuresticBondAngles {

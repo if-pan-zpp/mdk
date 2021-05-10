@@ -1,10 +1,10 @@
 #pragma once
 
 namespace mdk {
-    class System;
+    class Simulation;
 
     class Hook {
     public:
-        virtual void execute(System& system) = 0;
+        virtual void execute(Simulation& system) = 0;
     };
 }

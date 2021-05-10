@@ -1,4 +1,4 @@
-#include <mdk/cpu/sys/System.hpp>
+#include <mdk/cpu/simul/Simulation.hpp>
 #include <mdk/tools/pdb/Parser.hpp>
 #include <mdk/cpu/hooks/ExportPDB.hpp>
 #include <mdk/cpu/hooks/ProgressBar.hpp>
@@ -22,25 +22,25 @@ int main() {
     auto ixDist = 4.56*angstrom;
     model.morphIntoSAW(*rand, false, density, ixDist);
 
-    System sys(model);
+    Simulation simul(model);
     Masses masses(model);
 
-    sys.leapfrog = Leapfrog(masses);
-    sys.langDyn = LangevinDynamics(masses, rand, 2.0/tau, 300.0*Kelvin);
-    sys.pauliExcl = PauliExclusion();
-    sys.harm = HarmonicTethers(model, true);
-    sys.nativeBA = NativeBondAngles(model);
-    sys.compNativeDih = ComplexNativeDihedrals(model);
-    sys.natCont = NativeContacts(model, DisulfideV());
-    sys.constDH = ConstDH(Charges(model, params));
+    simul.leapfrog = Leapfrog(masses);
+    simul.langDyn = LangevinDynamics(masses, rand, 2.0/tau, 300.0*Kelvin);
+    simul.pauliExcl = PauliExclusion();
+    simul.harm = HarmonicTethers(model, true);
+    simul.nativeBA = NativeBondAngles(model);
+    simul.compNativeDih = ComplexNativeDihedrals(model);
+    simul.natCont = NativeContacts(model, DisulfideV());
+    simul.constDH = ConstDH(Charges(model, params));
 
-    sys.hooks.emplace_back(make_shared<ExportPDB>(model,
+    simul.hooks.emplace_back(make_shared<ExportPDB>(model,
        10*nanosecond, "model.pdb"));
 
-    auto simul = 15000.0*tau;
-    sys.hooks.emplace_back(make_shared<ProgressBar>(simul));
+    auto time = 15000.0*tau;
+    simul.hooks.emplace_back(make_shared<ProgressBar>(time));
 
-    sys.step(simul);
+    simul.step(time);
 
     return 0;
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include <mdk/cpu/hooks/Hook.hpp>
 #include <mdk/utils/Units.hpp>
-#include <mdk/cpu/data/State.hpp>
+#include <mdk/cpu/simul/State.hpp>
 #include <string>
 
 namespace mdk {
@@ -17,6 +17,6 @@ namespace mdk {
             std::string name = "model"): period {period},
             name {std::move(name)}, model {std::move(model)} {};
 
-        void execute(System& system) override;
+        void execute(Simulation& system) override;
     };
 }

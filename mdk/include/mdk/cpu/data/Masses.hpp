@@ -1,6 +1,6 @@
 #pragma once
 #include <mdk/cpu/data/Primitives.hpp>
-#include <mdk/cpu/data/State.hpp>
+#include <mdk/cpu/simul/State.hpp>
 
 namespace mdk {
     class Masses: public Scalars {

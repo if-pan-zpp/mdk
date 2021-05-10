@@ -1,5 +1,5 @@
 #pragma once
-#include <mdk/cpu/data/State.hpp>
+#include <mdk/cpu/simul/State.hpp>
 #include <mdk/cpu/generic/Harmonic.hpp>
 #include <mdk/cpu/dynamics/Dynamics.hpp>
 

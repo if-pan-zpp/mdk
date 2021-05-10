@@ -1,8 +1,8 @@
 #pragma once
 #include <optional>
 #include <memory>
-#include <mdk/cpu/sys/SystemVL.hpp>
-#include <mdk/cpu/sys/Imports.hpp>
+#include <mdk/cpu/simul/SimulVL.hpp>
+#include <mdk/cpu/simul/Imports.hpp>
 #include <mdk/cpu/dynamics/Dynamics.hpp>
 #include <mdk/cpu/dynamics/LangevinDynamics.hpp>
 #include <mdk/cpu/dynamics/PredictorCorrector.hpp>
@@ -10,9 +10,9 @@
 #include <mdk/cpu/data/Sequences.hpp>
 
 namespace mdk {
-    class System {
+    class Simulation {
     public:
-        friend class SystemVL;
+        friend class SimulVL;
 
         Sequences seqs;
         SystemVLFactory factory;
@@ -53,7 +53,7 @@ namespace mdk {
         std::vector<std::shared_ptr<Hook>> hooks;
 
     public:
-        explicit System(Model const& model);
+        explicit Simulation(Model const& model);
 
         void init();
         void step(int n = 1);

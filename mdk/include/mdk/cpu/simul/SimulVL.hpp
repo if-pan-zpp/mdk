@@ -7,22 +7,22 @@
 namespace mdk {
     struct NoContact {};
 
-    class System;
+    class Simulation;
 
-    class SystemVL: public vl::List<NoContact, qa::Contact,
+    class SimulVL: public vl::List<NoContact, qa::Contact,
         NativeNormal, NativeDisulfide> {
     private:
-        System const* system;
+        Simulation const* simul;
 
     public:
-        explicit SystemVL(System const& system);
+        explicit SimulVL(Simulation const& simul);
 
         double cutoff() override;
         void refine() override;
     };
 
-    using SystemVLItem = typename SystemVL::Item;
+    using SystemVLItem = typename SimulVL::Item;
 
-    using SystemVLFactory = vl::Factory<SystemVL,
+    using SystemVLFactory = vl::Factory<SimulVL,
         NoContact, qa::Contact, NativeNormal, NativeDisulfide>;
 }

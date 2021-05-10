@@ -1,11 +1,11 @@
 #include "cpu/hooks/ProgressBar.hpp"
-#include "cpu/sys/System.hpp"
+#include "cpu/simul/Simulation.hpp"
 #include <cmath>
 #include <iostream>
 using namespace mdk;
 using namespace std;
 
-void ProgressBar::execute(System &system) {
+void ProgressBar::execute(Simulation &system) {
     double progress = system.state.t / totalTime;
 
     cout << "[";

@@ -1,5 +1,5 @@
 #pragma once
-#include <mdk/cpu/data/State.hpp>
+#include <mdk/cpu/simul/State.hpp>
 #include <mdk/cpu/verlet/VL.hpp>
 #include <mdk/cpu/verlet/Pairs.hpp>
 #include <unordered_map>

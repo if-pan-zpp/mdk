@@ -11,6 +11,6 @@ namespace mdk {
         explicit ProgressBar(double totalTime, int width = 70):
             totalTime {totalTime}, width {width} {};
 
-        void execute(System& system) override;
+        void execute(Simulation& system) override;
     };
 }

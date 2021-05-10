@@ -1,8 +1,8 @@
-#include "cpu/sys/System.hpp"
+#include "cpu/simul/Simulation.hpp"
 using namespace mdk;
 using namespace std;
 
-void System::localPass() {
+void Simulation::localPass() {
     for (int i = 0; i+1 < state.n; ++i) {
         int i1 = i-2, i2 = i-1, i3 = i, i4 = i+1;
 
@@ -115,7 +115,7 @@ void System::localPass() {
     }
 }
 
-void System::verletPass() {
+void Simulation::verletPass() {
     factory.update(state);
     for (auto& item: factory.cur) {
         auto r12 = state.top(state.r[item->i2] - state.r[item->i1]);
@@ -157,13 +157,13 @@ void System::verletPass() {
     }
 }
 
-System::System(const Model &model):
+Simulation::Simulation(const Model &model):
     factory(*this), state(model), dyn(model.n) {
 
     seqs = Sequences(model);
 }
 
-bool System::coherencyCheck() const {
+bool Simulation::coherencyCheck() const {
     if (!(pc.has_value() ^ leapfrog.has_value()))
         return false;
 
@@ -182,7 +182,7 @@ bool System::coherencyCheck() const {
     return true;
 }
 
-void System::init() {
+void Simulation::init() {
     if (!coherencyCheck()) throw;
 
     factory.update(state);
@@ -195,7 +195,7 @@ void System::init() {
     initialized = true;
 }
 
-void System::step(int n) {
+void Simulation::step(int n) {
     if (!initialized)
         init();
 
@@ -218,7 +218,7 @@ void System::step(int n) {
     }
 }
 
-void System::step(double t) {
+void Simulation::step(double t) {
     if (!initialized)
         init();
 
