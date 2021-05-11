@@ -1,8 +1,8 @@
 #pragma once
 
-#include <mdk/cpu/generic/Harmonic.hpp>
-#include <mdk/cpu/generic/LennardJones.hpp>
-#include <mdk/cpu/generic/ShiftedTruncatedLJ.hpp>
+#include <mdk/cpu/kernels/Harmonic.hpp>
+#include <mdk/cpu/kernels/LennardJones.hpp>
+#include <mdk/cpu/kernels/ShiftedTruncatedLJ.hpp>
 
 #include <mdk/cpu/local/Chirality.hpp>
 #include <mdk/cpu/local/ComplexNativeDihedrals.hpp>

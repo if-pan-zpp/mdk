@@ -22,6 +22,9 @@ int main() {
     auto ixDist = 4.56*angstrom;
     model.morphIntoSAW(*rand, false, density, ixDist);
 
+    ofstream model0("data/model_0.pdb");
+    pdb::Parser().write(model0, pdb::Data(AtomicModel(model)));
+
     Simulation simul(model);
     Masses masses(model);
 
@@ -31,8 +34,9 @@ int main() {
     simul.harm = HarmonicTethers(model, true);
     simul.nativeBA = NativeBondAngles(model);
     simul.compNativeDih = ComplexNativeDihedrals(model);
-    simul.natCont = NativeContacts(model, DisulfideV());
+    simul.natCont = NativeContacts(model);
     simul.constDH = ConstDH(Charges(model, params));
+    simul.quasiAd = QuasiAdiabatic(model, params);
 
     simul.hooks.emplace_back(make_shared<ExportPDB>(model,
        10*nanosecond, "model.pdb"));

@@ -24,8 +24,8 @@ target_include_directories(${TARGET}
 target_compile_options(${TARGET}
     PUBLIC
         -Wall -Wextra
-        $<$<CONFIG:Debug>:-pg>
-        $<$<CONFIG:Release>:-Ofast -march=native -fno-omit-frame-pointer>
+        $<$<CONFIG:Debug>:-pg -Og -march=native>
+        $<$<CONFIG:Release>:-Ofast -march=native>
     )
 
 target_compile_features(${TARGET}

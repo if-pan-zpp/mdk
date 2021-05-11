@@ -2,8 +2,8 @@
 #include <mdk/cpu/data/Primitives.hpp>
 #include <mdk/tools/model/Model.hpp>
 #include <mdk/tools/param/Parameters.hpp>
-#include <mdk/cpu/verlet/VL.hpp>
 #include <mdk/cpu/data/Charges.hpp>
+#include <mdk/cpu/verlet/Base.hpp>
 
 namespace mdk {
     class ConstDH {
@@ -14,9 +14,7 @@ namespace mdk {
         double screeningDist = 10.0 * angstrom;
         double perm = 80.0 * epsilon_0;
 
-        mutable double _cutoff;
         inline double cutoff() const {
-            _cutoff = screeningDist;
             return screeningDist;
         }
 

@@ -1,5 +1,6 @@
 #include "tools/param/LegacyParser.hpp"
 #include "utils/Text.hpp"
+#include "utils/Units.hpp"
 #include <sstream>
 using namespace mdk;
 using namespace mdk::param;
@@ -82,12 +83,14 @@ static void fetchPairwiseData(istream &is, Parameters &data) {
 
         double minDist;
         ss >> minDist;
+        minDist *= angstrom;
         data.pairwiseMinDist[{acid1, acid2}] = minDist;
         data.pairwiseMinDist[{acid2, acid1}] = minDist;
 
         if (fetchMJ) {
             double mjEnergy;
             ss >> mjEnergy;
+            mjEnergy *= eps;
 
             data.mjMatrix.value()[{acid1, acid2}] = mjEnergy;
             data.mjMatrix.value()[{acid2, acid1}] = mjEnergy;

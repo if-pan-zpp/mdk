@@ -18,8 +18,9 @@ namespace mdk {
             dV_dn += diff * (2.0 * H1 + 4.0 * H2 * diff2);
         }
 
+        template<typename T1, typename T2>
         inline void asForce(VRef unit, double diff, double& V,
-            Vector& F1, Vector& F2) const {
+            T1 F1, T2 F2) const {
 
             double dV_dn = 0.0;
             kernel(diff, V, dV_dn);

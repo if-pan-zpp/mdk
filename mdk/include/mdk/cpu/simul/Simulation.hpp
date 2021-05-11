@@ -1,7 +1,7 @@
 #pragma once
 #include <optional>
 #include <memory>
-#include <mdk/cpu/simul/SimulVL.hpp>
+#include <mdk/cpu/verlet/SimulVL.hpp>
 #include <mdk/cpu/simul/Imports.hpp>
 #include <mdk/cpu/dynamics/Dynamics.hpp>
 #include <mdk/cpu/dynamics/LangevinDynamics.hpp>
@@ -15,10 +15,10 @@ namespace mdk {
         friend class SimulVL;
 
         Sequences seqs;
-        SystemVLFactory factory;
-        double cutoff2 = 0.0;
+        SimulVL vl;
 
         bool interrupt = false;
+        double cutoff_sq;
         State state;
         Dynamics dyn;
 

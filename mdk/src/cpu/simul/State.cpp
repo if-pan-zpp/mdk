@@ -1,4 +1,5 @@
 #include "cpu/simul/State.hpp"
+#include <iostream>
 using namespace mdk;
 
 State::State(const Model &model) {
@@ -10,7 +11,7 @@ State::State(const Model &model) {
 
     for (int i = 0; i < model.n; ++i) {
         r[i] = model.residues[i].pos;
-        v[i] = { 0.0, 0.0, 0.0 };
+        v[i] = Vector { 0.0, 0.0, 0.0 };
     }
 }
 

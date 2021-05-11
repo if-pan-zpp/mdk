@@ -1,42 +1,29 @@
 #pragma once
-#include <mdk/tools/model/Model.hpp>
-#include <mdk/cpu/generic/LennardJones.hpp>
-#include <mdk/cpu/generic/DisulfideV.hpp>
-#include <mdk/cpu/verlet/VL.hpp>
-#include <mdk/cpu/dynamics/Dynamics.hpp>
 #include <vector>
 #include <optional>
+#include <mdk/tools/model/Model.hpp>
+#include <mdk/cpu/kernels/LennardJones.hpp>
+#include <mdk/cpu/verlet/Base.hpp>
+#include <mdk/cpu/dynamics/Dynamics.hpp>
 
 namespace mdk {
-    struct NativeNormal {
-        double r_min;
+    struct NativeContact: vl::Base {
+        double r_min = 0.0;
     };
-
-    struct NativeDisulfide {};
 
     class NativeContacts {
     public:
-        DisulfideV disulfideV;
-
         mutable double _cutoff;
         double cutoff() const;
 
-        std::vector<std::pair<std::pair<int, int>, NativeNormal>> normals;
-        std::vector<std::pair<std::pair<int, int>, NativeDisulfide>> disulfides;
+        std::vector<std::pair<std::pair<int, int>, NativeContact>> normals;
 
-        explicit NativeContacts(Model const& model,
-            DisulfideV const& disulfideV);
+        explicit NativeContacts(Model const& model);
 
-        inline void perNormal(vl::Base const& p, NativeNormal& normal,
-             Dynamics& dyn) const {
-
+        inline void perNormal(NativeContact const& x, Dynamics& dyn) const {
             thread_local LennardJones lj;
-            lj.r_min = normal.r_min;
-            lj.asForce(p.unit, p.norm, dyn.V, dyn.F[p.i1], dyn.F[p.i2]);
-        }
-
-        inline void perDisulfide(vl::Base const& p, Dynamics& dyn) const {
-            disulfideV.asForce(p.unit, p.norm, dyn.V, dyn.F[p.i1], dyn.F[p.i2]);
+            lj.r_min = x.r_min;
+            lj.asForce(x.unit, x.norm, dyn.V, dyn.F[x.i1], dyn.F[x.i2]);
         }
     };
 }

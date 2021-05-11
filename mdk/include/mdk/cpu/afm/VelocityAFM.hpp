@@ -1,6 +1,6 @@
 #pragma once
 #include <mdk/cpu/simul/State.hpp>
-#include <mdk/cpu/generic/Harmonic.hpp>
+#include <mdk/cpu/kernels/Harmonic.hpp>
 #include <mdk/cpu/dynamics/Dynamics.hpp>
 
 namespace mdk {

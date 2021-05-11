@@ -1,9 +1,9 @@
 #pragma once
 #include <mdk/cpu/data/Primitives.hpp>
-#include <mdk/cpu/generic/LennardJones.hpp>
+#include <mdk/cpu/kernels/LennardJones.hpp>
 
 namespace mdk {
-    class SinkLJ {
+    class SidechainLJ {
     public:
         double depth = 1.0 * eps;
         double sink_min = 4.0 * angstrom;
@@ -30,8 +30,9 @@ namespace mdk {
             }
         }
 
+        template<typename T1, typename T2>
         inline void asForce(VRef unit, double norm, double& V,
-            Vector& F1, Vector& F2) const {
+            T1 F1, T2 F2) const {
 
             double dV_dn = 0.0;
             kernel(norm, V, dV_dn);

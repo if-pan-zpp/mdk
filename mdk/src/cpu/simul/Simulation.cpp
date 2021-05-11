@@ -1,4 +1,5 @@
 #include "cpu/simul/Simulation.hpp"
+#include <iostream>
 using namespace mdk;
 using namespace std;
 
@@ -116,49 +117,72 @@ void Simulation::localPass() {
 }
 
 void Simulation::verletPass() {
-    factory.update(state);
-    for (auto& item: factory.cur) {
-        auto r12 = state.top(state.r[item->i2] - state.r[item->i1]);
+    vl.update();
+
+    for (auto& x: vl.freePairs) {
+        if (x.status == vl::Free::Status::TAKEN)
+            continue;
+
+        auto r12 = state.top(state.r[x.i2] - state.r[x.i1]);
         auto norm12_sq = r12.squaredNorm();
 
-        if (norm12_sq <= cutoff2) {
+        if (norm12_sq <= cutoff_sq) {
             auto norm12 = sqrt(norm12_sq);
-            item->unit = r12 / norm12;
-            item->norm = norm12;
+            x.unit = r12 / norm12;
+            x.norm = norm12;
 
-            auto const& base = item.base();
-            if (item.holds<NoContact>()) {
-                if (quasiAd && norm12 <= quasiAd->_cutoff)
-                    quasiAd->tryForming(item, state);
+            if (quasiAd) quasiAd->tryForming(x, state);
+            if (pid) pid->perPair(x, state, dyn);
+            if (pauliExcl) pauliExcl->perPair(x, dyn);
 
-                if (pid && norm12 <= pid->_cutoff)
-                    pid->perPair(base, state, dyn);
+            if (constDH) constDH->perPair(x, dyn);
+            if (relativeDH) relativeDH->perPair(x, dyn);
+        }
+    }
+
+    if (natCont) {
+        for (auto& x: vl.nativeContacts) {
+            auto r12 = state.top(state.r[x.i2] - state.r[x.i1]);
+            auto norm12_sq = r12.squaredNorm();
+
+            if (norm12_sq < 4.0 * x.r_min * x.r_min) {
+                auto norm12 = sqrt(norm12_sq);
+                x.unit = r12 / norm12;
+                x.norm = norm12;
+
+                natCont->perNormal(x, dyn);
             }
-            else if (item.holds<qa::Contact>()) {
-                quasiAd->perPair(item, state, dyn);
-            }
-            else if (item.holds<NativeNormal>() && norm12 <= natCont->_cutoff) {
-                auto& nn = item.data<NativeNormal>();
-                natCont->perNormal(base, nn, dyn);
-            }
-            else if (item.holds<NativeDisulfide>()) {
-                natCont->perDisulfide(base, dyn);
-            }
+        }
+    }
 
-            if (constDH && norm12 <= constDH->_cutoff)
-                constDH->perPair(base, dyn);
+    if (quasiAd) {
+        for (auto& x: vl.qaContacts) {
+            if (x.status == QAContact::Status::VACATED) {
+                vl::Free f;
+                f.i1 = x.i1; f.i2 = x.i2;
+                f.status = vl::Free::Status::FREE;
+                vl.freePairs.emplace_back(std::move(f));
 
-            if (relativeDH && norm12 <= relativeDH->_cutoff)
-                relativeDH->perPair(base, dyn);
+                x.status = QAContact::Status::REMOVED;
+            }
+            else if (x.status != QAContact::Status::REMOVED) {
+                auto r12 = state.top(state.r[x.i2] - state.r[x.i1]);
+                auto norm12_sq = r12.squaredNorm();
 
-            if (pauliExcl && norm12 <= pauliExcl->_cutoff)
-                pauliExcl->perPair(base, dyn);
+                if (norm12_sq <= cutoff_sq) {
+                    auto norm12 = sqrt(norm12_sq);
+                    x.unit = r12 / norm12;
+                    x.norm = norm12;
+
+                    quasiAd->perPair(x, state, dyn);
+                }
+            }
         }
     }
 }
 
 Simulation::Simulation(const Model &model):
-    factory(*this), state(model), dyn(model.n) {
+    vl(*this), state(model), dyn(model.n) {
 
     seqs = Sequences(model);
 }
@@ -185,8 +209,8 @@ bool Simulation::coherencyCheck() const {
 void Simulation::init() {
     if (!coherencyCheck()) throw;
 
-    factory.update(state);
-    cutoff2 = pow(factory.cur.cutoff(), 2.0);
+    vl.init();
+    cutoff_sq = pow(vl.cutoff(), 2.0);
     dyn = Dynamics(state.n);
 
     if (langDyn) langDyn->initVel(state);

@@ -1,4 +1,5 @@
 #pragma once
+#include <mdk/utils/Units.hpp>
 #include <Eigen/Core>
 #include <string>
 #include <variant>
@@ -38,7 +39,7 @@ namespace mdk::pdb::records {
     class Cryst1 {
     public:
         Eigen::Vector3d size;
-        Eigen::Vector3d angles;
+        Eigen::Vector3d angles = { 90*degree, 90*degree, 90*degree };
         std::string spaceGroup;
         int z = 0;
     };
@@ -56,7 +57,7 @@ namespace mdk::pdb::records {
     public:
         struct PerResidueData {
             std::string atomName;
-            char altLocation;
+            char altLocation = ' ';
             std::string residueName;
             char chainId = 'A';
             int residueSeqNum;

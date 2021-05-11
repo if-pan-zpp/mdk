@@ -2,7 +2,7 @@
 #include <mdk/cpu/data/Primitives.hpp>
 #include <mdk/tools/model/Model.hpp>
 #include <mdk/tools/param/Parameters.hpp>
-#include <mdk/cpu/verlet/VL.hpp>
+#include <mdk/cpu/verlet/Base.hpp>
 #include <mdk/cpu/data/Charges.hpp>
 
 namespace mdk {
@@ -14,9 +14,7 @@ namespace mdk {
         double screeningDist = 10.0 * angstrom;
         double R = 4.0 * angstrom;
 
-        mutable double _cutoff;
         inline double cutoff() const {
-            _cutoff = screeningDist;
             return screeningDist;
         }
 

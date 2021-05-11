@@ -63,7 +63,6 @@ double PseudoImproperDihedral::cutoff() const {
         }
     }
 
-    _cutoff = maxCutoff;
     return maxCutoff;
 }
 

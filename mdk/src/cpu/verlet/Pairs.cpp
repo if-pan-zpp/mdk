@@ -16,8 +16,8 @@ static Eigen::Vector3i floor(const Vector &v) {
 
 void Pairs::prepCells() {
     Eigen::AlignedBox3d bbox;
-    for (auto const& pt: state0->r) {
-        bbox.extend(state0->top(pt));
+    for (int i = 0, s = state0->n; i < s; ++i) {
+        bbox.extend(state0->top(state0->r[i]));
     }
 
     auto effCutoff = cutoff + 2.0 * pad;
@@ -65,6 +65,7 @@ void Pairs::neighLoop(int idx1, const Eigen::Vector3i &loc1) {
             for (diff.z() = -1; diff.z() <= 1; ++diff.z()) {
                 Eigen::Vector3i loc2 = loc1 + diff;
                 for (int d = 0; d < 3; ++d) {
+                    if (loc2[d] >= grid[d]) loc2[d] -= grid[d];
                     if (loc2[d] < 0) loc2[d] += grid[d];
                 }
 
@@ -80,12 +81,12 @@ void Pairs::neighLoop(int idx1, const Eigen::Vector3i &loc1) {
 void Pairs::forCellPair(int idx1, int idx2) {
     auto cutoffSq = cutoff*cutoff;
     for (int pt1 = first[idx1]; pt1 >= 0; pt1 = next[pt1]) {
-        Vector r1 = state0->r[pt1];
+        auto r1 = state0->r[pt1];
         for (int pt2 = first[idx2]; pt2 >= 0; pt2 = next[pt2]) {
             if (pt1 >= pt2) continue;
 
-            Vector r2 = state0->r[pt2];
-            double r12_norm2 = state0->top(r2 - r1).squaredNorm();
+            auto r2 = state0->r[pt2];
+            auto r12_norm2 = state0->top(r2 - r1).squaredNorm();
             if (r12_norm2 <= cutoffSq)
                 pairs.emplace_back(pt1, pt2);
         }
@@ -93,23 +94,33 @@ void Pairs::forCellPair(int idx1, int idx2) {
 }
 
 void Pairs::genPairList() {
-    prepCells();
-    cellLoop();
-    std::sort(pairs.begin(), pairs.end());
+//    prepCells();
+//    cellLoop();
+//    std::sort(pairs.begin(), pairs.end());
+    auto cutoffSq = cutoff*cutoff;
+    for (int pt1 = 0; pt1 < r0.cols(); ++pt1) {
+        auto r1 = state0->r[pt1];
+        for (int pt2 = pt1+1; pt2 < r0.cols(); ++pt2) {
+            auto r2 = state0->r[pt2];
+            auto r12_norm2 = state0->top(r2 - r1).squaredNorm();
+            if (r12_norm2 <= cutoffSq)
+                pairs.emplace_back(pt1, pt2);
+        }
+    }
 }
 
 bool Pairs::needToReset(State const& state) const {
     if (&state != state0) return true;
     if (t0 == state.t) return false;
 
-    double maxMoveSq = 0.0;
+    auto maxMoveSq = 0.0;
     for (int i = 0; i < state0->n; ++i) {
-        double moveSq = (state0->r[i] - r0[i]).squaredNorm();
+        auto moveSq = (state0->r[i] - r0[i]).squaredNorm();
         maxMoveSq = std::max(maxMoveSq, moveSq);
     }
 
-    double maxMove = sqrt(maxMoveSq);
-    double pbcShift = (top0.cell - state0->top.cell).lpNorm<1>();
+    auto maxMove = sqrt(maxMoveSq);
+    auto pbcShift = (top0.cell - state0->top.cell).lpNorm<1>();
     return maxMove + 2.0 * pbcShift >= pad;
 }
 
@@ -118,10 +129,10 @@ bool Pairs::update(State const& state) {
 
     if (needToReset(state)) {
         this->state0 = &state;
-        genPairList();
         t0 = state.t;
         r0 = state.r;
         top0 = state.top;
+        genPairList();
     }
     return reset;
 }

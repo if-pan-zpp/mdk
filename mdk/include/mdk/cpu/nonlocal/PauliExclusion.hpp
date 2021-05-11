@@ -1,7 +1,7 @@
 #pragma once
 #include <mdk/cpu/dynamics/Dynamics.hpp>
-#include <mdk/cpu/generic/ShiftedTruncatedLJ.hpp>
-#include <mdk/cpu/verlet/VL.hpp>
+#include <mdk/cpu/kernels/ShiftedTruncatedLJ.hpp>
+#include <mdk/cpu/verlet/Base.hpp>
 
 namespace mdk {
     class PauliExclusion: public ShiftedTruncatedLJ {
