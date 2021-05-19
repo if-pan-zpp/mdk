@@ -30,13 +30,13 @@ int main() {
 
     simul.leapfrog = Leapfrog(masses);
     simul.langDyn = LangevinDynamics(masses, rand, 2.0/tau, 300.0*Kelvin);
-    simul.pauliExcl = PauliExclusion();
     simul.harm = HarmonicTethers(model, true);
     simul.nativeBA = NativeBondAngles(model);
     simul.compNativeDih = ComplexNativeDihedrals(model);
     simul.natCont = NativeContacts(model);
-    simul.constDH = ConstDH(Charges(model, params));
-    simul.quasiAd = QuasiAdiabatic(model, params);
+//    simul.constDH = ConstDH(Charges(model, params));
+//    simul.quasiAd = QuasiAdiabatic(model, params);
+    simul.pauliExcl = PauliExclusion();
 
     simul.hooks.emplace_back(make_shared<ExportPDB>(model,
        10*nanosecond, "model.pdb"));

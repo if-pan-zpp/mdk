@@ -8,16 +8,18 @@ namespace mdk {
         double r_min = 5.0*angstrom, depth = 1.0*eps;
 
         LennardJones() = default;
+        LennardJones(double r_min, double depth):
+            r_min(r_min), depth(depth) {};
 
         inline double cutoff() const {
-            return 2.0 * pow(2.0, -1.0/6.0) * r_min;
+            return 2.5 * pow(2.0, -1.0/6.0) * r_min;
         }
 
         inline void kernel(double norm, double& V, double& dV_dn) const {
             auto norm_inv = 1.0 / norm, s = norm_inv * r_min;
             auto s6 = s*s*s*s*s*s, s12 = s6*s6;
             V += depth * (s12 - 2.0 * s6);
-            dV_dn += depth * (s6 - s12) * norm_inv;
+            dV_dn += 12 * depth * (s6 - s12) * norm_inv;
         }
 
         template<typename T1, typename T2>

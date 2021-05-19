@@ -55,7 +55,7 @@ namespace mdk {
 
     public:
         void morphIntoLine();
-        void morphIntoSAW(Random& rand,
+        void morphIntoSAW(FortranRandom& rand,
             bool useTop = false,
             double density = 1e-4 * atom / pow(angstrom, 3.0),
             double minDist = 4.56 * angstrom);

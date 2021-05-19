@@ -7,13 +7,13 @@ namespace mdk {
     class LangevinDynamics {
     private:
         Masses m;
-        std::shared_ptr<Random> random;
+        std::shared_ptr<FortranRandom> random;
         double gamma;
 
     public:
         double T;
 
-        explicit LangevinDynamics(Masses m, std::shared_ptr<Random> random,
+        explicit LangevinDynamics(Masses m, std::shared_ptr<FortranRandom> random,
             double gamma, double T): m(std::move(m)), random(std::move(random)),
             gamma(gamma), T(T) {};
 

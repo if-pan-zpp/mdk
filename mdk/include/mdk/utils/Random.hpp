@@ -4,32 +4,7 @@
 #include <Eigen/Core>
 
 namespace mdk {
-    class Random {
-    public:
-        virtual double uniform() = 0;
-        double uniform(double a, double b);
-
-        virtual double normal();
-        double normal(double mu, double sigma);
-
-        virtual Eigen::Vector3d sphere();
-    };
-
-    class ModernRandom: public Random {
-    private:
-        std::mt19937 eng;
-        std::uniform_real_distribution<double> unifDist;
-        std::normal_distribution<double> normalDist;
-
-    public:
-        explicit ModernRandom(int seed = 0):
-            eng(seed), unifDist(0, 1), normalDist(0, 1) {};
-
-        double uniform() override;
-        double normal() override;
-    };
-
-    class FortranRandom: public Random {
+    class FortranRandom {
     private:
         static constexpr int
             im1 = 2147483563,
@@ -53,7 +28,56 @@ namespace mdk {
         int iv[ntab];
 
     public:
-        explicit FortranRandom(int seed = 0);
-        double uniform() override;
+        FortranRandom(int seed) {
+            idum = -seed;
+            for (auto& x: iv) x = 0;
+        }
+
+        inline double uniform() {
+            int k, j;
+            if (idum <= 0) {
+                idum2 = idum = std::max(-idum, 1);
+                for (j = ntab + 7; j >= 0; --j) {
+                    k = idum / iq1;
+                    idum = ia1 * (idum - k * iq1) - k * ir1;
+                    if (idum < 0) idum += im1;
+                    if (j < ntab) iv[j] = idum;
+                }
+            }
+
+            k = idum / iq1;
+            idum = ia1 * (idum - k * iq1) - k * ir1;
+            if (idum < 0) idum += im1;
+
+            k = idum2 / iq2;
+            idum2 = ia2 * (idum2 - k * iq2) - k * ir2;
+            if (idum2 < 0) idum2 += im2;
+
+            j = iy / ndiv;
+            iy = iv[j] - idum2;
+            iv[j] = idum;
+            if (iy < 1) iy += imm1;
+
+            return std::min(am * iy, rnmx);
+        }
+
+        inline double uniform(double a, double b) {
+            return a + (b - a) * uniform();
+        }
+
+        inline double normal() {
+            double r1 = uniform();
+            double r2 = uniform();
+            return sqrt(-2.0  * log(r1)) * cos(2.0 * M_PI * r2);
+        }
+
+        inline double normal(double mu, double sigma) {
+            return mu + sigma * normal();
+        }
+
+        inline Eigen::Vector3d sphere() {
+            Eigen::Vector3d r { normal(), normal(), normal() };
+            return r.normalized();
+        }
     };
 }

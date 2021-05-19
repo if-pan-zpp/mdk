@@ -13,16 +13,13 @@ namespace mdk {
 
     class NativeContacts {
     public:
-        mutable double _cutoff;
-        double cutoff() const;
-
+        explicit NativeContacts(Model const& model);
         std::vector<std::pair<std::pair<int, int>, NativeContact>> normals;
 
-        explicit NativeContacts(Model const& model);
+        double cutoff() const;
 
         inline void perNormal(NativeContact const& x, Dynamics& dyn) const {
-            thread_local LennardJones lj;
-            lj.r_min = x.r_min;
+            auto lj = LennardJones(x.r_min, 1.0 * eps);
             lj.asForce(x.unit, x.norm, dyn.V, dyn.F[x.i1], dyn.F[x.i2]);
         }
     };

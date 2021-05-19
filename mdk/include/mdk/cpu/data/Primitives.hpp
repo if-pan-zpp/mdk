@@ -24,11 +24,11 @@ namespace mdk {
             colwise() = init;
         }
 
-        inline auto operator[](int i) -> decltype(col(i)) {
+        inline auto operator[](int i) {
             return col(i);
         }
 
-        inline auto operator[](int i) const -> decltype(col(i)) {
+        inline auto operator[](int i) const {
             return col(i);
         }
     };

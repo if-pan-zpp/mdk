@@ -9,10 +9,12 @@ namespace mdk {
         double sink_min = 4.0 * angstrom;
         double sink_max = 10.0 * angstrom;
 
+        SidechainLJ() = default;
+        SidechainLJ(double depth, double sink_min, double sink_max):
+            depth(depth), sink_min(sink_min), sink_max(sink_max) {};
+
         inline double cutoff() const {
-            LennardJones lj;
-            lj.r_min = sink_max;
-            return lj.cutoff();
+            return LennardJones(sink_max, depth).cutoff();
         }
 
         inline void kernel(double norm, double& V, double& dV_dn) const {
@@ -36,8 +38,8 @@ namespace mdk {
 
             double dV_dn = 0.0;
             kernel(norm, V, dV_dn);
-            F1 -= dV_dn * unit;
-            F2 += dV_dn * unit;
+            F1 += dV_dn * unit;
+            F2 -= dV_dn * unit;
         }
     };
 }

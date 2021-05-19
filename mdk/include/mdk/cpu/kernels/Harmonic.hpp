@@ -8,6 +8,10 @@ namespace mdk {
         double H1 = 50.0 * eps/pow(angstrom, 2.0);
         double H2 = 0.0;
 
+        Harmonic() = default;
+        Harmonic(double H1, double H2):
+            H1(H1), H2(H2) {};
+
         inline double cutoff() const {
             return 0.0;
         }

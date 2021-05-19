@@ -229,7 +229,11 @@ Model AtomicModel::coarsen() {
         if (!cont.atom[0]->res || !cont.atom[1]->res) continue;
         auto& contThere = model.addContact();
         contThere.type = ContactType(cont.type);
-        contThere.dist0 = cont.dist0;
+
+        auto ca1 = cont.atom[0]->res->find("CA")->pos;
+        auto ca2 = cont.atom[1]->res->find("CA")->pos;
+        contThere.dist0 = (ca2 - ca1).norm();
+
         for (int i = 0; i < 2; ++i) {
             contThere.res[i] = resIdxMap.at(cont.atom[i]->res->idxInChain);
         }

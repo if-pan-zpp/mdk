@@ -12,13 +12,13 @@ QuasiAdiabatic::QuasiAdiabatic(Model const& model, const Parameters &params) {
         specs[(int8_t)acid] = spec;
     }
 
-    bb_lj.r_min = 5.0 * angstrom;
-    bs_lj.r_min = 6.8 * angstrom;
-    bb_lj.depth = bs_lj.depth = 1.0 * eps;
+    bb_lj = LennardJones(5.0 * angstrom, 1.0 * eps);
+    bs_lj = LennardJones(6.8 * angstrom, 1.0 * eps);
 
     for (auto const& [acids, r]: params.pairwiseMinDist) {
         auto acid1 = (int8_t)acids.first, acid2 = (int8_t)acids.second;
-        ss_ljs[acid1][acid2].sink_max = ss_ljs[acid2][acid1].sink_max = r;
+        auto sslj = SidechainLJ(1.0 * eps, 4.0 * angstrom, r);
+        ss_ljs[acid1][acid2] = ss_ljs[acid2][acid1] = sslj;
     }
 
 

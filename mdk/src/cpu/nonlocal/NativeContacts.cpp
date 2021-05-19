@@ -26,6 +26,5 @@ double NativeContacts::cutoff() const {
         maxCutoff = std::max(maxCutoff, nn.r_min);
     }
 
-    _cutoff = maxCutoff;
     return maxCutoff;
 }

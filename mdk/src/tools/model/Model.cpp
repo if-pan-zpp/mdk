@@ -46,7 +46,7 @@ void Model::morphIntoLine() {
     }
 }
 
-static Eigen::Vector3d sampleBox(Eigen::AlignedBox3d const& box, Random& rand) {
+static Eigen::Vector3d sampleBox(Eigen::AlignedBox3d const& box, FortranRandom& rand) {
     Eigen::Vector3d v;
     for (int i = 0; i < 3; ++i) {
         v[i] = rand.uniform(box.min()[i], box.max()[i]);
@@ -54,7 +54,7 @@ static Eigen::Vector3d sampleBox(Eigen::AlignedBox3d const& box, Random& rand) {
     return v;
 }
 
-static Eigen::Vector3d sampleSphere(Random& rand) {
+static Eigen::Vector3d sampleSphere(FortranRandom& rand) {
     Eigen::Vector3d v;
     for (int i = 0; i < 3; ++i) {
         v[i] = rand.normal();
@@ -69,7 +69,7 @@ static Eigen::Vector3d findPerp(Eigen::Vector3d const& v) {
     return perp.normalized();
 }
 
-void Model::morphIntoSAW(Random& rand, bool useTop, double density,
+void Model::morphIntoSAW(FortranRandom& rand, bool useTop, double density,
         double minDist) {
     Eigen::Vector3d minCorner, maxCorner;
     Eigen::AlignedBox3d box;

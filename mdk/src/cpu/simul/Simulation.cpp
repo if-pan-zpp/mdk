@@ -55,7 +55,8 @@ void Simulation::localPass() {
             Vector r24 = r4 - r2;
             double norm24_sq = r24.squaredNorm();
 
-            if (norm24_sq <= pauliExcl->cutoff2) {
+            thread_local auto excl2 = pow(pauliExcl->cutoff(), 2);
+            if (norm24_sq <= excl2) {
                 double norm24 = sqrt(norm24_sq);
                 r24 /= norm24;
                 pauliExcl->asForce(r24, norm24, dyn.V, dyn.F[i2], dyn.F[i4]);
@@ -152,6 +153,8 @@ void Simulation::verletPass() {
 
                 natCont->perNormal(x, dyn);
             }
+
+            if (pauliExcl) pauliExcl->perPair(x, dyn);
         }
     }
 
@@ -177,6 +180,8 @@ void Simulation::verletPass() {
                     quasiAd->perPair(x, state, dyn);
                 }
             }
+
+            if (pauliExcl) pauliExcl->perPair(x, dyn);
         }
     }
 }
@@ -200,8 +205,8 @@ bool Simulation::coherencyCheck() const {
     if (pid.has_value() && quasiAd.has_value())
         return false;
 
-    if (!pauliExcl)
-        return false;
+//    if (!pauliExcl)
+//        return false;
 
     return true;
 }
