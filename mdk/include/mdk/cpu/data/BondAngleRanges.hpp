@@ -3,9 +3,9 @@
 #include <mdk/tools/model/Model.hpp>
 
 namespace mdk {
-    class Masses: public Scalars {
+    class BondAngleRanges {
     public:
-        Masses() = default;
-        explicit Masses(Model const& model);
+        Ranges all, native, nonNative;
+        explicit BondAngleRanges(Model const& model);
     };
 }

@@ -32,7 +32,7 @@ double SimulVL::cutoff() const {
 }
 
 void SimulVL::init() {
-    pairs = vl::Pairs(cutoff(), 5.0*angstrom);
+    pairs = vl::Factory(cutoff(), 5.0 * angstrom);
 }
 
 void SimulVL::update() {

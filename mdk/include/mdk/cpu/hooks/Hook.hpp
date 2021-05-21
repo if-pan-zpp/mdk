@@ -5,6 +5,7 @@ namespace mdk {
 
     class Hook {
     public:
-        virtual void execute(Simulation& system) = 0;
+        virtual void init(Simulation& simul) = 0;
+        virtual void exec(Simulation const& simul) = 0;
     };
 }

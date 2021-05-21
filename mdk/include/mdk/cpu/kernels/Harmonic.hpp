@@ -12,22 +12,18 @@ namespace mdk {
         Harmonic(double H1, double H2):
             H1(H1), H2(H2) {};
 
-        inline double cutoff() const {
-            return 0.0;
-        }
-
-        inline void kernel(double diff, double& V, double& dV_dn) const {
-            auto diff2 = diff*diff;
-            V += diff2 * (H1 + H2 * diff);
-            dV_dn += diff * (2.0 * H1 + 4.0 * H2 * diff2);
+        inline void computeV(double dx, double& V, double& dV_dx) const {
+            auto dx2 = dx*dx;
+            V += dx2 * (H1 + H2 * dx);
+            dV_dx += dx * (2.0 * H1 + 4.0 * H2 * dx2);
         }
 
         template<typename T1, typename T2>
-        inline void asForce(VRef unit, double diff, double& V,
+        inline void computeF(VRef unit, double dx, double& V,
             T1 F1, T2 F2) const {
 
             double dV_dn = 0.0;
-            kernel(diff, V, dV_dn);
+            computeV(dx, V, dV_dn);
             F1 += dV_dn * unit;
             F2 -= dV_dn * unit;
         }

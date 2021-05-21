@@ -5,7 +5,7 @@ namespace mdk {
     class Topology {
     public:
         Vector cell, cellInv;
-        bool use[3];
+        bool use[3] = { false, false, false };
 
         void setCell(VRef cell);
 
