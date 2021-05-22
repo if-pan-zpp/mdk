@@ -1,16 +1,18 @@
 #pragma once
-#include <mdk/cpu/simul/State.hpp>
 #include <mdk/cpu/kernels/Harmonic.hpp>
-#include <cpu/dyn/Dynamics.hpp>
+#include <mdk/cpu/data/Primitives.hpp>
+#include <mdk/cpu/forces/Force.hpp>
 
 namespace mdk {
-    class VelocityAFM {
+    class VelocityAFM: public Force {
     public:
-        Harmonic harm = Harmonic();
-
         VelocityAFM(int idx, Vector afmInitPos, Vector afmVel):
             idx(idx), afmInitPos(std::move(afmInitPos)),
             afmVel(std::move(afmVel)) {};
+
+        void init(Simulation& simul) override;
+        std::future<void> eval(State const& state,
+            std::vector<Thread*> threads) override;
 
         inline void eval(State const& state, Dynamics& dyn) const {
             auto afmPos = afmInitPos + afmVel * state.t;
@@ -25,5 +27,6 @@ namespace mdk {
     private:
         int idx;
         Vector afmInitPos, afmVel;
+        Harmonic harm = Harmonic();
     };
 }

@@ -8,8 +8,6 @@ namespace mdk {
         Vectors y0, y1, y2, y3, y4, y5;
         std::shared_ptr<Masses> m;
 
-
-
     public:
         double dt;
         explicit PredictorCorrector(double dt = 0.005*nanosecond);
