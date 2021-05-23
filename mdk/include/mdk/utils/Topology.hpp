@@ -1,5 +1,5 @@
 #pragma once
-#include <mdk/cpu/data/Primitives.hpp>
+#include "../data/Primitives.hpp"
 
 namespace mdk {
     class Topology {

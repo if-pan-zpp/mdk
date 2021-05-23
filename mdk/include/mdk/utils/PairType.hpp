@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <mdk/utils/AminoAcid.hpp>
+#include "AminoAcid.hpp"
 
 namespace mdk {
     enum class PairType: int8_t {

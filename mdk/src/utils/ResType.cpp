@@ -3,7 +3,7 @@
 using namespace mdk;
 using namespace std;
 
-ResType::operator RTCode const&() const {
+ResType::operator ResTypeIdx const&() const {
     return code;
 }
 
@@ -17,4 +17,8 @@ ResType::operator int8_t() const {
 
 ResType::operator std::string() const {
     return (string)AminoAcid((int8_t)code);
+}
+
+double ResType::mass() const {
+    return AminoAcid((int8_t)code).info().mass;
 }

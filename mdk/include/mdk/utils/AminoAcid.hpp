@@ -5,9 +5,20 @@
 #include <unordered_set>
 
 namespace mdk {
-    enum class AAType: int8_t {
+    enum class AminoAcidIdx: int8_t {
         ALA, ARG, ASN, ASP, CYS, GLU, GLN, GLY, HIS, ILE,
         LEU, LYS, MET, PHE, PRO, SER, THR, TRP, TYR, VAL
+    };
+
+    struct AAAtomInfo {
+        double radius;
+        bool inBackbone = false;
+    };
+
+    struct AminoAcidInfo {
+        double mass;
+        std::unordered_set<std::string> heavyAtoms;
+        std::unordered_map<std::string, AAAtomInfo> atomInfo;
     };
 
     class AminoAcid {
@@ -15,11 +26,11 @@ namespace mdk {
         AminoAcid() = default;
         static std::vector<AminoAcid> aminoAcids();
 
-        static std::vector<AAType> types();
-        constexpr explicit AminoAcid(AAType type): type{type} {};
-        explicit operator AAType const&() const;
+        static std::vector<AminoAcidIdx> types();
+        constexpr explicit AminoAcid(AminoAcidIdx type): type{type} {};
+        explicit operator AminoAcidIdx const&() const;
 
-        constexpr AminoAcid(int8_t x): AminoAcid((AAType)x) {};
+        constexpr AminoAcid(int8_t x): AminoAcid((AminoAcidIdx)x) {};
         operator int8_t() const;
 
         static bool isProper(char code);
@@ -39,10 +50,12 @@ namespace mdk {
         bool operator>(AminoAcid const& other) const;
         bool operator>=(AminoAcid const& other) const;
 
+        AminoAcidInfo const& info() const;
+
         static constexpr const int N = 20;
 
     private:
-        AAType type;
+        AminoAcidIdx type;
         friend struct std::hash<AminoAcid>;
     };
 }
@@ -51,7 +64,7 @@ namespace std {
     template<>
     struct hash<mdk::AminoAcid> {
         size_t operator()(mdk::AminoAcid const &aminoAcid) const {
-            return std::hash<mdk::AAType>()(aminoAcid.type);
+            return std::hash<mdk::AminoAcidIdx>()(aminoAcid.type);
         }
     };
 }

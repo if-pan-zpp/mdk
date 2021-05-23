@@ -2,12 +2,10 @@ set(TARGET 1ubq)
 add_executable(${TARGET} main.cpp)
 
 target_link_libraries(${TARGET}
-    PUBLIC
-        mdk)
+    PRIVATE mdk)
 
 target_compile_features(${TARGET}
-    PRIVATE
-        cxx_std_17)
+    PRIVATE cxx_std_17)
 
 add_custom_command(TARGET ${TARGET} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory

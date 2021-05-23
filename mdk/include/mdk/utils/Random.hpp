@@ -4,7 +4,7 @@
 #include <Eigen/Core>
 
 namespace mdk {
-    class FortranRandom {
+    class Random {
     private:
         static constexpr int
             im1 = 2147483563,
@@ -28,7 +28,7 @@ namespace mdk {
         int iv[ntab];
 
     public:
-        FortranRandom(int seed) {
+        Random(int seed) {
             idum = -seed;
             for (auto& x: iv) x = 0;
         }
