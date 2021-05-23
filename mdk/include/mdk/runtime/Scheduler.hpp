@@ -9,8 +9,8 @@
 namespace mdk {
     class Scheduler: public Task {
     public:
-        std::vector<Target> const& req() const override;
-        std::vector<Target> const& sat() const override;
+        std::vector<Target> req() const override;
+        std::vector<Target> sat() const override;
 
         void compile(Target target);
         void run() override;

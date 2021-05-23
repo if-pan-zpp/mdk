@@ -1,22 +1,29 @@
 #pragma once
-#include "Hook.hpp"
 #include "../utils/Units.hpp"
 #include "../system/State.hpp"
-#include <string>
+#include "../runtime/Task.hpp"
+#include "../model/Model.hpp"
+#include "../simul/BoundEntity.hpp"
+#include <filesystem>
 
 namespace mdk {
-    class ExportPDB: public Hook {
+    class ExportPDB: public Task, BoundEntity {
     private:
-        int counter = 0;
+        Model base;
+        State *state = nullptr;
+
+        std::filesystem::path modelPath;
         double period, tprev = 0.0;
-        std::string name;
-        Model model;
 
     public:
-        explicit ExportPDB(Model model, double period = 1.0 * microsecond,
-            std::string name = "model"): period {period},
-            name {std::move(name)}, model {std::move(model)} {};
+        explicit ExportPDB(std::filesystem::path modelPath,
+            double period = 1.0 * microsecond):
+            modelPath(std::move(modelPath)),
+            period(period) {};
 
-        void execute(Simulation& system) override;
+        void bind(Simulation& simulation) override;
+        std::vector<Target> req() const override;
+        std::vector<Target> sat() const override;
+        void run() override;
     };
 }

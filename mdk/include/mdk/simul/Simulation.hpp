@@ -2,8 +2,10 @@
 #include "../model/Model.hpp"
 #include "../files/param/Parameters.hpp"
 #include "../data/DataFactory.hpp"
+#include "BoundEntity.hpp"
 #include <typeindex>
 #include <any>
+#include <type_traits>
 
 namespace mdk {
     class Simulation {
@@ -19,9 +21,21 @@ namespace mdk {
 
         template<typename Var>
         Var& var() {
-            auto& _var = vars[std::type_index(typeid(Var))];
-            return static_cast<Var&>(_var);
+            auto idx = std::type_index(typeid(Var));
+            if (vars.find(idx) == vars.end()) {
+                return add<Var>();
+            }
+            else {
+                return static_cast<Var&>(vars.at(idx));
+            }
         }
+
+        template<typename Entity>
+        Entity& add() {
+            // TODO: write this part super-generically
+        }
+
+        Target loopFinished = Target::create();
 
     private:
         Model model;

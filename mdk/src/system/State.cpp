@@ -12,7 +12,15 @@ std::vector<std::unique_ptr<Task>> State::tasks() {
     auto update = [&]() -> {
         integrator->integrate(*this);
     };
-    auto updateTask = Lambda({dynModified}, update, {stateUpdated}).unique();
+    auto updateTask = Lambda({canUpdate}, update, {stateUpdated}).unique();
 
     return { std::move(zeroDynTask), std::move(updateTask) };
+}
+
+void State::updateModel(Model &model) {
+    for (int i = 0; i < model.n; ++i) {
+        auto& res = model.residues[i];
+        res.r = r[i];
+        res.v = v[i];
+    }
 }

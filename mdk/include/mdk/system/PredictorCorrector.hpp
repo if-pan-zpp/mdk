@@ -7,7 +7,7 @@
 namespace mdk {
     class PredictorCorrector: public Integrator, BoundEntity {
     public:
-        PredictorCorrector(double dt):
+        explicit PredictorCorrector(double dt):
             dt(dt) {};
 
         void bind(Simulation& simulation) override;

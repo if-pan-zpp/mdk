@@ -8,11 +8,11 @@ namespace mdk {
         Lambda(std::vector<Target> req, Lam f, std::vector<Target> sat):
             _req(std::move(req)), _f(std::move(f)), _sat(std::move(sat)) {};
 
-        std::vector<Target> const& req() const override {
+        std::vector<Target> req() const override {
             return _req;
         }
 
-        std::vector<Target> const& sat() const override {
+        std::vector<Target> sat() const override {
             return _sat;
         }
 

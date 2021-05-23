@@ -1,5 +1,5 @@
-#include "cpu/hooks/ProgressBar.hpp"
-#include "cpu/simul/Simulation.hpp"
+#include "hooks/ProgressBar.hpp"
+#include "simul/Simulation.hpp"
 #include <cmath>
 #include <iostream>
 using namespace mdk;
@@ -12,8 +12,21 @@ ProgressBar::ProgressBar(double totalTime, int width) {
     realTime0 = high_resolution_clock::now();
 }
 
-void ProgressBar::execute(Simulation &system) {
-    double progress = system.state.t / totalTime;
+void ProgressBar::bind(Simulation &simulation) {
+    simul = &simulation;
+    state = &simulation.var<State>();
+}
+
+std::vector<Target> ProgressBar::req() const {
+    return { state->stateUpdated };
+}
+
+std::vector<Target> ProgressBar::sat() const {
+    return { simul->loopFinished };
+}
+
+void ProgressBar::run() {
+    double progress = state->t / totalTime;
 
     auto now = high_resolution_clock::now();
     auto diff = duration_cast<microseconds>(now - realTime0).count();
@@ -25,8 +38,8 @@ void ProgressBar::execute(Simulation &system) {
         else if (i == pos) cout << ">";
         else cout << " ";
     }
-    cout << "] " << system.state.t << " / " << totalTime;
-    cout << " V = " << system.dyn.V;
+    cout << "] " << state->t << " / " << totalTime;
+    cout << " V = " << state->dyn.V;
     cout << " t = " << diff/1000 << " ms";
 
     cout.flush();
