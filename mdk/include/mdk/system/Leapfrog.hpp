@@ -2,13 +2,14 @@
 #include "Integrator.hpp"
 #include "../utils/Units.hpp"
 #include "../data/Masses.hpp"
+#include "../simul/BoundEntity.hpp"
 
 namespace mdk {
-    class Leapfrog: public Integrator {
+    class Leapfrog: public Integrator, BoundEntity {
     public:
-        Leapfrog(double dt, Masses m):
-            dt(dt), m(std::move(m)), a_prev(m.size()) {};
+        explicit Leapfrog(double dt): dt(dt) {};
 
+        void bind(Simulation& simulation) override;
         void integrate(State& state) override;
 
     private:

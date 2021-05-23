@@ -20,7 +20,9 @@ namespace mdk {
 
         Dynamics dyn;
 
-        Target dynReset, dynModified, stateUpdated;
+        Target dynReset = Target::create();
+        Target dynModified = Target::create();
+        Target stateUpdated = Target::create();
         std::vector<std::unique_ptr<Task>> tasks() override;
 
     private:

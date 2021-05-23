@@ -7,8 +7,8 @@ using namespace mdk::pdb;
 using namespace mdk;
 using namespace std;
 
-AtomicModel Data::asModel() const {
-    AtomicModel model;
+pdb::Model Data::asModel() const {
+    pdb::Model model;
     unordered_set<char> terminated;
 
     for (auto const& record: records) {
@@ -78,7 +78,7 @@ AtomicModel Data::asModel() const {
     return model;
 }
 
-Data::Data(const AtomicModel &model) {
+Data::Data(const pdb::Model &model) {
     if (model.top.cell != Vector { 0.0, 0.0, 0.0 }) {
         auto record = records.emplace_back(Cryst1());
         auto& data = get<Cryst1>(record);
@@ -87,7 +87,7 @@ Data::Data(const AtomicModel &model) {
     }
 
     for (auto const& [chainIdx, chain]: model.chains) {
-        AtomicModel::Atom *finalAtom;
+        pdb::Model::Atom *finalAtom;
 
         for (auto const& res: chain.residues) {
             for (auto const& atom: res->atoms) {

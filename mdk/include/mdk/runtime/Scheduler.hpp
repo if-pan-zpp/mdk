@@ -7,12 +7,12 @@
 #include <mutex>
 
 namespace mdk {
-    class TaskSet: public Task {
+    class Scheduler: public Task {
     public:
         std::vector<Target> const& req() const override;
         std::vector<Target> const& sat() const override;
 
-        void compile(Target reach);
+        void compile(Target target);
         void run() override;
 
         template<typename TaskImpl>

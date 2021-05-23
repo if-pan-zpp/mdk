@@ -1,6 +1,5 @@
 #include "files/pdb/Model.hpp"
 #include "utils/AminoAcid.hpp"
-#include "utils/ResidueData.hpp"
 #include "utils/Math.hpp"
 using namespace std;
 using namespace mdk::pdb;
@@ -86,16 +85,15 @@ void Model::addContactsFromAtomOverlap() {
         contactAtoms.emplace_back(&atom);
     }
 
-    static const auto types = createResData();
     for (int idx1 = 0; idx1 < (int)contactAtoms.size(); ++idx1) {
         auto *atom1 = contactAtoms[idx1];
-        auto const& info1 = types.at((AminoAcid)atom1->res->type)
+        auto const& info1 = AminoAcid(atom1->res->type).info()
             .atomInfo.at(atom1->type);
         string type1 = info1.inBackbone ? "B" : "S";
 
         for (int idx2 = idx1; idx2 < (int)contactAtoms.size(); ++idx2) {
             auto *atom2 = contactAtoms[idx2];
-            auto const& info2 = types.at((AminoAcid)atom2->res->type)
+            auto const& info2 = AminoAcid(atom2->res->type).info()
                 .atomInfo.at(atom2->type);
             string type2 = info2.inBackbone ? "B" : "S";
 

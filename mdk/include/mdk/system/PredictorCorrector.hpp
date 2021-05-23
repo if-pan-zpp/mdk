@@ -2,13 +2,15 @@
 #include "Integrator.hpp"
 #include "../utils/Units.hpp"
 #include "../data/Masses.hpp"
+#include "../simul/BoundEntity.hpp"
 
 namespace mdk {
-    class PredictorCorrector: public Integrator {
+    class PredictorCorrector: public Integrator, BoundEntity {
     public:
-        PredictorCorrector(double dt, Masses m,
-            Model const& model);
+        PredictorCorrector(double dt):
+            dt(dt) {};
 
+        void bind(Simulation& simulation) override;
         void integrate(State& state) override;
 
     private:

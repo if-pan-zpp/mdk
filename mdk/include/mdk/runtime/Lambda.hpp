@@ -20,6 +20,10 @@ namespace mdk {
             _f();
         }
 
+        std::unique_ptr<Task> unique() const {
+            return std::unique_ptr<Lambda<Lam>>(*this);
+        }
+
     private:
         std::vector<Target> _req, _sat;
         Lam _f;

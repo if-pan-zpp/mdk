@@ -4,9 +4,5 @@
 
 namespace mdk {
     using Pairs = std::vector<std::pair<int, int>>;
-
-    class Ranges: public boost::icl::interval_set<int> {
-    public:
-        std::vector<Ranges> split(int n);
-    };
+    using Ranges = boost::icl::interval_set<int>;
 }

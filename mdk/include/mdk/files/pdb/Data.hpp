@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "Record.hpp"
-#include "../../model/AtomicModel.hpp"
+#include "Model.hpp"
 
 namespace mdk::pdb {
     class Data {
@@ -10,7 +10,7 @@ namespace mdk::pdb {
 
     public:
         Data() = default;
-        explicit Data(AtomicModel const& model);
-        AtomicModel asModel() const;
+        explicit Data(pdb::Model const& model);
+        db::Model asModel() const;
     };
 }

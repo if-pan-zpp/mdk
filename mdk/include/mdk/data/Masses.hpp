@@ -6,6 +6,6 @@ namespace mdk {
     class Masses: public Scalars {
     public:
         Masses() = default;
-        explicit Masses(Model const& model, bool mean = false);
+        explicit Masses(Model const& model);
     };
 }

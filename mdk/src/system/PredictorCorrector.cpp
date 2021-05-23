@@ -1,20 +1,7 @@
 #include "system/PredictorCorrector.hpp"
 #include "system/State.hpp"
+#include "simul/Simulation.hpp"
 using namespace mdk;
-
-PredictorCorrector::PredictorCorrector(double dt, Masses m,
-    const Model &model) {
-
-    this->dt = dt;
-    this->m = std::move(m);
-
-    y0 = y1 = y2 = y3 = y4 = y5 = Vectors(model.n, Vector::Zero());
-    for (int i = 0; i < model.n; ++i) {
-        auto& res = model.residues[i];
-        y0[i] = res.r;
-        y1[i] = res.v * dt;
-    }
-}
 
 void PredictorCorrector::integrate(State &state) {
     for (int i = 0; i < state.n; ++i) {
@@ -42,4 +29,16 @@ void PredictorCorrector::integrate(State &state) {
     }
 
     state.t += dt;
+}
+
+void PredictorCorrector::bind(Simulation &simulation) {
+    m = simulation.data<Masses>();
+    auto model = simulation.data<Model>();
+
+    y0 = y1 = y2 = y3 = y4 = y5 = Vectors(model.n, Vector::Zero());
+    for (int i = 0; i < model.n; ++i) {
+        auto& res = model.residues[i];
+        y0[i] = res.r;
+        y1[i] = res.v * dt;
+    }
 }

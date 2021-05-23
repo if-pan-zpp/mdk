@@ -1,5 +1,6 @@
 #include "system/Leapfrog.hpp"
 #include "system/State.hpp"
+#include "simul/Simulation.hpp"
 using namespace mdk;
 
 void Leapfrog::integrate(State &state) {
@@ -10,4 +11,9 @@ void Leapfrog::integrate(State &state) {
         a_prev[i] = a_cur;
     }
     state.t += dt;
+}
+
+void Leapfrog::bind(Simulation &simulation) {
+    m = simulation.data<Masses>();
+    a_prev = Vectors(m.size(), Vector::Zero());
 }

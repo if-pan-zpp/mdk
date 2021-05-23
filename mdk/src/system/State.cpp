@@ -7,14 +7,12 @@ std::vector<std::unique_ptr<Task>> State::tasks() {
         dyn.V = 0.0;
         dyn.F.vectorwise() = Vector::Zero();
     };
-    auto zeroDynTask = std::make_unique<Lambda<decltype(zeroDyn)>>(
-        {}, zeroDyn, {dynReset});
+    auto zeroDynTask = Lambda({}, zeroDyn, {dynReset}).unique();
 
     auto update = [&]() -> {
         integrator->integrate(*this);
     };
-    auto updateTask = std::make_unique<Lambda<decltype(update)>>(
-        {dynModified}, update, {stateUpdated});
+    auto updateTask = Lambda({dynModified}, update, {stateUpdated}).unique();
 
     return { std::move(zeroDynTask), std::move(updateTask) };
 }

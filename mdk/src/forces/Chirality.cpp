@@ -1,4 +1,4 @@
-#include "cpu/forces/Chirality.hpp"
+#include "forces/Chirality.hpp"
 using namespace mdk;
 
 Chirality::Chirality(const Model &model) {

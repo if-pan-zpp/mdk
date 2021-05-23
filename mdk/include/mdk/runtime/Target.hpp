@@ -4,13 +4,13 @@
 namespace mdk {
     class Target {
     public:
-        Target();
+        static Target create();
 
         bool operator<(Target const& other) const;
         bool operator==(Target const& other) const;
 
     private:
-        int uid;
+        int uid = 0;
         friend std::hash<Target>;
     };
 }
