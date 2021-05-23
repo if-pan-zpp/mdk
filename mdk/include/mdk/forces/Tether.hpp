@@ -1,8 +1,7 @@
 #pragma once
-#include <forces/Force.hpp>
-#include <mdk/tools/model/Model.hpp>
-#include <kernels/Harmonic.hpp>
-#include <data/Chains.hpp>
+#include "Force.hpp"
+#include "../kernels/Harmonic.hpp"
+#include "../data/Chains.hpp"
 
 namespace mdk {
     class Tether: public Force {
@@ -15,8 +14,7 @@ namespace mdk {
     public:
         explicit Tether(bool fromNative);
 
-        void init(Simulation& simul) override;
-        std::future<void> eval(State const& state,
-            std::vector<Thread*> threads) override;
+        void bind(Simulation& simulation) override;
+        void run() override;
     };
 }

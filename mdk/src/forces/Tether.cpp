@@ -1,5 +1,6 @@
-#include "cpu/forces/Tether.hpp"
-#include "cpu/data/Chains.hpp"
+#include "forces/Tether.hpp"
+#include "data/Chains.hpp"
+#include "simul/Simulation.hpp"
 using namespace mdk;
 using namespace boost::icl;
 
@@ -7,11 +8,12 @@ Tether::Tether(bool fromNative) {
     this->fromNative = fromNative;
 }
 
-void Tether::init(Simulation &simul) {
-    dist0 = Scalars::Constant(simul.state.n, 3.8 * angstrom);
+void Tether::bind(Simulation &simulation) {
+    Force::bind(simulation);
+    dist0 = Scalars::Constant(state->n, 3.8 * angstrom);
 
-    auto& model = simul.data<Model>();
-    for (auto const& chain: model->chains) {
+    auto model = simulation.data<Model>();
+    for (auto const& chain: model.chains) {
         int start = chain.start, end = chain.end-1;
         auto intv = interval<int>::right_open(start, end);
         ranges.add(intv);
@@ -19,19 +21,16 @@ void Tether::init(Simulation &simul) {
         if (fromNative) {
             for (auto i = intv.lower(); i < intv.upper(); ++i) {
                 auto i1 = i, i2 = i+1;
-                auto r1 = model->residues[i1].pos,
-                     r2 = model->residues[i2].pos;
+                auto r1 = model.residues[i1].r, r2 = model.residues[i2].r;
                 auto r12 = r2 - r1;
-
                 dist0[i1] = r12.norm();
             }
         }
     }
 }
 
-std::future<void>
-Tether::eval(const State &state, std::vector<Thread *> threads) {
-    auto& diff = threads[0]->diff;
+void Tether::run() {
+    auto& diff = state->dyn;
     for (auto const& intv: ranges) {
         for (int i = intv.lower(); i < intv.upper(); ++i) {
             auto r1 = state.r[i], r2 = state.r[i+1];

@@ -1,14 +1,16 @@
 #pragma once
-#include <future>
-#include <mdk/cpu/core/Thread.hpp>
+#include "../runtime/Task.hpp"
+#include "../system/State.hpp"
+#include "../simul/BoundEntity.hpp"
 
 namespace mdk {
-    class Simulation;
+    class Force: public Task, BoundEntity {
+    protected:
+        State *state = nullptr;
 
-    class Force {
     public:
-        virtual void init(Simulation& simul) = 0;
-        virtual std::future<void> eval(State const& state,
-            std::vector<Thread*> threads) = 0;
+        std::vector<Target> req() const override;
+        std::vector<Target> sat() const override;
+        void bind(Simulation& simulation) override;
     };
 }
