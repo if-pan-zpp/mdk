@@ -1,7 +1,11 @@
-#include "cpu/forces/NonlocalForce.hpp"
+#include "forces/NonlocalForce.hpp"
+#include "simul/Simulation.hpp"
 using namespace mdk;
 
-vl::Spec const& NonlocalForce::spec() const {
-    _spec = recomputeSpec();
-    return _spec;
+void NonlocalForce::bind(Simulation &simulation) {
+    Force::bind(simulation);
+
+    savedSpec = spec();
+    vl = &simulation.var<vl::List>();
+    vl->registerSpec(savedSpec);
 }

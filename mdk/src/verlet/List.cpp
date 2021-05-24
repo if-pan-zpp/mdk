@@ -15,13 +15,14 @@ void List::update() {
             auto r2 = state->r[pt2];
             auto r12_norm2 = state->top(r2 - r1).squaredNorm();
 
-            if (r12_norm2 <= effCutoffSq &&
-                chains->sepByAtLeastN(pt1, pt2, minBondSep)) {
+            bool cond = r12_norm2 <= effCutoffSq &&
+                chains->sepByAtLeastN(pt1, pt2, minBondSep);
 
-                pairs.emplace_back(pt1, pt2);
-            }
+            if (cond) pairs.emplace_back(pt1, pt2);
         }
     }
+
+    updateScheduler.run();
 }
 
 bool List::needToReset() const {

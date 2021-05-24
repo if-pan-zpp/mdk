@@ -1,5 +1,5 @@
 #pragma once
-#include <forces/dihedral/NativeDihedralBase.hpp>
+#include "NativeDihedralBase.hpp"
 
 namespace mdk {
     class SimpleNativeDihedral:

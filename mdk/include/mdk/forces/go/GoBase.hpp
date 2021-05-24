@@ -1,6 +1,5 @@
 #pragma once
-#include <forces/NonlocalForce.hpp>
-#include <mdk/tools/model/Model.hpp>
+#include "../NonlocalForce.hpp"
 
 namespace mdk {
     class GoBase: public NonlocalForce {
@@ -10,11 +9,11 @@ namespace mdk {
             double r_min;
         };
 
-        virtual void onVLUpdate(Pairs& vl, BaseState& state) override;
+        void bind(Simulation& simulation) override;
 
     protected:
         std::vector<Contact> allContacts, curPairs;
-        virtual vl::Spec recomputeSpec() const override;
+        vl::Spec spec() const override;
 
     private:
         Pairs newVl;

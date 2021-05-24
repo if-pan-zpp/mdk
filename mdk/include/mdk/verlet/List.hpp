@@ -4,6 +4,7 @@
 #include "../runtime/TaskFactory.hpp"
 #include "../simul/BoundEntity.hpp"
 #include "../data/Chains.hpp"
+#include "UpdateScheduler.hpp"
 #include "Spec.hpp"
 
 namespace mdk::vl {
@@ -30,5 +31,6 @@ namespace mdk::vl {
 
         Target vlChecked = Target::create();
         std::vector<std::unique_ptr<Task>> tasks() override;
+        UpdateScheduler updateScheduler;
     };
 }

@@ -7,11 +7,11 @@ namespace mdk {
     public:
         ShiftedTruncatedLJ stlj;
 
-        void reconstructFrom(Pairs& vl) override;
-        void eval(BaseState const& state, BaseDiff& update) const override;
+        void bind(Simulation& simulation) override;
+        void run() override;
 
     protected:
-        vl::Spec recomputeSpec() const override;
+        vl::Spec spec() const override;
 
     private:
         Pairs exclPairs;

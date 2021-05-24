@@ -6,10 +6,10 @@ namespace mdk {
     public:
         double depth = 1.0 * eps;
 
-        explicit NormalNative(Model const& model);
-        void eval(BaseState const& state, BaseDiff& update) const override;
+        void bind(Simulation& simulation) override;
+        void run() override;
 
     protected:
-        vl::Spec recomputeSpec() const override;
+        vl::Spec spec() const override;
     };
 }
