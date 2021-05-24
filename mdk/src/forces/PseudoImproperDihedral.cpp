@@ -1,4 +1,6 @@
-#include "cpu/forces/PseudoImproperDihedral.hpp"
+#include "forces/PseudoImproperDihedral.hpp"
+#include "simul/Simulation.hpp"
+#include "runtime/Lambda.hpp"
 using namespace mdk;
 
 bool Lambda::supp(double psi) const {
@@ -21,66 +23,25 @@ void Lambda::eval(double psi, double &L, double &dL_dpsi) const {
     }
 }
 
-PseudoImproperDihedral::PseudoImproperDihedral(const Model &model,
-    const param::Parameters &params) {
-    types = Types(model);
-    seqs = Chains(model);
+template<typename LJ>
+void perLambda(Lambda const& lambda, LJ const& lj, double psi[2],
+    double norm, double& A, double& B, double& C) {
+    if (lambda.supp(psi[0]) && lambda.supp(psi[1])) {
+        double L[2], dL_dpsi[2];
+        for (int m = 0; m < 2; ++m)
+            lambda.eval(psi[m], L[m], dL_dpsi[m]);
 
-    bb_neg_lj.r_min = 6.2 * angstrom;
-    bb_neg_lj.depth = 1.0 * eps;
-    bb_pos_lj.r_min = 5.6 * angstrom;
-    bb_pos_lj.depth = 1.0 * eps;
+        double ljV = 0.0, dljV_dn = 0.0;
+        lj.kernel(norm, ljV, dljV_dn);
 
-    bb_pos.alpha = 6.4; bb_pos.psi0 = 1.05 * rad;
-    bb_neg.alpha = 6.0; bb_neg.psi0 = -1.44 * rad;
-    ss.alpha = 1.2; ss.psi0 = -0.23 * rad;
-
-    for (auto const& type1: AminoAcid::aminoAcids()) {
-        auto code1 = (int8_t)type1;
-        for (auto const& type2: AminoAcid::aminoAcids()) {
-            auto code2 = (int8_t)type2;
-
-            auto& lj = ss_ljs[code1][code2];
-            lj.depth = params.mjMatrix
-                       ? params.mjMatrix->at({type1, type2})
-                       : 1.0 * eps;
-            lj.sink_max = params.pairwiseMinDist.at({type1, type2});
-        }
+        A += dL_dpsi[0] * L[1] * ljV;
+        B += dL_dpsi[1] * L[0] * ljV;
+        C += L[0] * L[1] * dljV_dn;
     }
-
-    types = Types(model);
-}
-
-void PseudoImproperDihedral::updateVL(Pairs &vl, BaseState const& state) {
-    pairs.clear();
-    for (auto const& [i1, i2]: vl) {
-        if (!(seqs.sepByN(i1, i2, 4) || seqs.isTerminal[i1]
-            || !seqs.isTerminal[i2])) {
-
-            pairs.emplace_back(i1, i2);
-        }
-    }
-}
-
-vl::Spec PseudoImproperDihedral::recomputeSpec() const {
-    double maxCutoff = 0.0;
-    maxCutoff = std::max(maxCutoff, bb_pos_lj.cutoff());
-    maxCutoff = std::max(maxCutoff, bb_neg_lj.cutoff());
-
-    for (int8_t acid1 = 0; acid1 < AminoAcid::N; ++acid1) {
-        for (int8_t acid2 = 0; acid2 < AminoAcid::N; ++acid2) {
-            maxCutoff = std::max(maxCutoff, ss_ljs[acid1][acid2].cutoff());
-        }
-    }
-
-    return (vl::Spec) {
-        .cutoffSq = pow(maxCutoff, 2.0),
-        .minBondSep = 3,
-    };
 }
 
 void PseudoImproperDihedral::deriveAngles(int _i1, int _i2, double norm,
-    VRef unit, BaseState const& state, double psi[2], Vector dpsi_dr[2][6]) const {
+    const Vector &unit, double *psi, Vector (*dpsi_dr)[6]) const {
 
     int idx[2] = { _i1, _i2 };
     for (int m = 0; m < 2; ++m) {
@@ -93,7 +54,7 @@ void PseudoImproperDihedral::deriveAngles(int _i1, int _i2, double norm,
         int i1 = idx[m]-1, i2 = idx[m], i3 = idx[m];
         int loc1 = 3*m, loc2 = 3*m+1, loc3 = 3*m+2, loc4 = 3*(1-m)+1;
 
-        Vector r1 = state.r[i1], r2 = state.r[i2], r3 = state.r[i3];
+        Vector r1 = state->r[i1], r2 = state->r[i2], r3 = state->r[i3];
         Vector r24 = (m == 0 ? 1 : -1) * norm * unit;
         Vector r12 = r2 - r1, r23 = r3 - r2, r13 = r3 - r1, r14 = r12 + r24;
 
@@ -124,28 +85,71 @@ void PseudoImproperDihedral::deriveAngles(int _i1, int _i2, double norm,
     }
 }
 
-template<typename LJ>
-void perLambda(Lambda const& lambda, LJ const& lj, double psi[2],
-    double norm, double& A, double& B, double& C) {
-    if (lambda.supp(psi[0]) && lambda.supp(psi[1])) {
-        double L[2], dL_dpsi[2];
-        for (int m = 0; m < 2; ++m)
-            lambda.eval(psi[m], L[m], dL_dpsi[m]);
+void PseudoImproperDihedral::bind(Simulation &simulation) {
+    NonlocalForce::bind(simulation);
 
-        double ljV = 0.0, dljV_dn = 0.0;
-        lj.kernel(norm, ljV, dljV_dn);
+    types = &simulation.data<Types>();
+    seqs = &simulation.data<Chains>();
 
-        A += dL_dpsi[0] * L[1] * ljV;
-        B += dL_dpsi[1] * L[0] * ljV;
-        C += L[0] * L[1] * dljV_dn;
+    bb_neg_lj.r_min = 6.2 * angstrom;
+    bb_neg_lj.depth = 1.0 * eps;
+    bb_pos_lj.r_min = 5.6 * angstrom;
+    bb_pos_lj.depth = 1.0 * eps;
+
+    bb_pos.alpha = 6.4; bb_pos.psi0 = 1.05 * rad;
+    bb_neg.alpha = 6.0; bb_neg.psi0 = -1.44 * rad;
+    ss.alpha = 1.2; ss.psi0 = -0.23 * rad;
+
+    auto& params = simulation.data<param::Parameters>();
+    for (auto const& type1: AminoAcid::aminoAcids()) {
+        auto code1 = (int8_t)type1;
+        for (auto const& type2: AminoAcid::aminoAcids()) {
+            auto code2 = (int8_t)type2;
+
+            auto& lj = ss_ljs[code1][code2];
+            lj.depth = params.mjMatrix
+                       ? params.mjMatrix->at({type1, type2})
+                       : 1.0 * eps;
+            lj.sink_max = params.pairwiseMinDist.at({type1, type2});
+        }
     }
+
+    auto update = [&]() -> {
+        pairs.clear();
+        for (auto const& [i1, i2]: vl) {
+            if (!(seqs->sepByN(i1, i2, 4) || seqs->isTerminal[i1]
+                  || !seqs->isTerminal[i2])) {
+
+                pairs.emplace_back(i1, i2);
+            }
+        }
+    };
+    auto updateTask = Lambda({}, update, {}).unique();
+    vl->updateScheduler.asyncUpdates.emplace_back(std::move(updateTask));
 }
 
-void PseudoImproperDihedral::eval(const BaseState &state, BaseDiff &update) const {
+vl::Spec PseudoImproperDihedral::spec() const {
+    double maxCutoff = 0.0;
+    maxCutoff = std::max(maxCutoff, bb_pos_lj.cutoff());
+    maxCutoff = std::max(maxCutoff, bb_neg_lj.cutoff());
+
+    for (int8_t acid1 = 0; acid1 < AminoAcid::N; ++acid1) {
+        for (int8_t acid2 = 0; acid2 < AminoAcid::N; ++acid2) {
+            maxCutoff = std::max(maxCutoff, ss_ljs[acid1][acid2].cutoff());
+        }
+    }
+
+    return (vl::Spec) {
+        .cutoffSq = pow(maxCutoff, 2.0),
+        .minBondSep = 3,
+    };
+}
+
+void PseudoImproperDihedral::run() {
     for (auto const& [i1, i2]: pairs) {
         auto r12 = state.top(state.r[i1] - state.r[i2]);
         auto r12_normsq = r12.squaredNorm();
-        if (r12_normsq >= _spec.cutoffSq) continue;
+        if (r12_normsq >= savedSpec.cutoffSq) continue;
 
         auto norm = sqrt(r12_normsq);
         auto unit = r12 / norm;
@@ -155,7 +159,7 @@ void PseudoImproperDihedral::eval(const BaseState &state, BaseDiff &update) cons
         deriveAngles(i1, i2, state, psi, dpsi_dr);
 
         double A = 0.0, B = 0.0, C = 0.0;
-        auto type1 = (int8_t)types[i1], type2 = (int8_t)types[i2];
+        auto type1 = (int8_t)(*types)[i1], type2 = (int8_t)(*types)[i2];
 
         perLambda(bb_pos, bb_pos_lj,
             psi, norm, A, B, C);
@@ -168,10 +172,10 @@ void PseudoImproperDihedral::eval(const BaseState &state, BaseDiff &update) cons
 
         int idx[6] = { i1-1, i1, i1 + 1, i2-1, i2, i2+1 };
         for (int i = 0; i < 6; ++i) {
-            update.F[idx[i]] -= A * dpsi_dr[0][i];
-            update.F[idx[i]] -= B * dpsi_dr[1][i];
+            state->dyn.F[idx[i]] -= A * dpsi_dr[0][i];
+            state->dyn.F[idx[i]] -= B * dpsi_dr[1][i];
         }
-        update.F[i1] += C * unit;
-        update.F[i2] -= C * unit;
+        state->dyn.F[i1] += C * unit;
+        state->dyn.F[i2] -= C * unit;
     }
 }

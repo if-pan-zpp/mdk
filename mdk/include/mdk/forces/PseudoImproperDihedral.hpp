@@ -1,11 +1,10 @@
 #pragma once
-#include <forces/NonlocalForce.hpp>
-#include <mdk/tools/model/Model.hpp>
-#include <mdk/tools/param/Parameters.hpp>
-#include <kernels/LennardJones.hpp>
-#include <kernels/SidechainLJ.hpp>
-#include <data/Types.hpp>
-#include <data/Chains.hpp>
+#include "NonlocalForce.hpp"
+#include "../kernels/LennardJones.hpp"
+#include "../kernels/SidechainLJ.hpp"
+#include "../data/Types.hpp"
+#include "../data/Chains.hpp"
+#include "../utils/AminoAcid.hpp"
 
 namespace mdk {
     class Lambda {
@@ -20,24 +19,21 @@ namespace mdk {
     class PseudoImproperDihedral: public NonlocalForce {
     private:
         void deriveAngles(int i1, int i2, double norm, VRef unit,
-            BaseState const& state, double psi[2], Vector dpsi_dr[2][6]) const;
+            double psi[2], Vector dpsi_dr[2][6]) const;
 
-        Types types;
-        Chains seqs;
+        Types const* types = nullptr;
+        Chains const* seqs = nullptr;
 
     public:
         Lambda bb_pos, bb_neg, ss;
         LennardJones bb_neg_lj, bb_pos_lj;
         SidechainLJ ss_ljs[AminoAcid::N][AminoAcid::N];
 
-        PseudoImproperDihedral(Model const& model,
-            param::Parameters const& params);
-
-        void reconstructFrom(Pairs& vl) override;
-        void eval(BaseState const& state, BaseDiff& update) const override;
+        void bind(Simulation& simulation) override;
+        void run() override;
 
     protected:
-        vl::Spec recomputeSpec() const override;
+        vl::Spec spec() const override;
 
     private:
         Pairs pairs;
