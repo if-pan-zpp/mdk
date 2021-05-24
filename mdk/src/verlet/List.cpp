@@ -41,7 +41,7 @@ bool List::needToReset() const {
 
 void List::bind(Simulation &simulation) {
     state = &simulation.var<State>();
-    chains = simulation.data<Chains>();
+    chains = &simulation.data<Chains>();
 }
 
 std::vector<std::unique_ptr<Task>> List::tasks() {

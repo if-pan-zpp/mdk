@@ -7,7 +7,7 @@ std::vector<Target> Force::req() const {
 }
 
 std::vector<Target> Force::sat() const {
-    return { state->canUpdate };
+    return { state->forceAdded };
 }
 
 void Force::bind(Simulation &simulation) {

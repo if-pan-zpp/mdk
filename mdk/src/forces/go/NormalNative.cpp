@@ -6,7 +6,7 @@ using namespace mdk;
 void NormalNative::bind(Simulation &simulation) {
     GoBase::bind(simulation);
 
-    auto& model = *simulation.data<Model>();
+    auto& model = simulation.data<Model>();
     for (auto const& cont: model.contacts) {
         if ((ContactTypeIdx)cont.type != ContactTypeIdx::NAT) {
             allContacts.emplace_back((Contact) {
@@ -19,7 +19,7 @@ void NormalNative::bind(Simulation &simulation) {
 
 void NormalNative::run() {
     for (auto const& cont: curPairs) {
-        auto r12 = state.top(state.r[cont.i1] - state.r[cont.i2]);
+        auto r12 = state->top(state->r[cont.i1] - state->r[cont.i2]);
         auto x2 = r12.squaredNorm();
         if (x2 > savedSpec.cutoffSq) continue;
 
@@ -39,4 +39,9 @@ vl::Spec NormalNative::spec() const {
         baseSpec.cutoffSq = std::max(baseSpec.cutoffSq, pow(contCutoff, 2.0));
     }
     return baseSpec;
+}
+
+std::vector<Target> NormalNative::sat() const {
+    auto _sat = Force::sat();
+    _sat.insert(_sat.end(), { })
 }

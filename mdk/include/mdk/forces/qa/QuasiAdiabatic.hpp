@@ -1,5 +1,5 @@
 #pragma once
-#include <forces/NonlocalForce.hpp>
+#include "../NonlocalForce.hpp"
 #include <mdk/tools/model/Model.hpp>
 #include <mdk/tools/param/Parameters.hpp>
 #include <kernels/LennardJones.hpp>

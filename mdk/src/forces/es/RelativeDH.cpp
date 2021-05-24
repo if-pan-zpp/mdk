@@ -20,3 +20,10 @@ void RelativeDH::run() {
         state->dyn.F[p.i2] -= dV_dn * unit;
     }
 }
+
+vl::Spec RelativeDH::spec() const {
+    return (vl::Spec) {
+        .cutoffSq = pow(screeningDist, 2.0),
+        .minBondSep = 3
+    };
+}

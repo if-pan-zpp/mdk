@@ -1,13 +1,13 @@
 #pragma once
 #include <cstdint>
-#include <forces/qa/QAState.hpp>
-#include <forces/qa/Stat.hpp>
+#include "QAState.hpp"
+#include "../../stats/Stat.hpp"
 
 namespace mdk {
     struct QADiffEntry {
         QAContact cont;
         int oldIdx;
         Stat statDiffs[2];
-        enum class Request { FORM, BREAK, DESTROY } request;
+        enum class Request: int8_t { FORM, BREAK, DESTROY } request;
     };
 }

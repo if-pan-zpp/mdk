@@ -17,7 +17,7 @@ std::vector<Target> ExportPDB::req() const {
 }
 
 std::vector<Target> ExportPDB::sat() const {
-    return { state->canUpdate };
+    return { state->forceAdded };
 }
 
 void ExportPDB::run() {

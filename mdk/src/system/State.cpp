@@ -12,7 +12,7 @@ std::vector<std::unique_ptr<Task>> State::tasks() {
     auto update = [&]() -> {
         integrator->integrate(*this);
     };
-    auto updateTask = Lambda({canUpdate}, update, {stateUpdated}).unique();
+    auto updateTask = Lambda({forceAdded}, update, {stateUpdated}).unique();
 
     return { std::move(zeroDynTask), std::move(updateTask) };
 }

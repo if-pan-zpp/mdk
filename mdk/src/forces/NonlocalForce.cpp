@@ -9,3 +9,9 @@ void NonlocalForce::bind(Simulation &simulation) {
     vl = &simulation.var<vl::List>();
     vl->registerSpec(savedSpec);
 }
+
+std::vector<Target> NonlocalForce::req() const {
+    auto _req = Force::req();
+    _req.insert(_req.end(), { vl->vlChecked });
+    return _req;
+}

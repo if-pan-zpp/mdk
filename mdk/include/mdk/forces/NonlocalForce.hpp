@@ -12,6 +12,7 @@ namespace mdk {
         vl::List *vl = nullptr;
 
     public:
+        std::vector<Target> req() const override;
         void bind(Simulation& simulation) override;
     };
 }

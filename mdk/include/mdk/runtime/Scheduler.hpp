@@ -11,8 +11,6 @@ namespace mdk {
     public:
         std::vector<Target> req() const override;
         std::vector<Target> sat() const override;
-
-        void compile(Target target);
         void run() override;
 
         template<typename TaskImpl>
@@ -27,5 +25,6 @@ namespace mdk {
         std::vector<std::mutex> mutexes;
 
         bool compiled;
+        void compile();
     };
 }
