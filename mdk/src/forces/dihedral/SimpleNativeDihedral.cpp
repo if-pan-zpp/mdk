@@ -1,4 +1,4 @@
-#include <cpu/forces/dihedral/SimpleNativeDihedral.hpp>
+#include "forces/dihedral/SimpleNativeDihedral.hpp"
 using namespace mdk;
 
 void SimpleNativeDihedral::dihTerm(int i, double phi, double &V,

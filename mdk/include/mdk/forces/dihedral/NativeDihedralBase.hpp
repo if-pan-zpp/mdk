@@ -1,6 +1,7 @@
 #pragma once
-#include <forces/dihedral/DihedralBase.hpp>
-#include <data/DihedralRanges.hpp>
+#include "DihedralBase.hpp"
+#include "../../data/DihedralRanges.hpp"
+#include "../../simul/Simulation.hpp"
 
 namespace mdk {
     template<typename Impl>
@@ -9,11 +10,13 @@ namespace mdk {
         Scalars phi0;
 
     public:
-        explicit NativeDihedralBase(Model const& model) {
+        void bind(Simulation& simul) {
             using namespace boost::icl;
-            phi0 = Scalars(model.n);
-            this->ranges = DihedralRanges(model).native;
+            this->ranges = simul.data<DihedralRanges>()->native;
 
+            auto& model = *simul.data<Model>();
+
+            phi0 = Scalars(model.n);
             for (auto const& ch: model.chains) {
                 for (auto const& spIdx: ch.structuredParts) {
                     auto const& sp = model.structuredParts[spIdx];

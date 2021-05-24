@@ -8,7 +8,7 @@
 using namespace mdk;
 
 void mdk::ExportPDB::bind(Simulation &simulation) {
-    base = simulation.data<Model>();
+    base = *simulation.data<Model>();
     state = &simulation.var<State>();
 }
 

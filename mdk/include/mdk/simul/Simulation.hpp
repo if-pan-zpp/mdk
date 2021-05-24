@@ -15,7 +15,7 @@ namespace mdk {
             df(this->model, this->params) {};
 
         template<typename Data>
-        Data data() {
+        Data const* data() {
             return df.data<Data>();
         }
 

@@ -1,11 +1,14 @@
-#include <cpu/forces/angle/NativeBondAngle.hpp>
-#include <cpu/data/BondAngleRanges.hpp>
+#include "forces/angle/NativeBondAngle.hpp"
+#include "data/BondAngleRanges.hpp"
+#include "simul/Simulation.hpp"
 using namespace mdk;
 
-NativeBondAngle::NativeBondAngle(const Model &model) {
-    theta0 = Scalars(model.n);
-    ranges = BondAngleRanges(model).native;
+void NativeBondAngle::bind(Simulation &simulation) {
+    Force::bind(simulation);
 
+    ranges = simulation.data<BondAngleRanges>()->native;
+
+    auto& model = *simulation.data<Model>();
     for (auto const& ch: model.chains) {
         for (auto const& spIdx: ch.structuredParts) {
             auto const& sp = model.structuredParts[spIdx];
@@ -20,9 +23,11 @@ NativeBondAngle::NativeBondAngle(const Model &model) {
 }
 
 void NativeBondAngle::bondAngleTerm(int i, double theta, double &V,
-        double &dV_dth) const  {
+    double &dV_dth) const  {
 
     auto diff = theta - theta0[i];
     V += CBA * diff * diff;
     dV_dth += 2.0 * CBA * diff;
 }
+
+

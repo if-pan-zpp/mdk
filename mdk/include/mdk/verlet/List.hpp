@@ -10,7 +10,7 @@ namespace mdk::vl {
     class List: public TaskFactory, BoundEntity {
     private:
         State const *state = nullptr;
-        Chains chains;
+        Chains const* chains = nullptr;
         double t0 = 0.0;
         Vectors r0;
         Topology top0;
@@ -29,7 +29,6 @@ namespace mdk::vl {
         void bind(Simulation& simulation) override;
 
         Target vlChecked = Target::create();
-        bool updated;
         std::vector<std::unique_ptr<Task>> tasks() override;
     };
 }

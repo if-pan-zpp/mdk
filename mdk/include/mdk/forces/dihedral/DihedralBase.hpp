@@ -1,5 +1,5 @@
 #pragma once
-#include <forces/Force.hpp>
+#include "../Force.hpp"
 
 namespace mdk {
     template<typename Impl>
@@ -8,11 +8,11 @@ namespace mdk {
         Ranges ranges;
 
     public:
-        void eval(BaseState const& state, BaseDiff& update) const override {
+        void run() override {
             for (auto const& intv: ranges) {
                 for (int i = intv.lower(); i < intv.upper(); ++i) {
                     auto r1 = state.r[i-2], r2 = state.r[i-1], r3 = state.r[i],
-                         r4 = state.r[i+1];
+                        r4 = state.r[i+1];
                     auto r12 = r2 - r1, r23 = r3 - r2, r34 = r4 - r3;
                     auto r23_norm = r23.norm();
 
@@ -32,7 +32,7 @@ namespace mdk {
                         auto phi = acos(cos_phi), dV_dphi = 0.0;
                         if (r12_x_r23.dot(r34) < 0.0) phi = -phi;
 
-                        dihTerm(i, phi, update.V, dV_dphi);
+                        dihTerm(i, phi, state->dyn.V, dV_dphi);
 
                         auto dphi_dr1 = -unit_r12_x_r23 * r23_norm;
                         auto dphi_dr4 = -unit_r23_x_r34 * r23_norm;
@@ -41,10 +41,10 @@ namespace mdk {
                         auto dphi_dr2 = -dphi_dr1 + df;
                         auto dphi_dr3 = -dphi_dr4 - df;
 
-                        update.F[i-2] -= dV_dphi * dphi_dr1;
-                        update.F[i-1] -= dV_dphi * dphi_dr2;
-                        update.F[i] -= dV_dphi * dphi_dr3;
-                        update.F[i+1] -= dV_dphi * dphi_dr4;
+                        state->dyn.F[i-2] -= dV_dphi * dphi_dr1;
+                        state->dyn.F[i-1] -= dV_dphi * dphi_dr2;
+                        state->dyn.F[i] -= dV_dphi * dphi_dr3;
+                        state->dyn.F[i+1] -= dV_dphi * dphi_dr4;
                     }
                 }
             }

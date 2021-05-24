@@ -16,7 +16,7 @@ void List::update() {
             auto r12_norm2 = state->top(r2 - r1).squaredNorm();
 
             if (r12_norm2 <= effCutoffSq &&
-                chains.sepByAtLeastN(pt1, pt2, minBondSep)) {
+                chains->sepByAtLeastN(pt1, pt2, minBondSep)) {
 
                 pairs.emplace_back(pt1, pt2);
             }

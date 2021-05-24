@@ -5,11 +5,10 @@ namespace mdk {
     class NativeBondAngle: public BondAngleBase<NativeBondAngle> {
     private:
         Scalars theta0;
+        double CBA = 30.0 * eps/pow(rad, 2);
 
     public:
-        double CBA = 30.0 * eps/pow(rad, 2);
-        explicit NativeBondAngle(Model const& model);
-
+        void bind(Simulation& simulation) override;
         void bondAngleTerm(int i, double theta, double& V, double& dV_dth) const;
     };
 }

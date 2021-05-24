@@ -1,15 +1,21 @@
-#include "cpu/forces/LangevinDynamics.hpp"
+#include "forces/LangevinDynamics.hpp"
+#include "simul/Simulation.hpp"
 using namespace mdk;
 
-void LangevinDynamics::initVel(State &state) {
-    for (int i = 0; i < state.n; ++i) {
-        state.v[i] = random->sphere() * sqrt(3*kB*T/m[i]);
+void LangevinDynamics::bind(Simulation &simulation) {
+    Force::bind(simulation);
+    m = simulation.data<Masses>();
+    random = &simulation.var<Random>();
+
+    for (int i = 0; i < state->n; ++i) {
+        state->v[i] = random->sphere() * sqrt(3*kB*T/(*m)[i]);
     }
 }
 
-void LangevinDynamics::eval(const State &state, Dynamics &dyn) {
-    for (int i = 0; i < state.n; ++i) {
-        dyn.F[i] += -gamma*m[i]*state.v[i]
-            + sqrt(2*m[i]*gamma*kB*T) * random->sphere();
+void LangevinDynamics::run() {
+    for (int i = 0; i < state->n; ++i) {
+        state->dyn.F[i] +=
+            -gamma * (*m)[i] * state->v[i]
+            + sqrt(2.0 * (*m)[i] * gamma * kB*T) * random->sphere();
     }
 }

@@ -1,4 +1,4 @@
-#include <cpu/forces/dihedral/ComplexNativeDihedral.hpp>
+#include "forces/dihedral/ComplexNativeDihedral.hpp"
 using namespace mdk;
 
 void ComplexNativeDihedral::dihTerm(int i, double phi, double &V,

@@ -8,41 +8,41 @@
 using namespace mdk;
 
 template<>
-BondAngleRanges DataFactory::data<BondAngleRanges>() const {
+BondAngleRanges DataFactory::create<BondAngleRanges>() const {
     return BondAngleRanges(*model);
 }
 
 template<>
-Chains DataFactory::data<Chains>() const {
+Chains DataFactory::create<Chains>() const {
     return Chains(*model);
 }
 
 template<>
-Charges DataFactory::data<Charges>() const {
+Charges DataFactory::create<Charges>() const {
     return Charges(*model, *params);
 }
 
 template<>
-DihedralRanges DataFactory::data<DihedralRanges>() const {
+DihedralRanges DataFactory::create<DihedralRanges>() const {
     return DihedralRanges(*model);
 }
 
 template<>
-Masses DataFactory::data<Masses>() const {
+Masses DataFactory::create<Masses>() const {
     return Masses(*model);
 }
 
 template<>
-Types DataFactory::data<Types>() const {
+Types DataFactory::create<Types>() const {
     return Types(*model);
 }
 
 template<>
-Model DataFactory::data<Model>() const {
+Model DataFactory::create<Model>() const {
     return *model;
 }
 
 template<>
-param::Parameters DataFactory::data<param::Parameters>() const {
+param::Parameters DataFactory::create<param::Parameters>() const {
     return *params;
 }

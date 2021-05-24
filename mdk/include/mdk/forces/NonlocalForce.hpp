@@ -1,16 +1,17 @@
 #pragma once
-#include <forces/Force.hpp>
-#include <verlet/List.hpp>
-#include <verlet/Spec.hpp>
+#include "Force.hpp"
+#include "../verlet/List.hpp"
+#include "../verlet/Spec.hpp"
 
 namespace mdk {
     class NonlocalForce: public Force {
     protected:
         mutable vl::Spec _spec;
-        virtual vl::Spec recomputeSpec() const = 0;
+        virtual vl::Spec spec() const = 0;
+
+        vl::List *vl;
 
     public:
-        vl::Spec const& spec() const;
-        virtual void onVLUpdate(Pairs& vl) = 0;
+        void bind(Simulation& simulation) override;
     };
 }
