@@ -2,13 +2,13 @@
 #include "../system/State.hpp"
 #include "../utils/Units.hpp"
 #include "../runtime/TaskFactory.hpp"
-#include "../simul/BoundEntity.hpp"
+#include "../simul/SimulVar.hpp"
 #include "../data/Chains.hpp"
 #include "UpdateScheduler.hpp"
 #include "Spec.hpp"
 
 namespace mdk::vl {
-    class List: public TaskFactory, BoundEntity {
+    class List: public TaskFactory, SimulVar {
     private:
         State const *state = nullptr;
         Chains const* chains = nullptr;

@@ -5,10 +5,8 @@ using namespace mdk;
 void PauliExclusion::bind(Simulation &simulation) {
     NonlocalForce::bind(simulation);
 
-    auto updateVL = [&]() -> {
-        exclPairs = vl->pairs;
-    };
-    auto updateTask = Lambda({}, updateVL, {}).unique();
+    auto update = [this]() -> void { updateLocalVL(); };
+    auto updateTask = Lambda({}, update, {}).unique();
     vl->updateScheduler.asyncUpdates.emplace_back(std::move(updateTask));
 }
 
@@ -30,4 +28,8 @@ void PauliExclusion::run() {
 
         stlj.asForce(unit, x, state->dyn.V, state->dyn.F[i1], state->dyn.F[i2]);
     }
+}
+
+void PauliExclusion::updateLocalVL() {
+    exclPairs = vl->pairs;
 }

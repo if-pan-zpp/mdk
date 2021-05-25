@@ -11,6 +11,8 @@ namespace mdk {
         std::vector<Contact> pairs;
         Eigen::Matrix<int8_t, Eigen::Dynamic, 1> charge;
 
+        void vlUpdateHook() override;
+
     public:
         void bind(Simulation& simulation) override;
     };

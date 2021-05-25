@@ -1,11 +1,9 @@
 #include "runtime/Target.hpp"
 using namespace mdk;
 
-Target Target::create() {
+Target::Target() {
     static int globalUID = 1;
-    Target target;
-    target.uid = globalUID++;
-    return target;
+    uid = globalUID++;
 }
 
 bool Target::operator==(const Target &other) const {

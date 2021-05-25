@@ -16,10 +16,10 @@ void HeuresticBondAngle::bondAngleTerm(int i, double theta, double &V,
 void HeuresticBondAngle::bind(Simulation &simulation) {
     Force::bind(simulation);
 
-    auto& model = *simulation.data<Model>();
-    auto& params = *simulation.data<param::Parameters>();
+    auto& model = simulation.data<Model>();
+    auto& params = simulation.data<param::Parameters>();
 
-    ranges = simulation.data<BondAngleRanges>()->nonNative;
+    ranges = simulation.data<BondAngleRanges>().nonNative;
 
     angleTypes = Eigen::Matrix<int8_t, Eigen::Dynamic, 1>(model.n);
     for (auto const& chain: model.chains) {

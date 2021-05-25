@@ -12,6 +12,7 @@ namespace mdk {
 
     protected:
         vl::Spec spec() const override;
+        void updateLocalVL() override;
 
     private:
         Pairs exclPairs;

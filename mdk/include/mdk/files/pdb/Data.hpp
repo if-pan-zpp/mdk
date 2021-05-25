@@ -11,6 +11,6 @@ namespace mdk::pdb {
     public:
         Data() = default;
         explicit Data(pdb::Model const& model);
-        db::Model asModel() const;
+        pdb::Model asModel() const;
     };
 }

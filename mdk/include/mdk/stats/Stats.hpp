@@ -1,28 +1,69 @@
 #pragma once
 #include "Stat.hpp"
-#include "../simul/BoundEntity.hpp"
+#include "../simul/SimulVar.hpp"
 #include <vector>
 #include "../runtime/TaskFactory.hpp"
+#include "../data/Types.hpp"
+#include "../files/param/Parameters.hpp"
 
 namespace mdk {
-    struct StatDiff {
-        int i1, i2;
-        Stat diffs[2];
-        enum class Status: int8_t { CREATED, ACCEPTED, REJECTED } status;
-    };
+    class Stats: public SimulVar {
+    private:
+        Types const *types = nullptr;
+        std::vector<param::Polarization> polarization;
 
-    class Stats: public BoundEntity, TaskFactory {
     public:
         std::vector<Stat> stats;
         bool used = false;
 
-        std::vector<StatDiff> statDiffs;
-
-        Target diffsReset = Target::create();
-        Target diffsAdded = Target::create();
-        Target statsUpdated = Target::create();
+        Target updatedAsync;
 
         void bind(Simulation& simulation) override;
-        std::vector<std::unique_ptr<Task>> tasks() override;
+
+        enum class Type: int8_t {
+            BB, BS, SB, SS
+        };
+
+        inline void creationDiffs(int i1, int i2, Type type, Stat diffs[2]) const {
+            diffs[0] = diffs[1] = Stat();
+
+            switch (type) {
+            case Type::BB:
+                --diffs[0].backbone;
+                --diffs[1].backbone;
+                break;
+            case Type::BS:
+                --diffs[0].backbone;
+                --diffs[1].sidechain;
+                break;
+            case Type::SB:
+                --diffs[0].sidechain;
+                --diffs[1].backbone;
+                break;
+            case Type::SS:
+                --diffs[0].sidechain;
+                --diffs[1].sidechain;
+            }
+
+            if (type == Type::SS) {
+                int idx[2] = {i1, i2};
+                for (int k = 0; k < 2; ++k) {
+                    switch (polarization[types[idx[1-k]]]) {
+                    case param::Polarization::POLAR:
+                    case param::Polarization::POLAR_NEG:
+                    case param::Polarization::POLAR_POS:
+                        --diffs[k].polarSS;
+                        break;
+
+                    case param::Polarization::HYDROPHOBIC:
+                        --diffs[k].hydrophobicSS;
+                        break;
+
+                    default:
+                        break;
+                    }
+                }
+            }
+        }
     };
 }

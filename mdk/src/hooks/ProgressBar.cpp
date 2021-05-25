@@ -17,12 +17,8 @@ void ProgressBar::bind(Simulation &simulation) {
     state = &simulation.var<State>();
 }
 
-std::vector<Target> ProgressBar::req() const {
-    return { state->stateUpdated };
-}
-
-std::vector<Target> ProgressBar::sat() const {
-    return { simul->loopFinished };
+std::vector<Target*> ProgressBar::req() {
+    return { &state->stateUpdated };
 }
 
 void ProgressBar::run() {

@@ -22,7 +22,6 @@ namespace mdk {
     private:
         std::vector<std::unique_ptr<Task>> tasks;
         std::unordered_map<Target, std::vector<int>> taskReqs, taskSats;
-        std::vector<std::mutex> mutexes;
 
         bool compiled;
         void compile();

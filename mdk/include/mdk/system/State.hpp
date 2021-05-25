@@ -3,6 +3,7 @@
 #include "../runtime/TaskFactory.hpp"
 #include "../utils/Topology.hpp"
 #include "../model/Model.hpp"
+#include "../simul/SimulVar.hpp"
 #include "Integrator.hpp"
 
 namespace mdk {
@@ -12,7 +13,7 @@ namespace mdk {
         Vectors F;
     };
 
-    class State: public TaskFactory {
+    class State: public TaskFactory, SimulVar {
     public:
         int n;
         Vectors r, v;
@@ -21,14 +22,10 @@ namespace mdk {
 
         Dynamics dyn;
 
-        Target dynReset = Target::create();
-        Target forceAdded = Target::create();
-        Target stateUpdated = Target::create();
+        Target forcesReset, beforeUpdate, stateUpdated;
         std::vector<std::unique_ptr<Task>> tasks() override;
 
-        void updateModel(Model& model);
-
-    private:
-        std::unique_ptr<Integrator> integrator;
+        void bind(Simulation& simul) override;
+        void exportTo(Model& model);
     };
 }

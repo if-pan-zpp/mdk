@@ -1,17 +1,16 @@
 #pragma once
 #include "../runtime/Task.hpp"
 #include "../system/State.hpp"
-#include "../simul/BoundEntity.hpp"
+#include "../simul/SimulVar.hpp"
 #include <chrono>
 
 namespace mdk {
-    class ProgressBar: public Task, BoundEntity {
+    class ProgressBar: public Task, SimulVar {
     public:
         explicit ProgressBar(double totalTime, int width = 70);
 
         void bind(Simulation& simulation) override;
-        std::vector<Target> req() const override;
-        std::vector<Target> sat() const override;
+        std::vector<Target*> req() override;
         void run() override;
 
     private:

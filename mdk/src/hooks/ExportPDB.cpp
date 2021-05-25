@@ -12,12 +12,8 @@ void mdk::ExportPDB::bind(Simulation &simulation) {
     state = &simulation.var<State>();
 }
 
-std::vector<Target> ExportPDB::req() const {
-    return {};
-}
-
-std::vector<Target> ExportPDB::sat() const {
-    return { state->forceAdded };
+std::vector<Target*> ExportPDB::sat() {
+    return { &state->beforeUpdate };
 }
 
 void ExportPDB::run() {

@@ -3,7 +3,7 @@
 namespace mdk {
     class Simulation;
 
-    class BoundEntity {
+    class SimulVar {
     public:
         virtual void bind(Simulation& simulation) = 0;
     };

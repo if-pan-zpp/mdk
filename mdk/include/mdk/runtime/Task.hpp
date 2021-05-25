@@ -5,8 +5,8 @@
 namespace mdk {
     class Task {
     public:
-        virtual std::vector<Target> req() const = 0;
-        virtual std::vector<Target> sat() const = 0;
+        virtual std::vector<Target*> req();
+        virtual std::vector<Target*> sat();
         virtual void run() = 0;
     };
 }

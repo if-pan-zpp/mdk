@@ -114,18 +114,7 @@ void PseudoImproperDihedral::bind(Simulation &simulation) {
         }
     }
 
-    auto update = [&]() -> {
-        pairs.clear();
-        for (auto const& [i1, i2]: vl) {
-            if (!(seqs->sepByN(i1, i2, 4) || seqs->isTerminal[i1]
-                  || !seqs->isTerminal[i2])) {
-
-                pairs.emplace_back(i1, i2);
-            }
-        }
-    };
-    auto updateTask = Lambda({}, update, {}).unique();
-    vl->updateScheduler.asyncUpdates.emplace_back(std::move(updateTask));
+    installIntoVL();
 }
 
 vl::Spec PseudoImproperDihedral::spec() const {
@@ -145,7 +134,7 @@ vl::Spec PseudoImproperDihedral::spec() const {
     };
 }
 
-void PseudoImproperDihedral::run() {
+void PseudoImproperDihedral::computeForce() {
     for (auto const& [i1, i2]: pairs) {
         auto r12 = state.top(state.r[i1] - state.r[i2]);
         auto r12_normsq = r12.squaredNorm();
@@ -179,3 +168,14 @@ void PseudoImproperDihedral::run() {
         state->dyn.F[i2] -= C * unit;
     }
 }
+
+void PseudoImproperDihedral::vlUpdateHook() {
+    pairs.clear();
+    for (auto const& [i1, i2]: vl->pairs) {
+        if (seqs->sepByN(i1, i2, 4) || seqs->isTerminal[i1] || !seqs->isTerminal[i2])
+            continue;
+
+        pairs.emplace_back(i1, i2);
+    }
+}
+

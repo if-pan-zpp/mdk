@@ -6,7 +6,7 @@ using namespace mdk;
 void NativeBondAngle::bind(Simulation &simulation) {
     Force::bind(simulation);
 
-    ranges = simulation.data<BondAngleRanges>()->native;
+    ranges = simulation.data<BondAngleRanges>().native;
 
     auto& model = *simulation.data<Model>();
     for (auto const& ch: model.chains) {

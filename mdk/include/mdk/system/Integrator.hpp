@@ -1,10 +1,21 @@
 #pragma once
+#include "../simul/SimulVar.hpp"
+#include "../runtime/Task.hpp"
+#include "simul/Simulation.hpp"
+#include "State.hpp"
 
 namespace mdk {
-    class State;
+    class Integrator: public SimulVar, Task {
+    protected:
+        State *state;
 
-    class Integrator {
     public:
-        virtual void integrate(State& state) = 0;
+        std::vector<Target*> req() override;
+        std::vector<Target*> sat() override;
+
+        void bind(Simulation& simulation) override;
+        void run() override;
+
+        virtual void integrate() = 0;
     };
 }

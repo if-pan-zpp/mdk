@@ -9,7 +9,7 @@ namespace mdk {
         Ranges ranges;
 
     public:
-        void run() override {
+        void computeForce() override {
             for (auto const& intv: ranges) {
                 for (int i = intv.lower(); i < intv.upper(); ++i) {
                     auto r1 = state->r[i-1], r2 = state->r[i], r3 = state->r[i+1];

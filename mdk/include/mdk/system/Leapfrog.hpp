@@ -2,15 +2,15 @@
 #include "Integrator.hpp"
 #include "../utils/Units.hpp"
 #include "../data/Masses.hpp"
-#include "../simul/BoundEntity.hpp"
+#include "../simul/SimulVar.hpp"
 
 namespace mdk {
-    class Leapfrog: public Integrator, BoundEntity {
+    class Leapfrog: public Integrator {
     public:
         explicit Leapfrog(double dt): dt(dt) {};
 
         void bind(Simulation& simulation) override;
-        void integrate(State& state) override;
+        void integrate() override;
 
     private:
         double dt = 0.005 * tau;

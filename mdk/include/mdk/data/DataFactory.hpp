@@ -13,13 +13,12 @@ namespace mdk {
             model(&model), params(&params) {};
 
         template<typename Data>
-        Data const& data() const {
+        Data const& data() {
             auto idx = std::type_index(typeid(Data));
             if (savedData.find(idx) == savedData.end()) {
-                auto _data = std::make_shared<Data>(create<Data>());
-                savedData.insert(idx, _data);
+                savedData.emplace(idx, create<Data>());
             }
-            return savedData.at(idx);
+            return std::any_cast<Data>(savedData.at(idx));
         }
 
     private:

@@ -11,10 +11,12 @@ namespace mdk {
 
     public:
         void bind(Simulation& simul) {
-            using namespace boost::icl;
-            this->ranges = simul.data<DihedralRanges>()->native;
+            Force::bind(simul);
 
-            auto& model = *simul.data<Model>();
+            using namespace boost::icl;
+            this->ranges = simul.data<DihedralRanges>().native;
+
+            auto& model = simul.data<Model>();
 
             phi0 = Scalars(model.n);
             for (auto const& ch: model.chains) {

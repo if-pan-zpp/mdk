@@ -10,9 +10,12 @@ namespace mdk {
         virtual vl::Spec spec() const = 0;
 
         vl::List *vl = nullptr;
+        virtual void vlUpdateHook() = 0;
+
+        void installIntoVL(bool async = true);
 
     public:
-        std::vector<Target> req() const override;
+        std::vector<Target*> req() override;
         void bind(Simulation& simulation) override;
     };
 }

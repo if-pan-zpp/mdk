@@ -4,7 +4,8 @@
 namespace mdk {
     class Target {
     public:
-        static Target create();
+        Target();
+        bool required = false;
 
         bool operator<(Target const& other) const;
         bool operator==(Target const& other) const;

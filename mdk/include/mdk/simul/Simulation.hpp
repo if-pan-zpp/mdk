@@ -2,7 +2,7 @@
 #include "../model/Model.hpp"
 #include "../files/param/Parameters.hpp"
 #include "../data/DataFactory.hpp"
-#include "BoundEntity.hpp"
+#include "SimulVar.hpp"
 #include <typeindex>
 #include <any>
 #include <type_traits>
@@ -26,7 +26,8 @@ namespace mdk {
                 return add<Var>();
             }
             else {
-                return static_cast<Var&>(vars.at(idx));
+                auto& _var = vars.at(idx);
+                return std::any_cast<Var&>(_var);
             }
         }
 
@@ -34,8 +35,6 @@ namespace mdk {
         Entity& add() {
             // TODO: write this part super-generically
         }
-
-        Target loopFinished = Target::create();
 
     private:
         Model model;

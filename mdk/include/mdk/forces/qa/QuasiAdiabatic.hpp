@@ -1,39 +1,65 @@
 #pragma once
 #include "../NonlocalForce.hpp"
-#include <mdk/tools/model/Model.hpp>
-#include <mdk/tools/param/Parameters.hpp>
-#include <kernels/LennardJones.hpp>
-#include <kernels/SidechainLJ.hpp>
-#include <data/Types.hpp>
-#include <data/Chains.hpp>
+#include "../../model/Model.hpp"
+#include "../../files/param/Parameters.hpp"
+#include "../../kernels/LennardJones.hpp"
+#include "../../kernels/SidechainLJ.hpp"
+#include "../../data/Types.hpp"
+#include "../../data/Chains.hpp"
+#include "../../stats/Stats.hpp"
+#include "../../runtime/TaskFactory.hpp"
+#include <mutex>
 
 namespace mdk {
-    class QuasiAdiabatic: public NonlocalForce {
+    struct QAContact {
+        int i1, i2;
+        enum class Status: int8_t { FORMING, BREAKING, REMOVED } status;
+        Stats::Type type;
+        double t0;
+    };
+
+    struct QAFreePair {
+        int i1, i2;
+        enum class Status: int8_t { FREE, TAKEN } status;
+    };
+
+    struct QADiff {
+        QAContact cont;
+        int oldIdx;
+        Stat statDiffs[2];
+    };
+
+    class QuasiAdiabatic: public NonlocalForce, TaskFactory {
     public:
-        QuasiAdiabatic(Model const& model, param::Parameters const& params);
-
-        void onVLUpdate(Pairs& vl, BaseState& state) override;
-        void eval(BaseState const& state, BaseDiff& update) const override;
-        
-        bool checkStat(int i, Stat const& stat) const;
-
-    protected:
-        vl::Spec recomputeSpec() const override;
+        void bind(Simulation &simulation) override;
+        std::vector<Target*> sat() override;
+        void computeForce() override;
+        std::vector<std::unique_ptr<Task>> tasks() override;
 
     private:
-        Types types;
-        param::Parameters::SpecificityParams specs[AminoAcid::N];
-        Chains seqs;
+        vl::Spec spec() const override;
+        void vlUpdateHook() override;
+
+        Types const *types = nullptr;
+        Chains const *chains = nullptr;
 
         LennardJones bb_lj = LennardJones(5.0 * angstrom, 1.0 * eps);
         LennardJones bs_lj = LennardJones(6.8 * angstrom, 1.0 * eps);
         SidechainLJ ss_ljs[AminoAcid::N][AminoAcid::N];
 
         Vectors n, h;
+        double formationMaxDistSq;
         double hr_abs_min = 0.92, hh_abs_min = 0.75, nr_max = 0.5;
 
         double formationTolerance = 1.0, formationTime = 10.0 * tau;
         double breakingTolerance = 1.0, breakingTime = 10.0 * tau;
+
+        std::vector<QAContact> oldPairs, pairs;
+        std::vector<QAFreePair> freePairs;
+
+        Stats *stats;
+        std::mutex qaDiffsMutex;
+        std::vector<QADiff> qaDiffs;
 
         struct PairInfo {
             int i1, i2;
@@ -41,22 +67,8 @@ namespace mdk {
             double norm;
         };
 
-        std::vector<QAContact> oldQAContacts;
-
+        void computeNH();
         bool geometryPhase(PairInfo const& p, QADiff& diff) const;
-
-        void forwardStatDiff(int i1, int i2, QAContact const& diff,
-            Stat diffs[2]) const;
-
-        bool coordinationPhase(PairInfo const& p, BaseState const& state,
-            QADiff& diff) const;
-
-        void tryForming(PairInfo const& p, BaseState const& state,
-            BaseDiff& diff) const;
-
-        void tryBreaking(PairInfo const& p, BaseState const& state,
-            QAContact const& cont, BaseDiff& diff) const;
-
-        void destroy(QAContact& cont, BaseDiff& diff) const;
+        void formationPass();
     };
 }
