@@ -27,6 +27,10 @@ namespace mdk {
         QAContact cont;
         int oldIdx;
         Stat statDiffs[2];
+
+        bool operator<(QADiff const& other) const {
+            return oldIdx < other.oldIdx;
+        }
     };
 
     class QuasiAdiabatic: public NonlocalForce, TaskFactory {

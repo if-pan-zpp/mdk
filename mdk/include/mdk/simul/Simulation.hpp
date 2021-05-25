@@ -2,6 +2,8 @@
 #include "../model/Model.hpp"
 #include "../files/param/Parameters.hpp"
 #include "../data/DataFactory.hpp"
+#include "../runtime/Scheduler.hpp"
+#include "../runtime/TaskFactory.hpp"
 #include "SimulVar.hpp"
 #include <typeindex>
 #include <any>
@@ -31,16 +33,43 @@ namespace mdk {
             }
         }
 
-        template<typename Entity>
-        Entity& add() {
-            // TODO: write this part super-generically
+        template<typename T, typename... Args>
+        T& add(Args&&... args) {
+            auto& _var = vars[std::type_index(typeid(T))];
+            _var = T(std::forward<Args>(args)...);
+            auto& x = std::any_cast<T&>(_var);
+
+            if constexpr (std::is_base_of_v<SimulVar, T>) {
+                ((SimulVar&)x).bind(*this);
+            }
+
+            if constexpr (std::is_base_of_v<Task, T>) {
+                sched.add(&x);
+            }
+
+            if constexpr (std::is_base_of_v<TaskFactory, T>) {
+                auto tasks = ((TaskFactory&)x).tasks();
+                for (auto& task: tasks) {
+                    sched.add(task.get());
+                }
+
+                extraTasks.insert(extraTasks.end(),
+                    std::make_move_iterator(tasks.begin()),
+                    std::make_move_iterator(tasks.end()));
+            }
+
+            return x;
         }
+
+        void step();
 
     private:
         Model model;
         param::Parameters params;
         DataFactory df;
+        Scheduler sched;
 
         std::unordered_map<std::type_index, std::any> vars;
+        std::vector<std::unique_ptr<Task>> extraTasks;
     };
 }

@@ -125,8 +125,11 @@ void QuasiAdiabatic::vlUpdateHook() {
     auto oldPairsEnd = oldPairs.end();
 
     for (auto& pair : vl->pairs) {
-        if (chains->isTerminal[pair.first] || chains->isTerminal[pair.second])
+        if (chains->isTerminal[pair.first] || chains->isTerminal[pair.second]
+            || !chains->sepByAtLeastN(pair.first, pair.second, 3)) {
+
             continue;
+        }
 
         while (oldPairsIter != oldPairsEnd && *oldPairsIter < pair)
             ++oldPairsIter;
@@ -230,6 +233,7 @@ void QuasiAdiabatic::formationPass() {
         qaDiffsMutex.unlock();
     }
 
+    std::sort(qaDiffs.begin(), qaDiffs.end());
     for (auto const& diff: qaDiffs) {
         auto& stat1 = stats->stats[diff.cont.i1];
         auto res1 = stat1 + diff.statDiffs[0];

@@ -19,7 +19,7 @@ void ConstDH::run() {
         auto x = sqrt(x2);
         auto unit = r12/x;
 
-        auto V_DH = coeff * exp(-x/screeningDist)/x;
+        auto V_DH = coeff * p.q1_x_q2 * exp(-x/screeningDist)/x;
         state->dyn.V += V_DH;
 
         auto dV_dx = -V_DH * (1.0 + x/screeningDist)/x;
