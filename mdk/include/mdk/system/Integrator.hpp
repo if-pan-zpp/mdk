@@ -1,7 +1,7 @@
 #pragma once
 #include "../simul/SimulVar.hpp"
 #include "../runtime/Task.hpp"
-#include "simul/Simulation.hpp"
+#include "../simul/Simulation.hpp"
 #include "State.hpp"
 
 namespace mdk {

@@ -1,8 +1,10 @@
-#include <mdk/cpu/simul/Simulation.hpp>
-#include <mdk/tools/pdb/Parser.hpp>
-#include <mdk/cpu/hooks/ExportPDB.hpp>
-#include <mdk/cpu/hooks/ProgressBar.hpp>
-#include <mdk/tools/param/LegacyParser.hpp>
+#include <mdk/simul/Simulation.hpp>
+#include <mdk/files/pdb/Parser.hpp>
+#include <mdk/hooks/ExportPDB.hpp>
+#include <mdk/hooks/ProgressBar.hpp>
+#include <mdk/files/param/LegacyParser.hpp>
+#include <mdk/forces/All.hpp>
+#include <mdk/system/Leapfrog.hpp>
 #include <fstream>
 using namespace mdk;
 using namespace std;
@@ -17,34 +19,35 @@ int main() {
     atomic.addContactsFromAtomOverlap();
     auto model = atomic.coarsen();
 
-    auto rand = make_shared<FortranRandom>(0);
+    auto rand = make_shared<Random>(0);
     auto density = 1e-4*atom/pow(angstrom, 3);
     auto ixDist = 4.56*angstrom;
     model.morphIntoSAW(*rand, false, density, ixDist);
 
     ofstream model0("data/model_0.pdb");
-    pdb::Parser().write(model0, pdb::Data(AtomicModel(model)));
+    pdb::Parser().write(model0, pdb::Data(pdb::Model(model)));
 
-    Simulation simul(model);
-    Masses masses(model);
+    Simulation simul(model, params);
 
-    simul.leapfrog = Leapfrog(masses);
-    simul.langDyn = LangevinDynamics(masses, rand, 2.0/tau, 300.0*Kelvin);
-    simul.harm = HarmonicTethers(model, true);
-    simul.nativeBA = NativeBondAngles(model);
-    simul.compNativeDih = ComplexNativeDihedrals(model);
-    simul.natCont = NativeContacts(model);
-//    simul.constDH = ConstDH(Charges(model, params));
-//    simul.quasiAd = QuasiAdiabatic(model, params);
-    simul.pauliExcl = PauliExclusion();
+    simul.add<Leapfrog>(0.002 * tau);
+    simul.add<LangevinDynamics>(2.0/tau, 300.0*Kelvin);
+    simul.add<Tether>(true);
+    simul.add<NativeBondAngle>();
+    simul.add<HeuresticBondAngle>();
+    simul.add<ComplexNativeDihedral>();
+    simul.add<HeuresticDihedral>();
+    simul.add<NativeContacts>();
+    simul.add<ConstDH>();
+    simul.add<QuasiAdiabatic>();
+    simul.add<PauliExclusion>();
 
-    simul.hooks.emplace_back(make_shared<ExportPDB>(model,
-       10*nanosecond, "model.pdb"));
-
+    simul.add<ExportPDB>("model.pdb", 10.0 * nanosecond);
     auto time = 15000.0*tau;
-    simul.hooks.emplace_back(make_shared<ProgressBar>(time));
+    simul.add<ProgressBar>(time);
 
-    simul.step(time);
+    auto& state = simul.var<State>();
+    while (state.t < time)
+        simul.step();
 
     return 0;
 }

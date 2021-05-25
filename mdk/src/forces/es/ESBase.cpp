@@ -34,7 +34,7 @@ void ESBase::vlUpdateHook() {
         auto q1_x_q2 = charge[i1] * charge[i2];
         if (q1_x_q2 != 0) {
             pairs.emplace_back((Contact) {
-                .i1 = i1, .i2 = i2, .q1_x_q2 = q1_x_q2
+                .i1 = i1, .i2 = i2, .q1_x_q2 = (double)q1_x_q2
             });
         }
     }

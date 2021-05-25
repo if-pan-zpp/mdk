@@ -1,7 +1,7 @@
 #include "forces/es/RelativeDH.hpp"
 using namespace mdk;
 
-void RelativeDH::run() {
+void RelativeDH::computeForce() {
     auto coeff = pow(echarge, 2.0) / (4.0 * M_PI /  r0);
 
     for (auto const& p: pairs) {

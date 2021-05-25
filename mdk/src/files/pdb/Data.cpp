@@ -86,7 +86,7 @@ Data::Data(const pdb::Model &model) {
     }
 
     for (auto const& [chainIdx, chain]: model.chains) {
-        pdb::Model::Atom *finalAtom;
+        pdb::Model::Atom *finalAtom = nullptr;
 
         for (auto const& res: chain.residues) {
             for (auto const& atom: res->atoms) {

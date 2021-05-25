@@ -1,5 +1,6 @@
 #include "forces/qa/QuasiAdiabatic.hpp"
 #include "runtime/Lambda.hpp"
+#include <Eigen/Core>
 #include <algorithm>
 using namespace mdk;
 using namespace mdk::param;

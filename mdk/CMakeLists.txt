@@ -34,6 +34,5 @@ find_package(Eigen3 REQUIRED)
 find_package(Catch2 REQUIRED)
 
 target_link_libraries(${TARGET}
-    PRIVATE
-    Eigen3::Eigen
-    Catch2::Catch2)
+    PUBLIC Eigen3::Eigen
+    PRIVATE Catch2::Catch2)

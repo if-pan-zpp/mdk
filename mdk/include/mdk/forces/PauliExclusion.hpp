@@ -1,6 +1,6 @@
 #pragma once
-#include <forces/NonlocalForce.hpp>
-#include <kernels/ShiftedTruncatedLJ.hpp>
+#include "NonlocalForce.hpp"
+#include "../kernels/ShiftedTruncatedLJ.hpp"
 
 namespace mdk {
     class PauliExclusion: public NonlocalForce {
@@ -8,7 +8,7 @@ namespace mdk {
         ShiftedTruncatedLJ stlj;
 
         void bind(Simulation& simulation) override;
-        void run() override;
+        void computeForce() override;
 
     protected:
         vl::Spec spec() const override;

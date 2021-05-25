@@ -1,5 +1,5 @@
 #pragma once
-#include <Eigen/Core>
+#include <Eigen/Dense>
 #include "Vectors.hpp"
 #include "Ranges.hpp"
 

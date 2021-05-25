@@ -8,6 +8,7 @@
 #include "../../data/Chains.hpp"
 #include "../../stats/Stats.hpp"
 #include "../../runtime/TaskFactory.hpp"
+#include "../../data/Primitives.hpp"
 #include <mutex>
 
 namespace mdk {

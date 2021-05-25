@@ -41,17 +41,17 @@ namespace mdk {
 
         template<typename T, typename... Args>
         T& add(Args&&... args) {
-            auto _var = std::make_any<T>(std::forward<Args>(args)...);
+            auto _var = std::make_shared<T>(std::forward<Args>(args)...);
             auto idx = std::type_index(typeid(T));
             auto xiter = vars.insert(std::make_pair(idx, std::move(_var))).first;
-            auto& x = std::any_cast<T&>(xiter->second);
+            auto& x = *std::any_cast<std::shared_ptr<T>&>(xiter->second);
 
             if constexpr (std::is_base_of_v<SimulVar, T>) {
                 ((SimulVar&)x).bind(*this);
             }
 
             if constexpr (std::is_base_of_v<Task, T>) {
-                sched.add(&x);
+                sched.add((Task*)&x);
             }
 
             if constexpr (std::is_base_of_v<TaskFactory, T>) {

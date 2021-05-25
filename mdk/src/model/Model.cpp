@@ -172,7 +172,7 @@ vector<pair<Model::Residue*, Model::Residue*>> Model::nonlocalPairs() {
 }
 
 void Model::useAverageMasses() {
-    double sum;
+    double sum = 0.0;
     for (auto& acid: AminoAcid::aminoAcids())
         sum += acid.info().mass;
     sum /= AminoAcid::N;

@@ -1,5 +1,5 @@
 #pragma once
-#include <forces/angle/BondAngleBase.hpp>
+#include "BondAngleBase.hpp"
 
 namespace mdk {
     class NativeBondAngle: public BondAngleBase<NativeBondAngle> {

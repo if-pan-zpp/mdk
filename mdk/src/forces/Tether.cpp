@@ -29,7 +29,7 @@ void Tether::bind(Simulation &simulation) {
     }
 }
 
-void Tether::run() {
+void Tether::computeForce() {
     auto& diff = state->dyn;
     for (auto const& intv: ranges) {
         for (int i = intv.lower(); i < intv.upper(); ++i) {

@@ -10,6 +10,6 @@ namespace mdk {
         double screeningDist = 10.0 * angstrom;
         double r0 = 4.0 * angstrom;
 
-        void run() override;
+        void computeForce() override;
     };
 }

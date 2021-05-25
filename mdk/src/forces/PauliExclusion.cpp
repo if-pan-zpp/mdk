@@ -14,7 +14,7 @@ vl::Spec PauliExclusion::spec() const {
     };
 }
 
-void PauliExclusion::run() {
+void PauliExclusion::computeForce() {
     for (auto const& [i1, i2]: exclPairs) {
         auto r12 = state->top(state->r[i1] - state->r[i2]);
         auto x2 = r12.squaredNorm();
