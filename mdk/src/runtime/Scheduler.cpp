@@ -1,6 +1,5 @@
 #include "runtime/Scheduler.hpp"
 #include <unordered_map>
-#include <unordered_set>
 using namespace mdk;
 
 void Scheduler::add(Task *task) {

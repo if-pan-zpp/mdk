@@ -48,7 +48,7 @@ namespace mdk {
             if (type == Type::SS) {
                 int idx[2] = {i1, i2};
                 for (int k = 0; k < 2; ++k) {
-                    switch (polarization[types[idx[1-k]]]) {
+                    switch (polarization[(int8_t)(*types)[idx[1-k]]]) {
                     case param::Polarization::POLAR:
                     case param::Polarization::POLAR_NEG:
                     case param::Polarization::POLAR_POS:

@@ -11,8 +11,8 @@ namespace mdk {
         void computeForce() override {
             for (auto const& intv: ranges) {
                 for (int i = intv.lower(); i < intv.upper(); ++i) {
-                    auto r1 = state.r[i-2], r2 = state.r[i-1], r3 = state.r[i],
-                        r4 = state.r[i+1];
+                    auto r1 = state->r[i-2], r2 = state->r[i-1],
+                         r3 = state->r[i],   r4 = state->r[i+1];
                     auto r12 = r2 - r1, r23 = r3 - r2, r34 = r4 - r3;
                     auto r23_norm = r23.norm();
 
@@ -36,7 +36,7 @@ namespace mdk {
 
                         auto dphi_dr1 = -unit_r12_x_r23 * r23_norm;
                         auto dphi_dr4 = -unit_r23_x_r34 * r23_norm;
-                        auto df = (-dphi_dr1*r12.dot(r23)+dphi_dr4*r23.dot(r34));
+                        Vector df = (-dphi_dr1*r12.dot(r23)+dphi_dr4*r23.dot(r34));
                         df /= (r23_norm * r23_norm);
                         auto dphi_dr2 = -dphi_dr1 + df;
                         auto dphi_dr3 = -dphi_dr4 - df;
@@ -51,7 +51,7 @@ namespace mdk {
         }
 
         void dihTerm(int i, double phi, double& V, double& dV_dphi) const {
-            static_cast<Impl const&>(*this).formula(i, phi, V, dV_dphi);
+            static_cast<Impl const&>(*this).dihTerm(i, phi, V, dV_dphi);
         }
     };
 }

@@ -29,7 +29,7 @@ namespace mdk::vl {
         Pairs pairs;
         void bind(Simulation& simulation) override;
 
-        Target vlChecked = Target::create();
+        Target vlChecked;
         std::vector<std::unique_ptr<Task>> tasks() override;
         UpdateScheduler updateScheduler;
     };

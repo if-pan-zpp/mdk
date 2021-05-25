@@ -4,10 +4,7 @@ using namespace mdk;
 
 void PauliExclusion::bind(Simulation &simulation) {
     NonlocalForce::bind(simulation);
-
-    auto update = [this]() -> void { updateLocalVL(); };
-    auto updateTask = Lambda({}, update, {}).unique();
-    vl->updateScheduler.asyncUpdates.emplace_back(std::move(updateTask));
+    installIntoVL();
 }
 
 vl::Spec PauliExclusion::spec() const {
@@ -30,6 +27,6 @@ void PauliExclusion::run() {
     }
 }
 
-void PauliExclusion::updateLocalVL() {
+void PauliExclusion::vlUpdateHook() {
     exclPairs = vl->pairs;
 }

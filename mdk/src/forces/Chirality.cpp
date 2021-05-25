@@ -8,7 +8,7 @@ void Chirality::bind(Simulation &simulation) {
     d0_cube_inv = Scalars(state->n);
     C_nat = Scalars(state->n);
 
-    auto& model = *simulation.data<Model>();
+    auto& model = simulation.data<Model>();
 
     for (auto const& chain: model.chains) {
         auto start = chain.start + 2, end = chain.end - 1;

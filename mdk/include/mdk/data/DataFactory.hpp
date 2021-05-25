@@ -18,7 +18,7 @@ namespace mdk {
             if (savedData.find(idx) == savedData.end()) {
                 savedData.emplace(idx, create<Data>());
             }
-            return std::any_cast<Data>(savedData.at(idx));
+            return std::any_cast<Data const&>(savedData.at(idx));
         }
 
     private:

@@ -192,7 +192,7 @@ void QuasiAdiabatic::formationPass() {
     qaDiffs.clear();
     computeNH();
 
-    for (int i = 0; i < freePairs.size(); ++i) {
+    for (int i = 0; i < (int)freePairs.size(); ++i) {
         auto const& p = freePairs[i];
 
         if (p.status == QAFreePair::Status::TAKEN)
@@ -264,7 +264,10 @@ void QuasiAdiabatic::computeNH() {
 std::vector<std::unique_ptr<Task>> QuasiAdiabatic::tasks() {
     auto formationLam = [this]() -> void { formationPass(); };
     auto formationTask = Lambda({ &stats->updatedAsync }, formationLam, {}).unique();
-    return {std::move(formationTask)};
+
+    std::vector<std::unique_ptr<Task>> _tasks;
+    _tasks.emplace_back(std::move(formationTask));
+    return _tasks;
 }
 
 std::vector<Target *> QuasiAdiabatic::sat() {

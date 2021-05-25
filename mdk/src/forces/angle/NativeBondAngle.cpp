@@ -8,7 +8,7 @@ void NativeBondAngle::bind(Simulation &simulation) {
 
     ranges = simulation.data<BondAngleRanges>().native;
 
-    auto& model = *simulation.data<Model>();
+    auto& model = simulation.data<Model>();
     for (auto const& ch: model.chains) {
         for (auto const& spIdx: ch.structuredParts) {
             auto const& sp = model.structuredParts[spIdx];

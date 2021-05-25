@@ -8,7 +8,7 @@
 using namespace mdk;
 
 void mdk::ExportPDB::bind(Simulation &simulation) {
-    base = *simulation.data<Model>();
+    base = simulation.data<Model>();
     state = &simulation.var<State>();
 }
 
@@ -18,7 +18,7 @@ std::vector<Target*> ExportPDB::sat() {
 
 void ExportPDB::run() {
     if (state->t - tprev >= period) {
-        state->updateModel(base);
+        state->exportTo(base);
 
         auto modelFile = std::ofstream(modelPath);
         pdb::Parser().write(modelFile, pdb::Data(pdb::Model(base)));

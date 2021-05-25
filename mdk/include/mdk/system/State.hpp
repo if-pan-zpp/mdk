@@ -4,7 +4,6 @@
 #include "../utils/Topology.hpp"
 #include "../model/Model.hpp"
 #include "../simul/SimulVar.hpp"
-#include "Integrator.hpp"
 
 namespace mdk {
     class Dynamics {

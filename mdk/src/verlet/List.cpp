@@ -45,7 +45,7 @@ void List::bind(Simulation &simulation) {
 }
 
 std::vector<std::unique_ptr<Task>> List::tasks() {
-    auto check = [&]() -> {
+    auto check = [this]() -> void {
         if (needToReset()) {
             t0 = state->t;
             r0 = state->r;
@@ -53,9 +53,11 @@ std::vector<std::unique_ptr<Task>> List::tasks() {
             update();
         }
     };
-    auto checkTask = Lambda({}, check, {vlChecked}).unique();
+    auto checkTask = Lambda({}, check, {&vlChecked}).unique();
 
-    return { std::move(checkTask) };
+    std::vector<std::unique_ptr<Task>> _tasks;
+    _tasks.emplace_back(std::move(checkTask));
+    return _tasks;
 }
 
 void List::registerSpec(const Spec &spec) {

@@ -6,7 +6,7 @@ namespace mdk {
     class Lambda: public Task {
     public:
         Lambda(std::vector<Target*> req, Lam f, std::vector<Target*> sat):
-            _req(std::move(req)), _f(std::move(f)), _sat(std::move(sat)) {};
+            _req(std::move(req)), _sat(std::move(sat)), _f(std::move(f)) {};
 
         std::vector<Target*> req() override {
             return _req;

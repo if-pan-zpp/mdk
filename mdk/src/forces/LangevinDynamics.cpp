@@ -4,7 +4,7 @@ using namespace mdk;
 
 void LangevinDynamics::bind(Simulation &simulation) {
     Force::bind(simulation);
-    m = simulation.data<Masses>();
+    m = &simulation.data<Masses>();
     random = &simulation.var<Random>();
 
     for (int i = 0; i < state->n; ++i) {

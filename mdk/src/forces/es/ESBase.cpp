@@ -6,8 +6,8 @@ using namespace mdk;
 void ESBase::bind(Simulation &simulation) {
     NonlocalForce::bind(simulation);
 
-    auto& model = *simulation.data<Model>();
-    auto& params = *simulation.data<param::Parameters>();
+    auto& model = simulation.data<Model>();
+    auto& params = simulation.data<param::Parameters>();
 
     charge.resize(model.n);
     for (int i = 0; i < model.n; ++i) {
@@ -30,7 +30,7 @@ void ESBase::bind(Simulation &simulation) {
 
 void ESBase::vlUpdateHook() {
     pairs.clear();
-    for (auto const& [i1, i2]: vl) {
+    for (auto const& [i1, i2]: vl->pairs) {
         auto q1_x_q2 = charge[i1] * charge[i2];
         if (q1_x_q2 != 0) {
             pairs.emplace_back((Contact) {

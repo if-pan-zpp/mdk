@@ -6,7 +6,7 @@ using namespace mdk;
 void HeuresticBondAngle::bondAngleTerm(int i, double theta, double &V,
     double &dV_dth) const {
 
-    auto coeffs[6] = coeff[angleTypes[i]];
+    auto coeffs = coeff[angleTypes[i]];
     for (int d = D; d >= 0; --d) {
         V += theta * V + coeffs[d];
         dV_dth += theta * V + d * coeffs[d];

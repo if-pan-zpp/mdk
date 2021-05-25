@@ -168,7 +168,6 @@ mdk::Model Model::coarsen() {
             resIdxMap[res->serial] = resThere.idx;
             resThere.type = ResType(res->type);
             resThere.r = res->find("CA")->r;
-            resThere.v = res->find("CA")->v;
         }
 
         auto& sp = model.addSP();

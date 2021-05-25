@@ -4,11 +4,15 @@
 using namespace mdk;
 
 std::vector<std::unique_ptr<Task>> State::tasks() {
-    auto zeroDyn = [&]() -> {
+    auto zeroDyn = [this]() -> void {
         dyn.V = 0.0;
         dyn.F.vectorwise() = Vector::Zero();
     };
-    auto zeroDynTask = Lambda({}, zeroDyn, {forcesReset}).unique();
+    auto zeroDynTask = Lambda({}, zeroDyn, {&forcesReset}).unique();
+
+    std::vector<std::unique_ptr<Task>> _tasks;
+    _tasks.emplace_back(std::move(zeroDynTask));
+    return _tasks;
 }
 
 void State::exportTo(Model &model) {

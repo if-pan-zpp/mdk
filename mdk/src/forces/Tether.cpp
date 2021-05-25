@@ -33,7 +33,7 @@ void Tether::run() {
     auto& diff = state->dyn;
     for (auto const& intv: ranges) {
         for (int i = intv.lower(); i < intv.upper(); ++i) {
-            auto r1 = state.r[i], r2 = state.r[i+1];
+            auto r1 = state->r[i], r2 = state->r[i+1];
             auto r12 = r2 - r1;
             auto r12_norm = r12.norm();
 

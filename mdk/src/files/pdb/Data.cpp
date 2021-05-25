@@ -31,7 +31,6 @@ pdb::Model Data::asModel() const {
                 auto& atom = model.addAtom(data.serialNum, &res);
                 atom.type = data.atomName;
                 atom.r = data.pos;
-                atom.v = Vector::Zero();
             }
         }
         else if (holds_alternative<Ter>(record)) {

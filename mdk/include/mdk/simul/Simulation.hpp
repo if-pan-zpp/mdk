@@ -8,6 +8,7 @@
 #include <typeindex>
 #include <any>
 #include <type_traits>
+#include <stdexcept>
 
 namespace mdk {
     class Simulation {
@@ -25,7 +26,12 @@ namespace mdk {
         Var& var() {
             auto idx = std::type_index(typeid(Var));
             if (vars.find(idx) == vars.end()) {
-                return add<Var>();
+                if constexpr (std::is_default_constructible_v<Var>) {
+                    return add<Var>();
+                }
+                else {
+                    throw std::runtime_error("cannot construct Var");
+                }
             }
             else {
                 auto& _var = vars.at(idx);
@@ -35,9 +41,10 @@ namespace mdk {
 
         template<typename T, typename... Args>
         T& add(Args&&... args) {
-            auto& _var = vars[std::type_index(typeid(T))];
-            _var = T(std::forward<Args>(args)...);
-            auto& x = std::any_cast<T&>(_var);
+            auto _var = std::make_any<T>(std::forward<Args>(args)...);
+            auto idx = std::type_index(typeid(T));
+            auto xiter = vars.insert(std::make_pair(idx, std::move(_var))).first;
+            auto& x = std::any_cast<T&>(xiter->second);
 
             if constexpr (std::is_base_of_v<SimulVar, T>) {
                 ((SimulVar&)x).bind(*this);

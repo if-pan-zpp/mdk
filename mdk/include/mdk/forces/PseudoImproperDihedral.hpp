@@ -7,7 +7,7 @@
 #include "../utils/AminoAcid.hpp"
 
 namespace mdk {
-    class Lambda {
+    class LambdaPeak {
     public:
         double alpha, psi0;
         bool cosineVersion;
@@ -25,7 +25,7 @@ namespace mdk {
         Chains const* seqs = nullptr;
 
     public:
-        Lambda bb_pos, bb_neg, ss;
+        LambdaPeak bb_pos, bb_neg, ss;
         LennardJones bb_neg_lj, bb_pos_lj;
         SidechainLJ ss_ljs[AminoAcid::N][AminoAcid::N];
 

@@ -5,8 +5,8 @@
 namespace mdk::vl {
     class UpdateScheduler {
     public:
-        std::vector<std::unique_ptr<Task>> destructiveUpdates;
-        std::vector<std::unique_ptr<Task>> asyncUpdates;
+        std::vector<std::shared_ptr<Task>> destructiveUpdates;
+        std::vector<std::shared_ptr<Task>> asyncUpdates;
 
         void run();
     };

@@ -31,26 +31,32 @@ vl::Spec NativeContacts::spec() const {
     };
 }
 
-bool operator<(NativeContacts::Contact const& p1, std::pair<int, int> const& p2) {
+bool operator<(NativeContacts::Contact const& p1, std::pair<int, int> const& p2)  {
     return std::make_pair(p1.i1, p1.i2) < p2;
 }
 
-bool operator<(std::pair<int, int> const& p1, NativeContacts::Contact const& p2) {
-    return p1 < std::make_pair(p2.i1, p2.i2);
+bool operator==(NativeContacts::Contact const& p1, std::pair<int, int> const& p2) {
+    return std::make_pair(p1.i1, p1.i2) == p2;
 }
 
 void NativeContacts::vlUpdateHook() {
     curPairs.clear();
-    std::set_intersection(
-        allContacts.begin(), allContacts.end(),
-        vl->pairs.begin(), vl->pairs.end(),
-        std::back_inserter(curPairs));
-
     newVL.clear();
-    std::set_difference(
-        vl->pairs.begin(), vl->pairs.end(),
-        curPairs.begin(), curPairs.end(),
-        std::back_inserter(newVL));
+
+    auto allContIter = allContacts.begin();
+    auto allContEnd = allContacts.end();
+
+    for (auto const& p: vl->pairs) {
+        while (allContIter != allContEnd && *allContIter < p)
+            ++allContIter;
+
+        if (allContIter != allContEnd && *allContIter == p) {
+            curPairs.emplace_back(*allContIter);
+        }
+        else {
+            newVL.emplace_back(p);
+        }
+    }
 
     std::swap(vl->pairs, newVL);
 }

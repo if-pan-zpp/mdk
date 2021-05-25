@@ -3,12 +3,12 @@
 #include "runtime/Lambda.hpp"
 using namespace mdk;
 
-bool Lambda::supp(double psi) const {
+bool LambdaPeak::supp(double psi) const {
     double s = alpha * (psi - psi0);
     return -M_PI <= s && s <= M_PI;
 }
 
-void Lambda::eval(double psi, double &L, double &dL_dpsi) const {
+void LambdaPeak::eval(double psi, double &L, double &dL_dpsi) const {
     double s = alpha * (psi - psi0);
     if (cosineVersion) {
         L = 0.5 * cos(s) + 0.5;
@@ -24,7 +24,7 @@ void Lambda::eval(double psi, double &L, double &dL_dpsi) const {
 }
 
 template<typename LJ>
-void perLambda(Lambda const& lambda, LJ const& lj, double psi[2],
+void perLambda(LambdaPeak const& lambda, LJ const& lj, double psi[2],
     double norm, double& A, double& B, double& C) {
     if (lambda.supp(psi[0]) && lambda.supp(psi[1])) {
         double L[2], dL_dpsi[2];
@@ -136,7 +136,7 @@ vl::Spec PseudoImproperDihedral::spec() const {
 
 void PseudoImproperDihedral::computeForce() {
     for (auto const& [i1, i2]: pairs) {
-        auto r12 = state.top(state.r[i1] - state.r[i2]);
+        auto r12 = state->top(state->r[i1] - state->r[i2]);
         auto r12_normsq = r12.squaredNorm();
         if (r12_normsq >= savedSpec.cutoffSq) continue;
 
@@ -145,7 +145,7 @@ void PseudoImproperDihedral::computeForce() {
 
         double psi[2];
         Vector dpsi_dr[2][6];
-        deriveAngles(i1, i2, state, psi, dpsi_dr);
+        deriveAngles(i1, i2, norm, unit, psi, dpsi_dr);
 
         double A = 0.0, B = 0.0, C = 0.0;
         auto type1 = (int8_t)(*types)[i1], type2 = (int8_t)(*types)[i2];

@@ -1,4 +1,5 @@
-#include "../../include/utils/PairType.hpp"
+#include "utils/PairType.hpp"
+#include "utils/AminoAcid.hpp"
 using namespace mdk;
 using namespace std;
 
@@ -11,8 +12,8 @@ vector<PairType> mdk::pairTypes() {
 }
 
 static int8_t encode(AminoAcid const& acid) {
-    if ((AAType)acid == AAType::GLY) return 0;
-    else if ((AAType)acid == AAType::PRO) return 1;
+    if ((AminoAcidIdx)acid == AminoAcidIdx::GLY) return 0;
+    else if ((AminoAcidIdx)acid == AminoAcidIdx::PRO) return 1;
     else return 2;
 }
 

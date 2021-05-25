@@ -1,13 +1,7 @@
 #include "forces/dihedral/HeuresticDihedral.hpp"
 #include "data/DihedralRanges.hpp"
 #include "simul/Simulation.hpp"
-
 using namespace mdk;
-
-HeuresticDihedral::HeuresticDihedral(Model const& model,
-    const param::Parameters &params) {
-
-}
 
 void HeuresticDihedral::dihTerm(int i, double phi, double &V,
     double &dV_dphi) const {
@@ -25,10 +19,10 @@ void mdk::HeuresticDihedral::bind(Simulation &simulation) {
     Force::bind(simulation);
 
     using namespace boost::icl;
-    auto& model = *simulation.data<Model>();
-    auto& params = *simulation.data<param::Parameters>();
+    auto& model = simulation.data<Model>();
+    auto& params = simulation.data<param::Parameters>();
 
-    ranges = simulation.data<DihedralRanges>()->nonNative;
+    ranges = simulation.data<DihedralRanges>().nonNative;
 
     angleTypes = Eigen::Matrix<int8_t, Eigen::Dynamic, 1>(model.n);
     for (auto const& chain: model.chains) {
