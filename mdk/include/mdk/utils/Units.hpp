@@ -6,14 +6,14 @@ namespace mdk
 #define Unit inline constexpr double
 
     /* Distance */
-    Unit nanometer = 1.0;
-    Unit angstrom = nanometer / 1.0e1;
+    Unit f77unit = 1.0;
+    Unit angstrom = f77unit / 5.0;
+    Unit nanometer = 10.0 * angstrom;
     Unit meter = nanometer * 1.0e9;
-    Unit f77unit = 5.0 * angstrom;
 
     /* Time */
-    Unit tau = 1.0;
     Unit nanosecond = 1.0;
+    Unit tau = 1.0 * nanosecond;
     Unit microsecond = nanosecond * 1.0e3;
     Unit millisecond = nanosecond * 1.0e6;
     Unit second = nanosecond * 1.0e9;
@@ -33,6 +33,7 @@ namespace mdk
     Unit Kelvin = 1.380649e-23 * Joule / kB;
 
     /* Mass */
+    Unit reducedMass = 1.0;
     Unit kg = Joule * second * second / (meter * meter);
     Unit au = kg * 0.99999999965e-3 / mol;
 

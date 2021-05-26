@@ -20,7 +20,8 @@ Model Sequence::asModel() const {
             resThere.type = ResType((int8_t)code);
             resThere.r = {0.0, 0.0, 0.0};
             resThere.v = {0.0, 0.0, 0.0};
-            resThere.mass = resThere.type.mass();
+//            resThere.mass = resThere.type.mass();
+            resThere.mass = 1.0;
         }
 
         for (auto const& cmapName: chain.contactMaps) {

@@ -32,15 +32,15 @@ int main() {
     auto& lf = simul.add<Leapfrog>(0.002 * tau);
     auto& srand = simul.add<Random>(0);
     auto& lang = simul.add<LangevinDynamics>(2.0/tau, 300.0*Kelvin);
-    auto& teth = simul.add<Tether>(true);
-    auto& nba = simul.add<NativeBondAngle>();
-    auto& hba = simul.add<HeuresticBondAngle>();
-    auto& cnd = simul.add<ComplexNativeDihedral>();
-    auto& hd = simul.add<HeuresticDihedral>();
-    auto& nc = simul.add<NativeContacts>();
-    auto& cdh = simul.add<ConstDH>();
-    auto& qa = simul.add<QuasiAdiabatic>();
-    auto& pe = simul.add<PauliExclusion>();
+//    auto& teth = simul.add<Tether>(true);
+//    auto& nba = simul.add<NativeBondAngle>();
+//    auto& hba = simul.add<HeuresticBondAngle>();
+//    auto& cnd = simul.add<ComplexNativeDihedral>();
+//    auto& hd = simul.add<HeuresticDihedral>();
+//    auto& nc = simul.add<NativeContacts>();
+//    auto& cdh = simul.add<ConstDH>();
+//    auto& qa = simul.add<QuasiAdiabatic>();
+//    auto& pe = simul.add<PauliExclusion>();
 
     auto& exp = simul.add<ExportPDB>("model.pdb", 10.0 * nanosecond);
     auto time = 15000.0*tau;
