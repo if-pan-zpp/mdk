@@ -16,12 +16,14 @@ namespace mdk::vl {
         Vectors r0;
         Topology top0;
 
+        bool initial = false;
         double cutoff = 0.0 * angstrom;
         double pad = 10.0 * angstrom;
         int minBondSep = 0;
 
         bool needToReset() const;
         void update();
+        void check();
 
     public:
         void registerSpec(Spec const& spec);

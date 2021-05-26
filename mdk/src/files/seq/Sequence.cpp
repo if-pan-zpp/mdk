@@ -18,7 +18,9 @@ Model Sequence::asModel() const {
         for (auto const& code: chain.codes) {
             auto& resThere = model.addResidue(&chainThere);
             resThere.type = ResType((int8_t)code);
-            resThere.r = {0.0, 0.0, 0.0 };
+            resThere.r = {0.0, 0.0, 0.0};
+            resThere.v = {0.0, 0.0, 0.0};
+            resThere.mass = resThere.type.mass();
         }
 
         for (auto const& cmapName: chain.contactMaps) {

@@ -13,26 +13,9 @@ namespace mdk {
         void bind(Simulation& simul) {
             Force::bind(simul);
 
-            using namespace boost::icl;
-            this->ranges = simul.data<DihedralRanges>().native;
-
-            auto& model = simul.data<Model>();
-
-            phi0 = Scalars(model.n);
-            for (auto const& ch: model.chains) {
-                for (auto const& spIdx: ch.structuredParts) {
-                    auto const& sp = model.structuredParts[spIdx];
-
-                    auto start = ch.start + sp.off;
-                    auto end = start + sp.len;
-                    auto intv = interval<int>::right_open(start, end);
-                    this->ranges.add(intv);
-
-                    for (int i = start; i < end; ++i) {
-                        phi0[i] = sp.dihedral[i - start];
-                    }
-                }
-            }
+            auto const& dihRanges = simul.data<DihedralRanges>();
+            this->ranges = dihRanges.native;
+            phi0 = dihRanges.phi_0;
         }
     };
 }

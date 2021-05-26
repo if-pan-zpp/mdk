@@ -9,9 +9,9 @@ void List::update() {
     auto effCutoffSq = pow(effCutoff, 2.0);
 
     pairs.clear();
-    for (int pt1 = 0; pt1 < r0.cols(); ++pt1) {
+    for (int pt1 = 0; pt1 < r0.size(); ++pt1) {
         auto r1 = state->r[pt1];
-        for (int pt2 = pt1+1; pt2 < r0.cols(); ++pt2) {
+        for (int pt2 = pt1+1; pt2 < r0.size(); ++pt2) {
             auto r2 = state->r[pt2];
             auto r12_norm2 = state->top(r2 - r1).squaredNorm();
 
@@ -26,6 +26,7 @@ void List::update() {
 }
 
 bool List::needToReset() const {
+    if (initial) return true;
     if (t0 == state->t) return false;
 
     auto maxMoveSq = 0.0;
@@ -42,18 +43,22 @@ bool List::needToReset() const {
 void List::bind(Simulation &simulation) {
     state = &simulation.var<State>();
     chains = &simulation.data<Chains>();
+    initial = true;
+}
+
+void List::check() {
+    if (needToReset()) {
+        t0 = state->t;
+        r0 = state->r;
+        top0 = state->top;
+        update();
+    }
+    initial = false;
 }
 
 std::vector<std::unique_ptr<Task>> List::tasks() {
-    auto check = [this]() -> void {
-        if (needToReset()) {
-            t0 = state->t;
-            r0 = state->r;
-            top0 = state->top;
-            update();
-        }
-    };
-    auto checkTask = Lambda({}, check, {&vlChecked}).unique();
+    auto checkLam = [this]() -> void { check(); };
+    auto checkTask = Lambda({}, checkLam, {&vlChecked}).unique();
 
     std::vector<std::unique_ptr<Task>> _tasks;
     _tasks.emplace_back(std::move(checkTask));

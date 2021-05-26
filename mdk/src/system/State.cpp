@@ -30,6 +30,7 @@ void State::bind(Simulation &simul) {
     r = v = Vectors(n, Vector::Zero());
     t = 0.0;
     top = model.top;
+    dyn.F = Vectors(n, Vector::Zero());
 
     for (int i = 0; i < model.n; ++i) {
         auto& res = model.residues[i];

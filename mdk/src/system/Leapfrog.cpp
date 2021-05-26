@@ -1,5 +1,4 @@
 #include "system/Leapfrog.hpp"
-#include "system/State.hpp"
 #include "simul/Simulation.hpp"
 using namespace mdk;
 

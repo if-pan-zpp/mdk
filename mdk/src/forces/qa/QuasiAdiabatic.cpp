@@ -135,7 +135,8 @@ void QuasiAdiabatic::vlUpdateHook() {
         while (oldPairsIter != oldPairsEnd && *oldPairsIter < pair)
             ++oldPairsIter;
 
-        if (oldPairsIter->status != QAContact::Status::REMOVED
+        if (oldPairsIter != oldPairsEnd
+            && oldPairsIter->status != QAContact::Status::REMOVED
             && *oldPairsIter == pair) {
 
             pairs.emplace_back(*oldPairsIter);

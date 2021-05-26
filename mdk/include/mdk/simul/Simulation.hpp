@@ -6,7 +6,6 @@
 #include "../runtime/TaskFactory.hpp"
 #include "SimulVar.hpp"
 #include <typeindex>
-#include <any>
 #include <type_traits>
 #include <stdexcept>
 
@@ -30,12 +29,12 @@ namespace mdk {
                     return add<Var>();
                 }
                 else {
-                    throw std::runtime_error("cannot construct Var");
+                    static_assert("cannot construct Var");
                 }
             }
             else {
                 auto& _var = vars.at(idx);
-                return std::any_cast<Var&>(_var);
+                return *(Var*)_var.get();
             }
         }
 
@@ -43,8 +42,8 @@ namespace mdk {
         T& add(Args&&... args) {
             auto _var = std::make_shared<T>(std::forward<Args>(args)...);
             auto idx = std::type_index(typeid(T));
-            auto xiter = vars.insert(std::make_pair(idx, std::move(_var))).first;
-            auto& x = *std::any_cast<std::shared_ptr<T>&>(xiter->second);
+            auto varIter = vars.emplace(idx, _var).first;
+            auto& x = *(T*)varIter->second.get();
 
             if constexpr (std::is_base_of_v<SimulVar, T>) {
                 ((SimulVar&)x).bind(*this);
@@ -76,7 +75,7 @@ namespace mdk {
         DataFactory df;
         Scheduler sched;
 
-        std::unordered_map<std::type_index, std::any> vars;
+        std::unordered_map<std::type_index, std::shared_ptr<void>> vars;
         std::vector<std::unique_ptr<Task>> extraTasks;
     };
 }

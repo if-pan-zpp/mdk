@@ -50,6 +50,7 @@ void Scheduler::compile() {
     if (sorted.size() != tasks.size())
         throw;
 
+    tasks = sorted;
     compiled = true;
 }
 
