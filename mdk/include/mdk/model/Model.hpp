@@ -61,6 +61,12 @@ namespace mdk {
             double density = 1e-4 * atom / pow(angstrom, 3.0),
             double minDist = 4.56 * angstrom);
 
+        void legacyMorphIntoSAW(Random& rand,
+            bool useTop = false,
+            double density = 1e-4 * atom / pow(angstrom, 3.0),
+            double minDist = 4.56 * angstrom,
+            bool nativeBondLen = false);
+
         StructuredPart& addContactMap(cmap::ContactMap const& contactMap);
         void addCMapContacts(cmap::ContactMap const& contactMap, Chain& chain);
 

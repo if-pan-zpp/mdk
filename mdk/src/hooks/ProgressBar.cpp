@@ -17,7 +17,7 @@ void ProgressBar::bind(Simulation &simulation) {
     state = &simulation.var<State>();
 }
 
-void ProgressBar::execute() {
+void ProgressBar::execute(int step_nr) {
     double progress = state->t / totalTime;
 
     auto now = high_resolution_clock::now();

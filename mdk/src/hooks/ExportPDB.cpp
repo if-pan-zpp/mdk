@@ -12,7 +12,7 @@ void mdk::ExportPDB::bind(Simulation &simulation) {
     state = &simulation.var<State>();
 }
 
-void ExportPDB::execute() {
+void ExportPDB::execute(int step_nr) {
     if (state->t - tprev >= period) {
         state->exportTo(base);
 

@@ -22,7 +22,7 @@ namespace mdk {
         static constexpr double
             eps = 1.2e-7,
             rnmx = 1.-eps,
-            am = 1.0/im1;
+            am = (float) 1.0/im1;
 
         int iy = 0, idum = -448, idum2 = 123456789;
         int iv[ntab];
@@ -43,6 +43,7 @@ namespace mdk {
                     if (idum < 0) idum += im1;
                     if (j < ntab) iv[j] = idum;
                 }
+                iy = iv[0];
             }
 
             k = idum / iq1;

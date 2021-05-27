@@ -10,7 +10,7 @@ namespace mdk {
         explicit ProgressBar(double totalTime, int width = 70);
 
         void bind(Simulation& simulation) override;
-        void execute() override;
+        void execute(int step_nr) override;
 
     private:
         using time_point = std::chrono::high_resolution_clock::time_point;

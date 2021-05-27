@@ -3,3 +3,4 @@ project(mdk LANGUAGES CXX)
 
 add_subdirectory(mdk)
 add_subdirectory(examples)
+add_subdirectory(tests)

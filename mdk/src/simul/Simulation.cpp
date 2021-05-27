@@ -6,8 +6,26 @@
 #include "verlet/List.hpp"
 using namespace mdk;
 
+void Simulation::init() {
+    step_nr = 0;
+
+
+
+    for (auto* hook: hooks) {
+        hook->execute(0);
+    }
+    
+    initialized = true;
+}
+
 void Simulation::step() {
+    if (not initialized) {
+        init();
+    }
+    
+    step_nr++;
     auto& state = var<State>();
+    
     auto& vl = var<vl::List>();
     state.prepareDyn();
 
@@ -23,6 +41,6 @@ void Simulation::step() {
     integrator->integrate();
 
     for (auto* hook: hooks) {
-        hook->execute();
+        hook->execute(step_nr);
     }
 }

@@ -71,6 +71,7 @@ namespace mdk {
             return x;
         }
 
+        void init();
         void step();
 
     private:
@@ -83,5 +84,8 @@ namespace mdk {
         std::vector<NonlocalForce*> nonlocalForces;
         std::vector<Hook*> hooks;
         Integrator *integrator;
+
+        bool initialized = false;
+        int step_nr;
     };
 }

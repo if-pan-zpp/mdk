@@ -22,6 +22,6 @@ namespace mdk {
             period(period) {};
 
         void bind(Simulation& simulation) override;
-        void execute() override;
+        void execute(int step_nr) override;
     };
 }

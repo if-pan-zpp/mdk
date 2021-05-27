@@ -3,6 +3,6 @@
 namespace mdk {
     class Hook {
     public:
-        virtual void execute() = 0;
+        virtual void execute(int step_nr) = 0;
     };
 }
