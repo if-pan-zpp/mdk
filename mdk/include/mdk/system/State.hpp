@@ -1,6 +1,5 @@
 #pragma once
 #include "../data/Primitives.hpp"
-#include "../runtime/TaskFactory.hpp"
 #include "../utils/Topology.hpp"
 #include "../model/Model.hpp"
 #include "../simul/SimulVar.hpp"
@@ -12,7 +11,7 @@ namespace mdk {
         Vectors F;
     };
 
-    class State: public TaskFactory, SimulVar {
+    class State: public SimulVar {
     public:
         int n;
         Vectors r, v;
@@ -21,9 +20,7 @@ namespace mdk {
 
         Dynamics dyn;
 
-        Target forcesReset, beforeUpdate, stateUpdated;
-        std::vector<std::unique_ptr<Task>> tasks() override;
-
+        void prepareDyn();
         void bind(Simulation& simul) override;
         void exportTo(Model& model);
     };

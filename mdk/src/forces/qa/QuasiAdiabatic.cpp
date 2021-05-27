@@ -1,5 +1,4 @@
 #include "forces/qa/QuasiAdiabatic.hpp"
-#include "runtime/Lambda.hpp"
 #include <Eigen/Core>
 #include <algorithm>
 using namespace mdk;
@@ -39,7 +38,9 @@ void QuasiAdiabatic::bind(Simulation &simulation) {
     installIntoVL();
 }
 
-void QuasiAdiabatic::computeForce() {
+void QuasiAdiabatic::asyncPart() {
+    computeNH();
+
     for (auto& cont: pairs) {
         if (cont.status == QAContact::Status::REMOVED)
             continue;
@@ -190,10 +191,8 @@ bool QuasiAdiabatic::geometryPhase(PairInfo const& p, QADiff &diff) const {
     return false;
 }
 
-void QuasiAdiabatic::formationPass() {
+void QuasiAdiabatic::syncPart() {
     qaDiffs.clear();
-    computeNH();
-
     for (int i = 0; i < (int)freePairs.size(); ++i) {
         auto const& p = freePairs[i];
 
@@ -261,19 +260,4 @@ void QuasiAdiabatic::computeNH() {
             h[i] = (v1.cross(v0)).normalized();
         }
     }
-}
-
-std::vector<std::unique_ptr<Task>> QuasiAdiabatic::tasks() {
-    auto formationLam = [this]() -> void { formationPass(); };
-    auto formationTask = Lambda({ &stats->updatedAsync }, formationLam, {}).unique();
-
-    std::vector<std::unique_ptr<Task>> _tasks;
-    _tasks.emplace_back(std::move(formationTask));
-    return _tasks;
-}
-
-std::vector<Target *> QuasiAdiabatic::sat() {
-    auto _sat = Force::sat();
-    _sat.insert(_sat.end(), { &stats->updatedAsync });
-    return _sat;
 }

@@ -1,13 +1,13 @@
 #pragma once
 #include "../utils/Units.hpp"
 #include "../system/State.hpp"
-#include "../runtime/Task.hpp"
 #include "../model/Model.hpp"
 #include "../simul/SimulVar.hpp"
+#include "Hook.hpp"
 #include <filesystem>
 
 namespace mdk {
-    class ExportPDB: public Task, SimulVar {
+    class ExportPDB: public Hook, SimulVar {
     private:
         Model base;
         State *state = nullptr;
@@ -22,7 +22,6 @@ namespace mdk {
             period(period) {};
 
         void bind(Simulation& simulation) override;
-        std::vector<Target*> sat() override;
-        void run() override;
+        void execute() override;
     };
 }

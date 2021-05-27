@@ -1,6 +1,6 @@
 #include "verlet/List.hpp"
 #include "simul/Simulation.hpp"
-#include "runtime/Lambda.hpp"
+#include "forces/NonlocalForce.hpp"
 using namespace mdk;
 using namespace mdk::vl;
 
@@ -22,7 +22,9 @@ void List::update() {
         }
     }
 
-    updateScheduler.run();
+    for (auto& force: forces) {
+        force->vlUpdateHook();
+    }
 }
 
 bool List::needToReset() const {
@@ -56,18 +58,10 @@ void List::check() {
     initial = false;
 }
 
-std::vector<std::unique_ptr<Task>> List::tasks() {
-    auto checkLam = [this]() -> void { check(); };
-    auto checkTask = Lambda({}, checkLam, {&vlChecked}).unique();
-
-    std::vector<std::unique_ptr<Task>> _tasks;
-    _tasks.emplace_back(std::move(checkTask));
-    return _tasks;
-}
-
-void List::registerSpec(const Spec &spec) {
+void List::registerNF(NonlocalForce& force, Spec const& spec) {
     cutoff = std::max(cutoff, sqrt(spec.cutoffSq));
-
     if (minBondSep < 1) minBondSep = spec.minBondSep;
     else minBondSep = std::min(minBondSep, spec.minBondSep);
+
+    forces.push_back(&force);
 }

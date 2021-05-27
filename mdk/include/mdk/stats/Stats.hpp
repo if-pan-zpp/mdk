@@ -2,7 +2,6 @@
 #include "Stat.hpp"
 #include "../simul/SimulVar.hpp"
 #include <vector>
-#include "../runtime/TaskFactory.hpp"
 #include "../data/Types.hpp"
 #include "../files/param/Parameters.hpp"
 
@@ -15,8 +14,6 @@ namespace mdk {
     public:
         std::vector<Stat> stats;
         bool used = false;
-
-        Target updatedAsync;
 
         void bind(Simulation& simulation) override;
 

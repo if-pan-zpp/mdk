@@ -32,7 +32,7 @@ void Chirality::bind(Simulation &simulation) {
     }
 }
 
-void Chirality::computeForce() {
+void Chirality::asyncPart() {
     for (auto const& intv: ranges) {
         for (int i = intv.lower(); i < intv.upper(); ++i) {
             auto r1 = state->r[i-2], r2 = state->r[i-1],

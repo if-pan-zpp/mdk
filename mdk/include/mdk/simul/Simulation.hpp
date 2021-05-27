@@ -2,14 +2,17 @@
 #include "../model/Model.hpp"
 #include "../files/param/Parameters.hpp"
 #include "../data/DataFactory.hpp"
-#include "../runtime/Scheduler.hpp"
-#include "../runtime/TaskFactory.hpp"
 #include "SimulVar.hpp"
 #include <typeindex>
 #include <type_traits>
 #include <stdexcept>
 
 namespace mdk {
+    class Force;
+    class NonlocalForce;
+    class Hook;
+    class Integrator;
+
     class Simulation {
     public:
         Simulation(Model model, param::Parameters params):
@@ -29,7 +32,7 @@ namespace mdk {
                     return add<Var>();
                 }
                 else {
-                    static_assert("cannot construct Var");
+                    throw std::runtime_error("cannot construct Var");
                 }
             }
             else {
@@ -49,19 +52,20 @@ namespace mdk {
                 ((SimulVar&)x).bind(*this);
             }
 
-            if constexpr (std::is_base_of_v<Task, T>) {
-                sched.add((Task*)&x);
+            if constexpr (std::is_base_of_v<Force, T>) {
+                forces.push_back(&(Force&)x);
             }
 
-            if constexpr (std::is_base_of_v<TaskFactory, T>) {
-                auto tasks = ((TaskFactory&)x).tasks();
-                for (auto& task: tasks) {
-                    sched.add(task.get());
-                }
+            if constexpr (std::is_base_of_v<NonlocalForce, T>) {
+                nonlocalForces.push_back(&(NonlocalForce&)x);
+            }
 
-                extraTasks.insert(extraTasks.end(),
-                    std::make_move_iterator(tasks.begin()),
-                    std::make_move_iterator(tasks.end()));
+            if constexpr (std::is_base_of_v<Hook, T>) {
+                hooks.push_back(&(Hook&)x);
+            }
+
+            if constexpr (std::is_base_of_v<Integrator, T>) {
+                integrator = &(Integrator&)x;
             }
 
             return x;
@@ -73,9 +77,11 @@ namespace mdk {
         Model model;
         param::Parameters params;
         DataFactory df;
-        Scheduler sched;
 
         std::unordered_map<std::type_index, std::shared_ptr<void>> vars;
-        std::vector<std::unique_ptr<Task>> extraTasks;
+        std::vector<Force*> forces;
+        std::vector<NonlocalForce*> nonlocalForces;
+        std::vector<Hook*> hooks;
+        Integrator *integrator;
     };
 }

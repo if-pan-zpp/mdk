@@ -8,7 +8,7 @@ vl::Spec mdk::ConstDH::spec() const {
     };
 }
 
-void ConstDH::computeForce() {
+void ConstDH::asyncPart() {
     auto coeff = pow(echarge, 2.0) / (4.0 * M_PI * permittivity);
 
     for (auto const& p: pairs) {

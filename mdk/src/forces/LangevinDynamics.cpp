@@ -12,7 +12,7 @@ void LangevinDynamics::bind(Simulation &simulation) {
     }
 }
 
-void LangevinDynamics::computeForce() {
+void LangevinDynamics::asyncPart() {
     for (int i = 0; i < state->n; ++i) {
         state->dyn.F[i] +=
             -gamma * (*m)[i] * state->v[i]

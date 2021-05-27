@@ -1,6 +1,5 @@
 #include "forces/PseudoImproperDihedral.hpp"
 #include "simul/Simulation.hpp"
-#include "runtime/Lambda.hpp"
 using namespace mdk;
 
 bool LambdaPeak::supp(double psi) const {
@@ -134,7 +133,7 @@ vl::Spec PseudoImproperDihedral::spec() const {
     };
 }
 
-void PseudoImproperDihedral::computeForce() {
+void PseudoImproperDihedral::asyncPart() {
     for (auto const& [i1, i2]: pairs) {
         auto r12 = state->top(state->r[i1] - state->r[i2]);
         auto r12_normsq = r12.squaredNorm();

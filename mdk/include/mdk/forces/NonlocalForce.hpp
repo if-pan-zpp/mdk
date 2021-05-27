@@ -8,14 +8,12 @@ namespace mdk {
     protected:
         mutable vl::Spec savedSpec;
         virtual vl::Spec spec() const = 0;
-
         vl::List *vl = nullptr;
-        virtual void vlUpdateHook() = 0;
 
-        void installIntoVL(bool async = true);
+        void installIntoVL();
 
     public:
-        std::vector<Target*> req() override;
         void bind(Simulation& simulation) override;
+        virtual void vlUpdateHook() = 0;
     };
 }

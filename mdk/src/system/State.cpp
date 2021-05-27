@@ -1,19 +1,6 @@
 #include "system/State.hpp"
-#include "runtime/Lambda.hpp"
 #include "simul/Simulation.hpp"
 using namespace mdk;
-
-std::vector<std::unique_ptr<Task>> State::tasks() {
-    auto zeroDyn = [this]() -> void {
-        dyn.V = 0.0;
-        dyn.F.vectorwise() = Vector::Zero();
-    };
-    auto zeroDynTask = Lambda({}, zeroDyn, {&forcesReset}).unique();
-
-    std::vector<std::unique_ptr<Task>> _tasks;
-    _tasks.emplace_back(std::move(zeroDynTask));
-    return _tasks;
-}
 
 void State::exportTo(Model &model) {
     for (int i = 0; i < model.n; ++i) {
@@ -37,4 +24,9 @@ void State::bind(Simulation &simul) {
         r[i] = res.r;
         v[i] = res.v;
     }
+}
+
+void State::prepareDyn() {
+    dyn.V = 0.0;
+    dyn.F.vectorwise() = Vector::Zero();
 }

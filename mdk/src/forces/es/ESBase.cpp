@@ -1,6 +1,5 @@
 #include "forces/es/ESBase.hpp"
 #include "simul/Simulation.hpp"
-#include "runtime/Lambda.hpp"
 using namespace mdk;
 
 void ESBase::bind(Simulation &simulation) {

@@ -1,20 +1,24 @@
 #pragma once
 #include "../system/State.hpp"
 #include "../utils/Units.hpp"
-#include "../runtime/TaskFactory.hpp"
 #include "../simul/SimulVar.hpp"
 #include "../data/Chains.hpp"
-#include "UpdateScheduler.hpp"
 #include "Spec.hpp"
 
+namespace mdk {
+    class NonlocalForce;
+}
+
 namespace mdk::vl {
-    class List: public TaskFactory, SimulVar {
+    class List: public SimulVar {
     private:
         State const *state = nullptr;
         Chains const* chains = nullptr;
         double t0 = 0.0;
         Vectors r0;
         Topology top0;
+
+        std::vector<NonlocalForce*> forces;
 
         bool initial = false;
         double cutoff = 0.0 * angstrom;
@@ -23,16 +27,13 @@ namespace mdk::vl {
 
         bool needToReset() const;
         void update();
-        void check();
 
     public:
-        void registerSpec(Spec const& spec);
+        void registerNF(NonlocalForce& force, Spec const& spec);
 
         Pairs pairs;
         void bind(Simulation& simulation) override;
 
-        Target vlChecked;
-        std::vector<std::unique_ptr<Task>> tasks() override;
-        UpdateScheduler updateScheduler;
+        void check();
     };
 }

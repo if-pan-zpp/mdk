@@ -14,5 +14,4 @@
 #include "es/ConstDH.hpp"
 #include "es/RelativeDH.hpp"
 #include "go/NativeContacts.hpp"
-#include "go/NativeSS.hpp"
 #include "qa/QuasiAdiabatic.hpp"

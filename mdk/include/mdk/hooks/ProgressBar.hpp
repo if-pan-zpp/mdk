@@ -1,17 +1,16 @@
 #pragma once
-#include "../runtime/Task.hpp"
 #include "../system/State.hpp"
 #include "../simul/SimulVar.hpp"
+#include "Hook.hpp"
 #include <chrono>
 
 namespace mdk {
-    class ProgressBar: public Task, SimulVar {
+    class ProgressBar: public Hook, SimulVar {
     public:
         explicit ProgressBar(double totalTime, int width = 70);
 
         void bind(Simulation& simulation) override;
-        std::vector<Target*> req() override;
-        void run() override;
+        void execute() override;
 
     private:
         using time_point = std::chrono::high_resolution_clock::time_point;

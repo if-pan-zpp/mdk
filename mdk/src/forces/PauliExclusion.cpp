@@ -1,5 +1,4 @@
 #include "forces/PauliExclusion.hpp"
-#include "runtime/Lambda.hpp"
 using namespace mdk;
 
 void PauliExclusion::bind(Simulation &simulation) {
@@ -14,7 +13,7 @@ vl::Spec PauliExclusion::spec() const {
     };
 }
 
-void PauliExclusion::computeForce() {
+void PauliExclusion::asyncPart() {
     for (auto const& [i1, i2]: exclPairs) {
         auto r12 = state->top(state->r[i1] - state->r[i2]);
         auto x2 = r12.squaredNorm();
@@ -23,7 +22,8 @@ void PauliExclusion::computeForce() {
         auto x = sqrt(x2);
         auto unit = r12/x;
 
-        stlj.asForce(unit, x, state->dyn.V, state->dyn.F[i1], state->dyn.F[i2]);
+        stlj.asForce(unit, x, state->dyn.V,
+            state->dyn.F[i1], state->dyn.F[i2]);
     }
 }
 

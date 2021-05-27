@@ -7,7 +7,6 @@
 #include "../../data/Types.hpp"
 #include "../../data/Chains.hpp"
 #include "../../stats/Stats.hpp"
-#include "../../runtime/TaskFactory.hpp"
 #include "../../data/Primitives.hpp"
 #include <mutex>
 
@@ -34,16 +33,15 @@ namespace mdk {
         }
     };
 
-    class QuasiAdiabatic: public NonlocalForce, TaskFactory {
+    class QuasiAdiabatic: public NonlocalForce {
     public:
         void bind(Simulation &simulation) override;
-        std::vector<Target*> sat() override;
-        void computeForce() override;
-        std::vector<std::unique_ptr<Task>> tasks() override;
+        void asyncPart() override;
+        void syncPart() override;
+        void vlUpdateHook() override;
 
     private:
         vl::Spec spec() const override;
-        void vlUpdateHook() override;
 
         Types const *types = nullptr;
         Chains const *chains = nullptr;
@@ -74,6 +72,5 @@ namespace mdk {
 
         void computeNH();
         bool geometryPhase(PairInfo const& p, QADiff& diff) const;
-        void formationPass();
     };
 }

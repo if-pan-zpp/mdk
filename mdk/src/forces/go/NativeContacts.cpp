@@ -15,7 +15,7 @@ void NativeContacts::bind(Simulation &simulation) {
         }
     }
 
-    installIntoVL(false);
+    installIntoVL();
 }
 
 vl::Spec NativeContacts::spec() const {
@@ -61,7 +61,7 @@ void NativeContacts::vlUpdateHook() {
     std::swap(vl->pairs, newVL);
 }
 
-void NativeContacts::computeForce() {
+void NativeContacts::asyncPart() {
     for (auto const& cont: curPairs) {
         auto r12 = state->top(state->r[cont.i1] - state->r[cont.i2]);
         auto x2 = r12.squaredNorm();

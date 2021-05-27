@@ -12,11 +12,7 @@ void mdk::ExportPDB::bind(Simulation &simulation) {
     state = &simulation.var<State>();
 }
 
-std::vector<Target*> ExportPDB::sat() {
-    return { &state->beforeUpdate };
-}
-
-void ExportPDB::run() {
+void ExportPDB::execute() {
     if (state->t - tprev >= period) {
         state->exportTo(base);
 

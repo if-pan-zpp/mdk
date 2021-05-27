@@ -17,11 +17,7 @@ void ProgressBar::bind(Simulation &simulation) {
     state = &simulation.var<State>();
 }
 
-std::vector<Target*> ProgressBar::req() {
-    return { &state->stateUpdated };
-}
-
-void ProgressBar::run() {
+void ProgressBar::execute() {
     double progress = state->t / totalTime;
 
     auto now = high_resolution_clock::now();

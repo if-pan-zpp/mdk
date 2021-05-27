@@ -10,11 +10,11 @@ namespace mdk {
         };
 
         void bind(Simulation &simulation) override;
-        void computeForce() override;
+        void asyncPart() override;
+        void vlUpdateHook() override;
 
     private:
         vl::Spec spec() const override;
-        void vlUpdateHook() override;
 
         Pairs newVL;
         std::vector<Contact> allContacts, curPairs;

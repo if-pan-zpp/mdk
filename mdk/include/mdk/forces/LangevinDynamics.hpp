@@ -16,6 +16,6 @@ namespace mdk {
             gamma(gamma), T(T) {};
 
         void bind(Simulation& simulation) override;
-        void computeForce() override;
+        void asyncPart() override;
     };
 }
