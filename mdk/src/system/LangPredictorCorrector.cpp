@@ -1,15 +1,35 @@
-#include "system/PredictorCorrector.hpp"
+#include "system/LangPredictorCorrector.hpp"
 #include "system/State.hpp"
 #include "simul/Simulation.hpp"
 using namespace mdk;
 
-void PredictorCorrector::init() {
+void LangPredictorCorrector::init() {
     for (int i = 0; i < state->n; ++i) {
         y2[i] = state->dyn.F[i]/m[i] * (dt*dt/2.0);
     }
 }
 
-void PredictorCorrector::integrate() {
+void LangPredictorCorrector::generateNoise() {
+    // TODO: add legacy mode here
+    for (int dim = 0; dim < 3; ++dim) {
+        for (int i = 0; i < state->n; ++i) {
+            gaussianNoise[i](dim) = random->normal();
+        }
+    }
+}
+
+void LangPredictorCorrector::integrate() {
+    // TODO: do it as an async task
+    generateNoise();
+
+    // TODO: allow changing temperature
+    double noiseVariance = sqrt(2.0*temperature *gamma*dt) * dt;
+    double gamma_dt = gamma / dt;
+    for (int i = 0; i < state->n; ++i) {
+        y1[i] += gaussianNoise[i] * noiseVariance / m[i];
+        state->dyn.F[i] -= gamma_dt * y1[i];
+    }
+    
     for (int i = 0; i < state->n; ++i) {
         Vector err = y2[i] - state->dyn.F[i]/m[i] * (dt*dt/2.0);
         y0[i] -= 3.0/16.0 * err;
@@ -33,10 +53,11 @@ void PredictorCorrector::integrate() {
     state->t += dt;
 }
 
-void PredictorCorrector::bind(Simulation &simulation) {
+void LangPredictorCorrector::bind(Simulation &simulation) {
     Integrator::bind(simulation);
 
     m = simulation.data<Masses>();
+    random = &simulation.var<Random>();
     auto model = simulation.data<Model>();
 
     y0 = y1 = y2 = y3 = y4 = y5 = Vectors(model.n, Vector::Zero());
@@ -45,4 +66,6 @@ void PredictorCorrector::bind(Simulation &simulation) {
         y0[i] = res.r;
         y1[i] = res.v * dt;
     }
+
+    gaussianNoise = Vectors(model.n);
 }

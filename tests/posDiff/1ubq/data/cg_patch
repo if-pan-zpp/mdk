@@ -12,6 +12,3 @@
 >                 write(*,*) unit*x0(ib),unit*y0(ib),unit*z0(ib)
 >         enddo
 > 
-3858a3871,3872
-> 
->         return !disable langevin dynamics

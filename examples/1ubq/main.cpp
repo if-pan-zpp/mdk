@@ -1,10 +1,8 @@
 #include <mdk/simul/Simulation.hpp>
 #include <mdk/files/pdb/Parser.hpp>
-#include <mdk/hooks/ExportPDB.hpp>
-#include <mdk/hooks/ProgressBar.hpp>
 #include <mdk/files/param/LegacyParser.hpp>
+#include <mdk/system/LangPredictorCorrector.hpp>
 #include <mdk/forces/All.hpp>
-#include <mdk/system/Leapfrog.hpp>
 #include <fstream>
 using namespace mdk;
 using namespace std;
@@ -19,36 +17,27 @@ int main() {
     atomic.addContactsFromAtomOverlap();
     auto model = atomic.coarsen();
 
-    auto rand = make_shared<Random>(0);
-    auto density = 1e-4*atom/pow(angstrom, 3);
-    auto ixDist = 4.56*angstrom;
-    model.morphIntoSAW(*rand, false, density, ixDist);
+    auto rand = Random(448);
+    rand.uniform();
 
-    ofstream model0("data/model_0.pdb");
-    pdb::Parser().write(model0, pdb::Data(pdb::Model(model)));
+    model.legacyMorphIntoSAW(rand, false, 0, 4.56*angstrom, true);
+    model.initVelocity(rand, 0.35 * eps_kB, false);
 
     Simulation simul(model, params);
 
-    auto& lf = simul.add<Leapfrog>(0.002 * tau);
-    auto& srand = simul.add<Random>(0);
-    auto& lang = simul.add<LangevinDynamics>(2.0/tau, 300.0*Kelvin);
-//    auto& teth = simul.add<Tether>(true);
-//    auto& nba = simul.add<NativeBondAngle>();
-//    auto& hba = simul.add<HeuresticBondAngle>();
-//    auto& cnd = simul.add<ComplexNativeDihedral>();
-//    auto& hd = simul.add<HeuresticDihedral>();
-//    auto& nc = simul.add<NativeContacts>();
-//    auto& cdh = simul.add<ConstDH>();
-//    auto& qa = simul.add<QuasiAdiabatic>();
-//    auto& pe = simul.add<PauliExclusion>();
+    simul.add<Random>(rand);
+    simul.add<LangPredictorCorrector>(0.005 * tau);
 
-    auto& exp = simul.add<ExportPDB>("model.pdb", 10.0 * nanosecond);
-    auto time = 15000.0*tau;
-    auto& prog = simul.add<ProgressBar>(time);
+    simul.add<Tether>(true);
+    simul.add<NativeBondAngle>();
+    simul.add<ComplexNativeDihedral>();
 
-    auto& state = simul.var<State>();
-    while (state.t < time)
-        simul.step();
+    simul.add<NativeContacts>();
+    simul.add<PauliExclusion>();
 
+    for (int i = 0; i < 1000000; ++i) {
+    	simul.step();
+    }
+    cout << simul.var<State>().dyn.V << endl;
     return 0;
 }

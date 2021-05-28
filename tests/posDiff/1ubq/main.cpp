@@ -3,7 +3,7 @@
 #include <mdk/files/param/LegacyParser.hpp>
 #include <mdk/hooks/PositionDiff.hpp>
 #include <mdk/system/Leapfrog.hpp>
-#include <mdk/system/PredictorCorrector.hpp>
+#include <mdk/system/LangPredictorCorrector.hpp>
 #include <mdk/forces/Tether.hpp>
 #include <mdk/forces/angle/NativeBondAngle.hpp>
 #include <mdk/forces/dihedral/ComplexNativeDihedral.hpp>
@@ -23,15 +23,16 @@ int main() {
     atomic.addContactsFromAtomOverlap();
     auto model = atomic.coarsen();
 
-    auto rand = make_shared<Random>(448);
-    rand -> uniform();
+    auto rand = Random(448);
+    rand.uniform();
 
-    model.legacyMorphIntoSAW(*rand, false, 0, 4.56*angstrom, true);
-    model.initVelocity(*rand, 0.35 * eps_kB, false);
+    model.legacyMorphIntoSAW(rand, false, 0, 4.56*angstrom, true);
+    model.initVelocity(rand, 0.35 * eps_kB, false);
 
     Simulation simul(model, params);
 
-    simul.add<PredictorCorrector>(0.005 * tau);
+    simul.add<Random>(rand);
+    simul.add<LangPredictorCorrector>(0.005 * tau);
 
     simul.add<PositionDiff>(model, "data/positions.txt", "posDiffs.out");
 
@@ -42,7 +43,7 @@ int main() {
     simul.add<NativeContacts>();
     simul.add<PauliExclusion>();
 
-    for (int i = 0; i < 100; ++i) {
+    for (int i = 0; i < 10; ++i) {
     	simul.step();
     }
     return 0;

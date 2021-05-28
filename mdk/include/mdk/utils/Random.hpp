@@ -33,6 +33,8 @@ namespace mdk {
             for (auto& x: iv) x = 0;
         }
 
+        Random(Random const& oth) = default;
+
         inline double uniform() {
             int k, j;
             if (idum <= 0) {
