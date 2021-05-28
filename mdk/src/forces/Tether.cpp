@@ -19,11 +19,15 @@ void Tether::bind(Simulation &simulation) {
         ranges.add(intv);
 
         if (fromNative) {
+            auto const& residues = model.residues;
             for (auto i = intv.lower(); i < intv.upper(); ++i) {
-                auto i1 = i, i2 = i+1;
-                auto r1 = model.residues[i1].r, r2 = model.residues[i2].r;
+                if (not residues[i].nat_r || not residues[i+1].nat_r) {
+                    throw std::runtime_error("no native position"
+                                             " - tether's length can't be calculated");
+                }
+                Vector r1 = *model.residues[i].nat_r, r2 = *model.residues[i+1].nat_r;
                 auto r12 = r2 - r1;
-                dist0[i1] = r12.norm();
+                dist0[i] = r12.norm();
             }
         }
     }

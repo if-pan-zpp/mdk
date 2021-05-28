@@ -2,6 +2,10 @@
 #include "simul/Simulation.hpp"
 using namespace mdk;
 
+void Leapfrog::init() {
+    
+}
+
 void Leapfrog::integrate() {
     for (int i = 0; i < state->n; ++i) {
         Vector a_cur = state->dyn.F[i] / m[i];

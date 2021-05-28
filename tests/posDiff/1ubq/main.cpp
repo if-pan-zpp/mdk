@@ -3,6 +3,11 @@
 #include <mdk/files/param/LegacyParser.hpp>
 #include <mdk/hooks/PositionDiff.hpp>
 #include <mdk/system/Leapfrog.hpp>
+#include <mdk/system/PredictorCorrector.hpp>
+#include <mdk/forces/Tether.hpp>
+#include <mdk/forces/angle/NativeBondAngle.hpp>
+#include <mdk/forces/dihedral/ComplexNativeDihedral.hpp>
+#include <mdk/forces/go/NativeContacts.hpp>
 #include <fstream>
 using namespace mdk;
 using namespace std;
@@ -21,13 +26,21 @@ int main() {
     rand -> uniform();
 
     model.legacyMorphIntoSAW(*rand, false, 0, 4.56*angstrom, true);
+    model.initVelocity(*rand, 0.35 * eps_kB, false);
 
     Simulation simul(model, params);
 
-    simul.add<Leapfrog>(0.002 * tau);
+    simul.add<PredictorCorrector>(0.005 * tau);
+
     simul.add<PositionDiff>(model, "data/positions.txt", "posDiffs.out");
 
-    for (int i = 0; i < 100; ++i) {
+    simul.add<Tether>(true);
+    simul.add<NativeBondAngle>();
+    simul.add<ComplexNativeDihedral>();
+
+    simul.add<NativeContacts>();
+
+    for (int i = 0; i < 10; ++i) {
     	simul.step();
     }
     return 0;

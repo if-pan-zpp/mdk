@@ -11,9 +11,11 @@ namespace mdk {
 
     inline double dihedral(VRef v1, VRef v2, VRef v3, VRef v4) {
         auto u1 = v2 - v1, u2 = v3 - v2, u3 = v4 - v3;
-        auto d1 = u1.cross(u2), d2 = u3.cross(u2);
+        auto d1 = u1.cross(u2), d2 = u2.cross(u3);
 
         if (d1.isZero() || d2.isZero()) return 0.0;
-        else return acos(d1.dot(d2) / (d1.norm() * d2.norm()));
+        double phi = acos(d1.dot(d2) / (d1.norm() * d2.norm()));
+        if (d1.dot(u3) < 0.) phi = -phi;
+        return phi;
     }
 }

@@ -36,6 +36,7 @@ namespace mdk
     Unit reducedMass = 1.0;
     Unit kg = Joule * second * second / (meter * meter);
     Unit au = kg * 0.99999999965e-3 / mol;
+    Unit f77mass = eps * tau * tau / (f77unit * f77unit);
 
     /* EM stuff */
     Unit echarge = 1.0;

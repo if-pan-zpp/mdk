@@ -34,8 +34,8 @@ namespace mdk {
 
                         dihTerm(i, phi, state->dyn.V, dV_dphi);
 
-                        auto dphi_dr1 = -unit_r12_x_r23 * r23_norm;
-                        auto dphi_dr4 = -unit_r23_x_r34 * r23_norm;
+                        auto dphi_dr1 = -unit_r12_x_r23 * r23_norm / r12_x_r23_norm;
+                        auto dphi_dr4 = unit_r23_x_r34 * r23_norm / r23_x_r34_norm;
                         Vector df = (-dphi_dr1*r12.dot(r23)+dphi_dr4*r23.dot(r34));
                         df /= (r23_norm * r23_norm);
                         auto dphi_dr2 = -dphi_dr1 + df;

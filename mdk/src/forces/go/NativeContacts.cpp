@@ -7,23 +7,36 @@ void NativeContacts::bind(Simulation &simulation) {
 
     auto& model = simulation.data<Model>();
     for (auto const& cont: model.contacts) {
-        if ((ContactTypeIdx)cont.type != ContactTypeIdx::NAT) {
+        if ((ContactTypeIdx)cont.type != ContactTypeIdx::SSBOND) {
+            int i1 = cont.res[0];
+            int i2 = cont.res[1];
+            if (i1 > i2) std::swap(i1, i2);
             allContacts.emplace_back((Contact) {
-                .i1 = cont.res[0], .i2 = cont.res[1],
+                .i1 = i1, .i2 = i2,
                 .r_min = cont.dist0
             });
         }
     }
 
+    /* Remove duplicated contacts, this probably should be done in 'coarsen' */ 
+    sort(allContacts.begin(), allContacts.end(),
+         [](Contact const& a, Contact const& b) -> bool {
+             if (a.i1 == b.i1) return a.i2 < b.i2;
+             return a.i1 < b.i1;
+         });
+    allContacts.resize(
+        distance(allContacts.begin(),
+                 unique(allContacts.begin(), allContacts.end(),
+                        [](Contact const& a, Contact const& b) -> bool {
+                            return a.i1 == b.i1 && a.i2 == b.i2;
+                        })));
+
     installIntoVL();
 }
 
 vl::Spec NativeContacts::spec() const {
-    double maxCutoff = 0.0;
-    for (auto const& cont: allContacts) {
-        auto contCutoff = LennardJones(cont.r_min, depth).cutoff();
-        maxCutoff = std::max(maxCutoff, contCutoff);
-    }
+    // TODO: make it settable
+    double maxCutoff = 18.0 * angstrom;
 
     return (vl::Spec) {
         .cutoffSq = pow(maxCutoff, 2.0),

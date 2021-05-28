@@ -14,7 +14,7 @@ namespace mdk {
 
         inline void computeV(double dx, double& V, double& dV_dx) const {
             auto dx2 = dx*dx;
-            V += dx2 * (H1 + H2 * dx);
+            V += dx2 * (H1 + H2 * dx2);
             dV_dx += dx * (2.0 * H1 + 4.0 * H2 * dx2);
         }
 

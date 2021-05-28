@@ -6,10 +6,27 @@
 #include "verlet/List.hpp"
 using namespace mdk;
 
+void Simulation::calcForces() {
+    auto& state = var<State>();
+    
+    auto& vl = var<vl::List>();
+    state.prepareDyn();
+
+    vl.check();
+    for (auto* force: forces) {
+        force->asyncPart();
+    }
+
+    for (auto* force: forces) {
+        force->syncPart();
+    }
+}
+
 void Simulation::init() {
     step_nr = 0;
 
-
+    calcForces();
+    integrator->init();
 
     for (auto* hook: hooks) {
         hook->execute(0);
@@ -24,20 +41,8 @@ void Simulation::step() {
     }
     
     step_nr++;
-    auto& state = var<State>();
-    
-    auto& vl = var<vl::List>();
-    state.prepareDyn();
 
-    vl.check();
-    for (auto* force: forces) {
-        force->asyncPart();
-    }
-
-    for (auto* force: forces) {
-        force->syncPart();
-    }
-
+    calcForces();
     integrator->integrate();
 
     for (auto* hook: hooks) {

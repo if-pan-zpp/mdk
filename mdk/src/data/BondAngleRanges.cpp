@@ -3,7 +3,7 @@ using namespace mdk;
 using namespace boost::icl;
 
 BondAngleRanges::BondAngleRanges(const Model &model) {
-    theta_0 = Scalars(model.n);
+    theta_0 = Scalars::Zero(model.n);
 
     for (auto const& ch: model.chains) {
         auto start = ch.start + 1, end = ch.end - 1;

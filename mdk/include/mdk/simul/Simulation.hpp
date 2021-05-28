@@ -87,5 +87,7 @@ namespace mdk {
 
         bool initialized = false;
         int step_nr;
+
+        void calcForces();
     };
 }

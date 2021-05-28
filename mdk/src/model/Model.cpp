@@ -246,6 +246,52 @@ void Model::legacyMorphIntoSAW(Random& rand, bool useTop, double density,
     }
 }
 
+void Model::initVelocity(Random& rand, double temperature, bool useMass) {
+    int n = residues.size();
+    vector<double> masses(n, 1.0 * f77mass);
+
+    if (useMass) {
+        //TODO
+        assert(0);
+    }
+
+    for (int i = 0; i < n; ++i) {
+        //TODO: do this only in LEGACY_MODE
+        Vector& v = residues[i].v;
+        for (int d = 0; d < 3; ++d) {
+            v(d) = rand.uniform(-1.0, 1.0);
+        }
+        v.normalize();
+    }
+
+    // Shifting velocities so that total momentum is 0
+
+    double totMass = 0.0;
+    Vector totMomentum = Vector::Zero();
+
+    for (int i = 0; i < n; ++i) {
+        totMass += masses[i];
+        totMomentum += masses[i] * residues[i].v;
+    }
+
+    for (int i = 0; i < n; ++i) {
+        residues[i].v -= totMomentum * (1.0 / totMass);
+    }
+
+    // Scaling velocities to desired temperature
+
+    double avgKinEnergy = 0.0;
+    for (int i = 0; i < n; ++i) {
+        avgKinEnergy += masses[i] * residues[i].v.squaredNorm() / 2.0;
+    }
+    avgKinEnergy /= n;
+
+    double ratio = 1.5 * temperature / avgKinEnergy;
+    for (int i = 0; i < n; ++i) {
+        residues[i].v *= sqrt(ratio);
+    }
+}
+
 Model::StructuredPart& Model::addContactMap(cmap::ContactMap const& contactMap) {
     auto& sp = addSP();
     sp.off = contactMap.offset;

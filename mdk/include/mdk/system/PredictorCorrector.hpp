@@ -10,6 +10,7 @@ namespace mdk {
             dt(dt) {};
 
         void bind(Simulation& simulation) override;
+        void init() override;
         void integrate() override;
 
     private:

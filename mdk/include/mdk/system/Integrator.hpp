@@ -10,6 +10,7 @@ namespace mdk {
 
     public:
         void bind(Simulation& simulation) override;
+        virtual void init() = 0;
         virtual void integrate() = 0;
     };
 }

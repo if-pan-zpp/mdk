@@ -20,9 +20,10 @@ namespace mdk {
 
         struct Residue {
             int idx, chainIdx;
-            Eigen::Vector3d r, v;
+            Vector r, v;
             double mass;
             ResType type;
+            std::optional<Vector> nat_r;
         };
         std::vector<Residue> residues;
         Residue& addResidue(Chain *chain = nullptr);
@@ -66,6 +67,10 @@ namespace mdk {
             double density = 1e-4 * atom / pow(angstrom, 3.0),
             double minDist = 4.56 * angstrom,
             bool nativeBondLen = false);
+
+        void initVelocity(Random& rand,
+                          double temperature,
+                          bool useMass = true);
 
         StructuredPart& addContactMap(cmap::ContactMap const& contactMap);
         void addCMapContacts(cmap::ContactMap const& contactMap, Chain& chain);

@@ -3,7 +3,7 @@ using namespace mdk;
 using namespace boost::icl;
 
 DihedralRanges::DihedralRanges(const Model &model) {
-    phi_0 = Scalars(model.n);
+    phi_0 = Scalars::Zero(model.n);
 
     for (auto const& ch: model.chains) {
         auto start = ch.start + 2, end = ch.end - 1;
@@ -16,7 +16,7 @@ DihedralRanges::DihedralRanges(const Model &model) {
             native.add(interval<int>::right_open(spStart, spEnd));
 
             for (int i = spStart; i < spEnd; ++i) {
-                phi_0[i] = sp.angle[i - (ch.start + sp.off)];
+                phi_0[i] = sp.dihedral[i - (ch.start + sp.off)];
             }
         }
     }

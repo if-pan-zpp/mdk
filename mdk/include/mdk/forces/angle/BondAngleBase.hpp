@@ -19,14 +19,12 @@ namespace mdk {
                     auto r12_x_r23_norm = r12_x_r23.norm();
                     if (r12_x_r23_norm != 0.0) {
                         auto r12_norm = r12.norm(), r23_norm = r23.norm();
-                        auto r12_unit = r12 / r12_norm, r23_unit = r23 / r23_norm;
-                        auto r12_x_r23_unit = r12_x_r23 / r12_x_r23_norm;
 
-                        auto dtheta_dr1 = r23_unit.cross(r12_x_r23_unit) / r12_norm;
-                        auto dtheta_dr3 = r12_unit.cross(r12_x_r23_unit) / r23_norm;
-                        auto dtheta_dr2 = -dtheta_dr1 -dtheta_dr3;
+                        auto dtheta_dr1 = r12.cross(r12_x_r23).normalized() / r12_norm;
+                        auto dtheta_dr3 = r23.cross(r12_x_r23).normalized() / r23_norm;
+                        auto dtheta_dr2 = -dtheta_dr1 - dtheta_dr3;
 
-                        auto cos_theta = -r12_unit.dot(r23_unit);
+                        auto cos_theta = -r12.dot(r23) / r12_norm / r23_norm;
                         cos_theta = max(min(cos_theta, 1.0), -1.0);
                         double theta = acos(cos_theta), dV_dtheta = 0.0;
 

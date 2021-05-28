@@ -85,6 +85,8 @@ void Model::addContactsFromAtomOverlap() {
         contactAtoms.emplace_back(&atom);
     }
 
+    double alpha = pow(26.0/7.0, 1.0/6.0); /* cg.f:4906 */
+
     for (int idx1 = 0; idx1 < (int)contactAtoms.size(); ++idx1) {
         auto *atom1 = contactAtoms[idx1];
         auto const& info1 = AminoAcid(atom1->res->type).info()
@@ -97,16 +99,15 @@ void Model::addContactsFromAtomOverlap() {
                 .atomInfo.at(atom2->type);
             string type2 = info2.inBackbone ? "B" : "S";
 
-            if (atom1 >= atom2)
-                continue;
             if (atom1->res == atom2->res)
                 continue;
-            if (abs(atom1->res->idxInChain - atom2->res->idxInChain) < 3)
+            if (atom1->res->chain == atom2->res->chain and
+                abs(atom1->res->idxInChain - atom2->res->idxInChain) < 3)
                 continue;
 
             auto dist = (atom1->r - atom2->r).norm();
             auto overlapR = info1.radius + info2.radius;
-            if (dist <= overlapR) {
+            if (dist <= alpha * overlapR) {
                 auto& cont = addContact();
                 cont.dist0 = dist;
                 cont.type = "NAT_" + type1 + type2;
@@ -168,6 +169,7 @@ mdk::Model Model::coarsen() {
             resIdxMap[res->serial] = resThere.idx;
             resThere.type = ResType(res->type);
             resThere.r = res->find("CA")->r;
+            resThere.nat_r = resThere.r;
 //            resThere.mass = resThere.type.mass();
             resThere.mass = 1.0;
         }
