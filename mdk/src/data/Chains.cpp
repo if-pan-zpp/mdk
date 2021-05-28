@@ -12,6 +12,9 @@ Chains::Chains(const Model &model) {
             isConnected[i] = 1;
             chainIdx[i] = chIdx;
         }
+        if (ch.start < ch.end) {
+            chainIdx[ch.end - 1] = chIdx;
+        }
         isTerminal[ch.start] = isTerminal[ch.end-1] = true;
         chainBounds.add(interval<int>::right_open(ch.start, ch.end));
 

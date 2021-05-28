@@ -27,8 +27,8 @@ namespace mdk {
 
             double dV_dn = 0.0;
             kernel(norm, V, dV_dn);
-            F1 += dV_dn * unit;
-            F2 -= dV_dn * unit;
+            F1 -= dV_dn * unit;
+            F2 += dV_dn * unit;
         }
     };
 }

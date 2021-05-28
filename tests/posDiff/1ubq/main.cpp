@@ -8,6 +8,7 @@
 #include <mdk/forces/angle/NativeBondAngle.hpp>
 #include <mdk/forces/dihedral/ComplexNativeDihedral.hpp>
 #include <mdk/forces/go/NativeContacts.hpp>
+#include <mdk/forces/PauliExclusion.hpp>
 #include <fstream>
 using namespace mdk;
 using namespace std;
@@ -39,8 +40,9 @@ int main() {
     simul.add<ComplexNativeDihedral>();
 
     simul.add<NativeContacts>();
+    simul.add<PauliExclusion>();
 
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 100; ++i) {
     	simul.step();
     }
     return 0;
