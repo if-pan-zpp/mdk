@@ -3,8 +3,8 @@ using namespace mdk;
 using namespace boost::icl;
 
 Chains::Chains(const Model &model) {
-    isNative = isConnected = isTerminal = Bytes::Constant(model.n, false);
-    chainIdx = Integers::Constant(model.n, -1);
+    isNative = isConnected = isTerminal = Bytes(model.n, false);
+    chainIdx = Integers(model.n, -1);
 
     for (int chIdx = 0; chIdx < (int)model.chains.size(); ++chIdx) {
         auto const& ch = model.chains[chIdx];

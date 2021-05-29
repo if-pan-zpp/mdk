@@ -1,10 +1,9 @@
 #include "forces/dihedral/SimpleNativeDihedral.hpp"
+#include "forces/dihedral/DihedralAngles.hpp"
 using namespace mdk;
 
-void SimpleNativeDihedral::dihTerm(int i, double phi, double &V,
-    double &dV_dphi) const  {
-
-    auto diff = phi - phi0[i];
-    V += 0.5 * CDH * diff * diff;
-    dV_dphi += CDH * diff;
+void SimpleNativeDihedral::bind(Simulation &simulation) {
+    NativeDihedralBase::bind(simulation);
+    auto& unifiedDih = simulation.var<DihedralAngles>();
+    unifiedDih.simpNatDih = this;
 }

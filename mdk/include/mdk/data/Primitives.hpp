@@ -8,6 +8,6 @@ namespace mdk {
     using Vector = Eigen::Vector3d;
     using VRef = Vector const&;
 
-    using Bytes = Eigen::Matrix<int8_t, Eigen::Dynamic, 1>;
-    using Integers = Eigen::Matrix<int, Eigen::Dynamic, 1>;
+    using Bytes = std::vector<int8_t>;
+    using Integers = std::vector<int>;
 }

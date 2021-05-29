@@ -1,28 +1,11 @@
 #include "forces/dihedral/HeuresticDihedral.hpp"
-#include "data/DihedralRanges.hpp"
-#include "simul/Simulation.hpp"
+#include "forces/dihedral/DihedralAngles.hpp"
 using namespace mdk;
 
-void HeuresticDihedral::dihTerm(int i, double phi, double &V,
-    double &dV_dphi) const {
-
-    auto sin_phi = sin(phi), cos_phi = cos(phi);
-
-    auto* C = coeff[angleTypes[i]];
-    V += C[0] + C[1] * sin_phi + C[2] * cos_phi + C[3] * sin_phi * sin_phi +
-         C[4] * cos_phi * cos_phi + C[5] * sin_phi * cos_phi;
-    dV_dphi += C[1] * cos_phi - C[2] * sin_phi + 2.0 * C[3] * sin_phi -
-             2.0 * C[4] * sin_phi + C[5] * (cos_phi - sin_phi);
-}
-
-void mdk::HeuresticDihedral::bind(Simulation &simulation) {
-    Force::bind(simulation);
-
+void HeuresticDihedral::bind(Simulation &simulation) {
     using namespace boost::icl;
     auto& model = simulation.data<Model>();
     auto& params = simulation.data<param::Parameters>();
-
-    ranges = simulation.data<DihedralRanges>().nonNative;
 
     angleTypes = Eigen::Matrix<int8_t, Eigen::Dynamic, 1>(model.n);
     for (auto const& chain: model.chains) {
@@ -44,4 +27,7 @@ void mdk::HeuresticDihedral::bind(Simulation &simulation) {
             coeff[(int8_t)pt][d] = coeffs[d];
         }
     }
+
+    auto& unifiedDih = simulation.var<DihedralAngles>();
+    unifiedDih.heurDih = this;
 }

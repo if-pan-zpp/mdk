@@ -14,10 +14,10 @@ void State::bind(Simulation &simul) {
     auto& model = simul.data<Model>();
 
     n = model.n;
-    r = v = Vectors(n, Vector::Zero());
+    r = v = Vectors(n);
     t = 0.0;
     top = model.top;
-    dyn.F = Vectors(n, Vector::Zero());
+    dyn.F = Vectors(n);
 
     for (int i = 0; i < model.n; ++i) {
         auto& res = model.residues[i];
