@@ -6,6 +6,7 @@
 #include <typeindex>
 #include <type_traits>
 #include <stdexcept>
+#include <functional>
 
 namespace mdk {
     class Force;
@@ -71,6 +72,10 @@ namespace mdk {
             return x;
         }
 
+        void addAsyncTask(std::function<void()> const& f) {
+            asyncTasks.push_back(f);
+        }
+
         void init();
         void step();
 
@@ -83,6 +88,7 @@ namespace mdk {
         std::vector<Force*> forces;
         std::vector<NonlocalForce*> nonlocalForces;
         std::vector<Hook*> hooks;
+        std::vector<std::function<void()>> asyncTasks;
         Integrator *integrator;
 
         bool initialized = false;

@@ -7,30 +7,33 @@ void LangPredictorCorrector::init() {
     for (int i = 0; i < state->n; ++i) {
         y2[i] = state->dyn.F[i]/m[i] * (dt*dt/2.0);
     }
+    initialized = true;
 }
 
 void LangPredictorCorrector::generateNoise() {
-    // TODO: add legacy mode here
-    for (int dim = 0; dim < 3; ++dim) {
-        for (int i = 0; i < state->n; ++i) {
-            gaussianNoise[i](dim) = random->normal();
+    #pragma omp task
+    if (initialized) {
+        // TODO: add legacy mode here
+        for (int dim = 0; dim < 3; ++dim) {
+            for (int i = 0; i < state->n; ++i) {
+                gaussianNoise[i](dim) = random->normal();
+            }
         }
     }
 }
 
 void LangPredictorCorrector::integrate() {
-    // TODO: do it as an async task
-    generateNoise();
-
     // TODO: allow changing temperature
     double noiseVariance = sqrt(2.0*temperature *gamma*dt) * dt;
     double gamma_dt = gamma / dt;
+
+    #pragma omp parallel for
     for (int i = 0; i < state->n; ++i) {
+        // Damping and white noise
         y1[i] += gaussianNoise[i] * noiseVariance / m[i];
         state->dyn.F[i] -= gamma_dt * y1[i];
-    }
-    
-    for (int i = 0; i < state->n; ++i) {
+
+        // Correct
         Vector err = y2[i] - state->dyn.F[i]/m[i] * (dt*dt/2.0);
         y0[i] -= 3.0/16.0 * err;
         y1[i] -= 251.0/360.0 * err;
@@ -38,18 +41,20 @@ void LangPredictorCorrector::integrate() {
         y3[i] -= 11.0/18.0 * err;
         y4[i] -= 1.0/6.0 * err;
         y5[i] -= 1.0/60.0 * err;
-    }
 
-    for (int i = 0; i < state->n; ++i) {
+
+        // Predict
         y0[i] += y1[i] + y2[i] + y3[i] + y4[i] + y5[i];
         y1[i] += 2.0*y2[i] + 3.0*y3[i] + 4.0*y4[i] + 5.0*y5[i];
         y2[i] += 3.0*y3[i] + 6.0*y4[i] + 10.0*y5[i];
         y3[i] += 4.0*y4[i] + 10.0*y5[i];
         y4[i] += 5.0*y5[i];
 
+
         state->r[i] = y0[i];
         state->v[i] = y1[i]/dt;
     }
+
     state->t += dt;
 }
 
@@ -68,4 +73,5 @@ void LangPredictorCorrector::bind(Simulation &simulation) {
     }
 
     gaussianNoise = Vectors(model.n);
+    simulation.addAsyncTask([this]() { this->generateNoise(); });
 }

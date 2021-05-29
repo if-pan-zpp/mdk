@@ -23,6 +23,8 @@ namespace mdk {
         Vectors gaussianNoise;
         void generateNoise();
 
+        bool initialized = false;
+
         double temperature = 0.35 * eps_kB;
     };
 }

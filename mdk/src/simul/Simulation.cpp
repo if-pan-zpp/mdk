@@ -21,6 +21,11 @@ void Simulation::calcForces() {
     #pragma omp parallel
     {
         thread_dyn.zero(state.n);
+
+        #pragma omp master
+        for (auto const& task : asyncTasks) {
+            task();
+        }
             
         for (auto* force: forces) {
             force->asyncPart(thread_dyn);

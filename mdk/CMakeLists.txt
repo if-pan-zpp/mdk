@@ -27,9 +27,6 @@ target_compile_options(${TARGET}
 target_compile_features(${TARGET}
     PUBLIC cxx_std_17)
 
-target_compile_definitions(${TARGET}
-    PRIVATE $<$<CONFIG:Debug>:EIGEN_NO_DEBUG>)
-
 find_package(Eigen3 REQUIRED)
 find_package(Catch2 REQUIRED)
 find_package(OpenMP REQUIRED)
