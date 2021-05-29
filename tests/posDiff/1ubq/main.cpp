@@ -5,7 +5,7 @@
 #include <mdk/system/Leapfrog.hpp>
 #include <mdk/system/LangPredictorCorrector.hpp>
 #include <mdk/forces/Tether.hpp>
-#include <mdk/forces/angle/NativeBondAngle.hpp>
+#include <mdk/forces/angle/NativeBA.hpp>
 #include <mdk/forces/dihedral/ComplexNativeDihedral.hpp>
 #include <mdk/forces/go/NativeContacts.hpp>
 #include <mdk/forces/PauliExclusion.hpp>
@@ -37,7 +37,7 @@ int main() {
     simul.add<PositionDiff>(model, "data/positions.txt", "posDiffs.out");
 
     simul.add<Tether>(true);
-    simul.add<NativeBondAngle>();
+    simul.add<NativeBA>();
     simul.add<ComplexNativeDihedral>();
 
     simul.add<NativeContacts>();

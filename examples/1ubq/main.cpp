@@ -29,7 +29,7 @@ int main() {
     simul.add<LangPredictorCorrector>(0.005 * tau);
 
     simul.add<Tether>(true);
-    simul.add<NativeBondAngle>();
+    simul.add<NativeBA>();
     simul.add<ComplexNativeDihedral>();
 
     simul.add<NativeContacts>();
