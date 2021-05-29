@@ -5,7 +5,7 @@ using namespace mdk;
 
 void NativeBA::bind(Simulation &simulation) {
     auto const& model = simulation.data<Model>();
-    isNative = Bytes(model.n, false);
+    isNative = Bytes(model.n, 0);
     theta0 = Scalars(model.n);
 
     for (auto const& ch: model.chains) {
@@ -15,7 +15,7 @@ void NativeBA::bind(Simulation &simulation) {
             auto spEnd = ch.start + sp.off + sp.len - 1;
 
             for (int i = spStart; i < spEnd; ++i) {
-                isNative[i] = true;
+                isNative[i] = 1;
                 theta0[i] = sp.angle[i - (ch.start + sp.off)];
             }
         }

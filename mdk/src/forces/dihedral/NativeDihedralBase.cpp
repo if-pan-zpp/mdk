@@ -14,7 +14,7 @@ void NativeDihedralBase::bind(Simulation &simulation) {
 
             for (int i = spStart; i < spEnd; ++i) {
                 isNative[i] = true;
-                phi0[i] = sp.angle[i - (ch.start + sp.off)];
+                phi0[i] = sp.dihedral[i - (ch.start + sp.off)];
             }
         }
     }

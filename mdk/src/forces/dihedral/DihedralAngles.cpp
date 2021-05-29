@@ -14,7 +14,7 @@ void DihedralAngles::bind(Simulation &simulation) {
 }
 
 void DihedralAngles::asyncPart() {
-    for (int i = 0; i < inRange.size(); ++i) {
+    for (int i = 0; i < (int) inRange.size(); ++i) {
         if (!inRange[i]) continue;
 
         auto r1 = state->r[i-2], r2 = state->r[i-1],

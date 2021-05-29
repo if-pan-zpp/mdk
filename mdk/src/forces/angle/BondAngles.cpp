@@ -4,7 +4,7 @@ using namespace std;
 
 void BondAngles::bind(Simulation &simulation) {
     Force::bind(simulation);
-    inRange =  Bytes(state->n, false);
+    inRange = Bytes(state->n, false);
 
     auto const& model = simulation.data<Model>();
     for (auto const& ch: model.chains) {
@@ -15,7 +15,7 @@ void BondAngles::bind(Simulation &simulation) {
 }
 
 void BondAngles::asyncPart() {
-    for (int i = 0; i < inRange.size(); ++i) {
+    for (int i = 0; i < (int) inRange.size(); ++i) {
         if (!inRange[i]) continue;
 
         auto r1 = state->r[i-1], r2 = state->r[i], r3 = state->r[i+1];
