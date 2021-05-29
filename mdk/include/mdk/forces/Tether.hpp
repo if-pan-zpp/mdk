@@ -5,16 +5,17 @@
 
 namespace mdk {
     class Tether: public Force {
-    private:
-        bool fromNative;
-        Scalars dist0;
-        Ranges ranges;
-        Harmonic harm;
-
     public:
         explicit Tether(bool fromNative);
 
         void bind(Simulation& simulation) override;
         void asyncPart(Dynamics &) override;
+    private:
+        Harmonic harm;
+        bool fromNative;
+
+        int n;
+        Scalars dist0;
+        Bytes isConnected;
     };
 }

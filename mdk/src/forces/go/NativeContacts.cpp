@@ -75,6 +75,7 @@ void NativeContacts::vlUpdateHook() {
 }
 
 void NativeContacts::asyncPart(Dynamics &dyn) {
+    #pragma omp for nowait 
     for (auto const& cont: curPairs) {
         auto r12 = state->top(state->r[cont.i1] - state->r[cont.i2]);
         auto x2 = r12.squaredNorm();

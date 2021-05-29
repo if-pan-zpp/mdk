@@ -6,6 +6,10 @@
 #include "verlet/List.hpp"
 using namespace mdk;
 
+extern Dynamics thread_dyn;
+#pragma omp threadprivate(thread_dyn)
+Dynamics thread_dyn;
+
 void Simulation::calcForces() {
     auto& state = var<State>();
     
@@ -13,8 +17,19 @@ void Simulation::calcForces() {
     state.prepareDyn();
 
     vl.check();
-    for (auto* force: forces) {
-        force->asyncPart(state.dyn);
+
+    #pragma omp parallel
+    {
+        thread_dyn.zero(state.n);
+            
+        for (auto* force: forces) {
+            force->asyncPart(thread_dyn);
+        }
+
+        #pragma omp critical
+        {
+            state.updateWithDyn(thread_dyn);
+        }
     }
 
     for (auto* force: forces) {

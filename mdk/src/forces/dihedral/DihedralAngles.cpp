@@ -14,6 +14,7 @@ void DihedralAngles::bind(Simulation &simulation) {
 }
 
 void DihedralAngles::asyncPart(Dynamics &dyn) {
+    #pragma omp for nowait
     for (int i = 0; i < (int) inRange.size(); ++i) {
         if (!inRange[i]) continue;
 

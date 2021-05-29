@@ -43,7 +43,7 @@ int main() {
     simul.add<NativeContacts>();
     simul.add<PauliExclusion>();
 
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 100; ++i) {
     	simul.step();
     }
     return 0;

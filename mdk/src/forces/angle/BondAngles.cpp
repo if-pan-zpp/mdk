@@ -15,6 +15,7 @@ void BondAngles::bind(Simulation &simulation) {
 }
 
 void BondAngles::asyncPart(Dynamics &dyn) {
+    #pragma omp for nowait
     for (int i = 0; i < (int) inRange.size(); ++i) {
         if (!inRange[i]) continue;
 

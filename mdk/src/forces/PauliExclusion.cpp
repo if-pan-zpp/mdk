@@ -19,6 +19,7 @@ vl::Spec PauliExclusion::spec() const {
 }
 
 void PauliExclusion::asyncPart(Dynamics &dyn) {
+    #pragma omp for nowait
     for (auto const& [i1, i2]: exclPairs) {
         if (not (chains -> sepByAtLeastN(i1, i2, 2))) continue;
 
