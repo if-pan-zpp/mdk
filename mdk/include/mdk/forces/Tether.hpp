@@ -15,6 +15,6 @@ namespace mdk {
         explicit Tether(bool fromNative);
 
         void bind(Simulation& simulation) override;
-        void asyncPart() override;
+        void asyncPart(Dynamics &) override;
     };
 }

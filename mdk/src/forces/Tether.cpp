@@ -33,8 +33,7 @@ void Tether::bind(Simulation &simulation) {
     }
 }
 
-void Tether::asyncPart() {
-    auto& diff = state->dyn;
+void Tether::asyncPart(Dynamics &dyn) {
     for (auto const& intv: ranges) {
         for (int i = intv.lower(); i < intv.upper(); ++i) {
             auto r1 = state->r[i], r2 = state->r[i+1];
@@ -43,7 +42,7 @@ void Tether::asyncPart() {
 
             auto dx = r12_norm - dist0[i];
             auto r12_unit = r12 / r12_norm;
-            harm.computeF(r12_unit, dx, diff.V, diff.F[i], diff.F[i+1]);
+            harm.computeF(r12_unit, dx, dyn.V, dyn.F[i], dyn.F[i+1]);
         }
     }
 }

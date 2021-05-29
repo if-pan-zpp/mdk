@@ -36,8 +36,8 @@ namespace mdk {
     class QuasiAdiabatic: public NonlocalForce {
     public:
         void bind(Simulation &simulation) override;
-        void asyncPart() override;
-        void syncPart() override;
+        void asyncPart(Dynamics &) override;
+        void syncPart(Dynamics &) override;
         void vlUpdateHook() override;
 
     private:

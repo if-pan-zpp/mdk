@@ -133,7 +133,7 @@ vl::Spec PseudoImproperDihedral::spec() const {
     };
 }
 
-void PseudoImproperDihedral::asyncPart() {
+void PseudoImproperDihedral::asyncPart(Dynamics &dyn) {
     for (auto const& [i1, i2]: pairs) {
         auto r12 = state->top(state->r[i1] - state->r[i2]);
         auto r12_normsq = r12.squaredNorm();
@@ -160,11 +160,11 @@ void PseudoImproperDihedral::asyncPart() {
 
         int idx[6] = { i1-1, i1, i1 + 1, i2-1, i2, i2+1 };
         for (int i = 0; i < 6; ++i) {
-            state->dyn.F[idx[i]] -= A * dpsi_dr[0][i];
-            state->dyn.F[idx[i]] -= B * dpsi_dr[1][i];
+            dyn.F[idx[i]] -= A * dpsi_dr[0][i];
+            dyn.F[idx[i]] -= B * dpsi_dr[1][i];
         }
-        state->dyn.F[i1] += C * unit;
-        state->dyn.F[i2] -= C * unit;
+        dyn.F[i1] += C * unit;
+        dyn.F[i2] -= C * unit;
     }
 }
 

@@ -6,11 +6,12 @@
 namespace mdk {
     class Force: public SimulVar {
     protected:
-        State *state = nullptr;
+        State const* state = nullptr;
 
     public:
         void bind(Simulation& simulation) override;
-        virtual void asyncPart();
-        virtual void syncPart();
+        virtual void asyncPart(Dynamics &);
+        virtual void syncPart(Dynamics &);
+        virtual ~Force() {}
     };
 }

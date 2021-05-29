@@ -27,6 +27,10 @@ void State::bind(Simulation &simul) {
 }
 
 void State::prepareDyn() {
-    dyn.V = 0.0;
-    dyn.F.vectorwise() = Vector::Zero();
+    dyn.zero(n);
+}
+
+void State::updateWithDyn(Dynamics const& othDyn) {
+    dyn.V += othDyn.V;
+    dyn.F += othDyn.F;
 }

@@ -10,6 +10,6 @@ namespace mdk {
         double screeningDist = 10.0 * angstrom;
         double permittivity = 80.0 * epsilon_0;
 
-        void asyncPart() override;
+        void asyncPart(Dynamics &) override;
     };
 }

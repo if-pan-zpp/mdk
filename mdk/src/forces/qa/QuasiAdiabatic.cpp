@@ -38,7 +38,7 @@ void QuasiAdiabatic::bind(Simulation &simulation) {
     installIntoVL();
 }
 
-void QuasiAdiabatic::asyncPart() {
+void QuasiAdiabatic::asyncPart(Dynamics &dyn) {
     computeNH();
 
     for (auto& cont: pairs) {
@@ -60,19 +60,16 @@ void QuasiAdiabatic::asyncPart() {
 
         if (stage > 0.0) {
             if (cont.type == Stats::Type::BB) {
-                bb_lj.asForce(unit, norm, state->dyn.V,
-                    state->dyn.F[cont.i1], state->dyn.F[cont.i2]);
+                bb_lj.asForce(unit, norm, dyn.V, dyn.F[cont.i1], dyn.F[cont.i2]);
                 r_min = bb_lj.r_min;
             }
             else if (cont.type != Stats::Type::SS) {
-                bs_lj.asForce(unit, norm, state->dyn.V,
-                    state->dyn.F[cont.i1], state->dyn.F[cont.i2]);
+                bs_lj.asForce(unit, norm, dyn.V, dyn.F[cont.i1], dyn.F[cont.i2]);
                 r_min = bs_lj.r_min;
             }
             else {
                 auto const& ss_lj = ss_ljs[(*types)[cont.i1]][(*types)[cont.i2]];
-                ss_lj.asForce(unit, norm, state->dyn.V,
-                    state->dyn.F[cont.i1], state->dyn.F[cont.i2]);
+                ss_lj.asForce(unit, norm, dyn.V, dyn.F[cont.i1], dyn.F[cont.i2]);
                 r_min = ss_lj.sink_max;
             }
 
@@ -191,7 +188,7 @@ bool QuasiAdiabatic::geometryPhase(PairInfo const& p, QADiff &diff) const {
     return false;
 }
 
-void QuasiAdiabatic::syncPart() {
+void QuasiAdiabatic::syncPart(Dynamics &dyn) {
     qaDiffs.clear();
     for (int i = 0; i < (int)freePairs.size(); ++i) {
         auto const& p = freePairs[i];

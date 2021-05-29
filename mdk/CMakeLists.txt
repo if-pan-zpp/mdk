@@ -20,9 +20,9 @@ target_include_directories(${TARGET}
 
 target_compile_options(${TARGET}
     PRIVATE
-    -Wall -Wextra -fopenmp -Wno-unused-parameter
-    $<$<CONFIG:Debug>:-pg -Og -march=native>
-    $<$<CONFIG:Release>:-Ofast -march=native>)
+    -Wall -Wextra -Wno-unused-parameter
+    $<$<CONFIG:Debug>:-pg -Og>
+    $<$<CONFIG:Release>:-Ofast>)
 
 target_compile_features(${TARGET}
     PUBLIC cxx_std_17)
@@ -32,7 +32,9 @@ target_compile_definitions(${TARGET}
 
 find_package(Eigen3 REQUIRED)
 find_package(Catch2 REQUIRED)
+find_package(OpenMP REQUIRED)
 
 target_link_libraries(${TARGET}
     PUBLIC Eigen3::Eigen
-    PRIVATE Catch2::Catch2)
+    PRIVATE Catch2::Catch2
+    PRIVATE OpenMP::OpenMP_CXX)

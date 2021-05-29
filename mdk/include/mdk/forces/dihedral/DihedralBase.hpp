@@ -8,7 +8,7 @@ namespace mdk {
         Ranges ranges;
 
     public:
-        void asyncPart() override {
+        void asyncPart(Dynamics &dyn) override {
             for (auto const& intv: ranges) {
                 for (int i = intv.lower(); i < intv.upper(); ++i) {
                     auto r1 = state->r[i-2], r2 = state->r[i-1],
@@ -32,7 +32,7 @@ namespace mdk {
                         auto phi = acos(cos_phi), dV_dphi = 0.0;
                         if (r12_x_r23.dot(r34) < 0.0) phi = -phi;
 
-                        dihTerm(i, phi, state->dyn.V, dV_dphi);
+                        dihTerm(i, phi, dyn.V, dV_dphi);
 
                         auto dphi_dr1 = -unit_r12_x_r23 * r23_norm / r12_x_r23_norm;
                         auto dphi_dr4 = unit_r23_x_r34 * r23_norm / r23_x_r34_norm;
@@ -41,10 +41,10 @@ namespace mdk {
                         auto dphi_dr2 = -dphi_dr1 + df;
                         auto dphi_dr3 = -dphi_dr4 - df;
 
-                        state->dyn.F[i-2] -= dV_dphi * dphi_dr1;
-                        state->dyn.F[i-1] -= dV_dphi * dphi_dr2;
-                        state->dyn.F[i] -= dV_dphi * dphi_dr3;
-                        state->dyn.F[i+1] -= dV_dphi * dphi_dr4;
+                        dyn.F[i-2] -= dV_dphi * dphi_dr1;
+                        dyn.F[i-1] -= dV_dphi * dphi_dr2;
+                        dyn.F[i] -= dV_dphi * dphi_dr3;
+                        dyn.F[i+1] -= dV_dphi * dphi_dr4;
                     }
                 }
             }

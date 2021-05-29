@@ -14,11 +14,11 @@ void Simulation::calcForces() {
 
     vl.check();
     for (auto* force: forces) {
-        force->asyncPart();
+        force->asyncPart(state.dyn);
     }
 
     for (auto* force: forces) {
-        force->syncPart();
+        force->syncPart(state.dyn);
     }
 }
 

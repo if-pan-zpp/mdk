@@ -6,6 +6,6 @@ void Force::bind(Simulation &simulation) {
     state = &simulation.var<State>();
 }
 
-void Force::asyncPart() {}
+void Force::asyncPart(Dynamics &) {}
 
-void Force::syncPart() {}
+void Force::syncPart(Dynamics &) {}

@@ -74,7 +74,7 @@ void NativeContacts::vlUpdateHook() {
     std::swap(vl->pairs, newVL);
 }
 
-void NativeContacts::asyncPart() {
+void NativeContacts::asyncPart(Dynamics &dyn) {
     for (auto const& cont: curPairs) {
         auto r12 = state->top(state->r[cont.i1] - state->r[cont.i2]);
         auto x2 = r12.squaredNorm();
@@ -84,7 +84,6 @@ void NativeContacts::asyncPart() {
         auto unit = r12/x;
 
         auto lj = LennardJones(cont.r_min, depth);
-        lj.asForce(unit, x, state->dyn.V,
-            state->dyn.F[cont.i1], state->dyn.F[cont.i2]);
+        lj.asForce(unit, x, dyn.V, dyn.F[cont.i1], dyn.F[cont.i2]);
     }
 }

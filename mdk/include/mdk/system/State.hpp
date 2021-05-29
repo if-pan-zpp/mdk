@@ -5,10 +5,14 @@
 #include "../simul/SimulVar.hpp"
 
 namespace mdk {
-    class Dynamics {
-    public:
+    struct Dynamics {
         double V = 0.0;
         Vectors F;
+
+        void zero(int n) {
+            V = 0.0;
+            F = Vectors(n, Vector::Zero());
+        }
     };
 
     class State: public SimulVar {
@@ -21,6 +25,7 @@ namespace mdk {
         Dynamics dyn;
 
         void prepareDyn();
+        void updateWithDyn(Dynamics const& othDyn);
         void bind(Simulation& simul) override;
         void exportTo(Model& model);
     };

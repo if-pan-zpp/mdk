@@ -30,7 +30,7 @@ namespace mdk {
         SidechainLJ ss_ljs[AminoAcid::N][AminoAcid::N];
 
         void bind(Simulation& simulation) override;
-        void asyncPart() override;
+        void asyncPart(Dynamics &) override;
         void vlUpdateHook() override;
 
     protected:

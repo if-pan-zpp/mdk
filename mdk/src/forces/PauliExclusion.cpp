@@ -18,7 +18,7 @@ vl::Spec PauliExclusion::spec() const {
     };
 }
 
-void PauliExclusion::asyncPart() {
+void PauliExclusion::asyncPart(Dynamics &dyn) {
     for (auto const& [i1, i2]: exclPairs) {
         if (not (chains -> sepByAtLeastN(i1, i2, 2))) continue;
 
@@ -29,8 +29,7 @@ void PauliExclusion::asyncPart() {
         auto x = sqrt(x2);
         auto unit = r12/x;
 
-        stlj.asForce(unit, x, state->dyn.V,
-            state->dyn.F[i1], state->dyn.F[i2]);
+        stlj.asForce(unit, x, dyn.V, dyn.F[i1], dyn.F[i2]);
     }
 }
 

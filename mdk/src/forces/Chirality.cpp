@@ -32,7 +32,7 @@ void Chirality::bind(Simulation &simulation) {
     }
 }
 
-void Chirality::asyncPart() {
+void Chirality::asyncPart(Dynamics &dyn) {
     for (auto const& intv: ranges) {
         for (int i = intv.lower(); i < intv.upper(); ++i) {
             auto r1 = state->r[i-2], r2 = state->r[i-1],
@@ -43,13 +43,13 @@ void Chirality::asyncPart() {
 
             auto C = r12.dot(r23_x_r34) * d0_cube_inv[i];
             auto diffC = C - C_nat[i];
-            state->dyn.V += 0.5 * e_chi * diffC * diffC;
+            dyn.V += 0.5 * e_chi * diffC * diffC;
 
             auto f = e_chi * diffC * d0_cube_inv[i];
-            state->dyn.F[i-2] += f * r23_x_r34;
-            state->dyn.F[i-1] -= f * (r12_x_r34 + r23_x_r34);
-            state->dyn.F[i] += f * (r12_x_r23 + r12_x_r34);
-            state->dyn.F[i+1] -= r12_x_r23;
+            dyn.F[i-2] += f * r23_x_r34;
+            dyn.F[i-1] -= f * (r12_x_r34 + r23_x_r34);
+            dyn.F[i] += f * (r12_x_r23 + r12_x_r34);
+            dyn.F[i+1] -= r12_x_r23;
         }
     }
 }

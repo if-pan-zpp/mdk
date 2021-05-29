@@ -8,7 +8,7 @@ vl::Spec mdk::ConstDH::spec() const {
     };
 }
 
-void ConstDH::asyncPart() {
+void ConstDH::asyncPart(Dynamics &dyn) {
     auto coeff = pow(echarge, 2.0) / (4.0 * M_PI * permittivity);
 
     for (auto const& p: pairs) {
@@ -20,10 +20,10 @@ void ConstDH::asyncPart() {
         auto unit = r12/x;
 
         auto V_DH = coeff * p.q1_x_q2 * exp(-x/screeningDist)/x;
-        state->dyn.V += V_DH;
+        dyn.V += V_DH;
 
         auto dV_dx = -V_DH * (1.0 + x/screeningDist)/x;
-        state->dyn.F[p.i1] += dV_dx * unit;
-        state->dyn.F[p.i2] -= dV_dx * unit;
+        dyn.F[p.i1] += dV_dx * unit;
+        dyn.F[p.i2] -= dV_dx * unit;
     }
 }

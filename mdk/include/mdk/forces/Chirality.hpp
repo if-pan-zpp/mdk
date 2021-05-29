@@ -11,6 +11,6 @@ namespace mdk {
         double e_chi = 1.0 * eps;
 
         void bind(Simulation& simulation) override;
-        void asyncPart() override;
+        void asyncPart(Dynamics &) override;
     };
 }
