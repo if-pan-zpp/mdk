@@ -7,7 +7,7 @@ void HeuresticBA::bind(Simulation &simulation) {
     auto& model = simulation.data<Model>();
     auto& params = simulation.data<param::Parameters>();
 
-    angleTypes = Eigen::Matrix<int8_t, Eigen::Dynamic, 1>(model.n);
+    angleTypes = Bytes(model.n, 0);
     for (auto const& chain: model.chains) {
         for (int i = chain.start+1; i+1 < chain.end; ++i) {
             auto i2 = i, i3 = i+1;

@@ -311,6 +311,9 @@ void Model::addCMapContacts(cmap::ContactMap const& contactMap, Chain &chain) {
             modelCont.res[i] = resIdx;
         }
     }
+
+    auto sp = addContactMap(contactMap);
+    chain.structuredParts.push_back(sp.idx);
 }
 
 vector<pair<Model::Residue*, Model::Residue*>> Model::nonlocalPairs() {

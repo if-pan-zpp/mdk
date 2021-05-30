@@ -5,7 +5,7 @@ using namespace mdk;
 using namespace mdk::vl;
 
 void List::update() {
-    auto effCutoff = cutoff + 2.0 * pad;
+    auto effCutoff = cutoff + pad;
     auto effCutoffSq = pow(effCutoff, 2.0);
 
     pairs.clear();
@@ -39,7 +39,7 @@ bool List::needToReset() const {
 
     auto maxMove = sqrt(maxMoveSq);
     auto pbcShift = (top0.cell - state->top.cell).lpNorm<1>();
-    return maxMove + 2.0 * pbcShift >= pad;
+    return maxMove + 2.0 * pbcShift >= pad / 2.0;
 }
 
 void List::bind(Simulation &simulation) {

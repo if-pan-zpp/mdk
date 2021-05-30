@@ -9,17 +9,22 @@ namespace mdk {
         friend class BondAngles;
         static constexpr const int D = 6;
         double coeff[numOfPTs][D+1];
-        Eigen::Matrix<int8_t, Eigen::Dynamic, 1> angleTypes;
+        Bytes angleTypes;
 
     public:
         void bind(Simulation& simulation) override;
 
         void term(int i, double theta, double& V, double& dV_dth) const {
-            auto coeffs = coeff[angleTypes[i]];
+            double const* coeffs = coeff[angleTypes[i]];
+            double V_loc = 0.0;
+            double dV_dth_loc = 0.0;
             for (int d = D; d >= 0; --d) {
-                V += theta * V + coeffs[d];
-                dV_dth += theta * V + d * coeffs[d];
+                if (d > 0) dV_dth_loc = d * coeffs[d] + theta * dV_dth_loc;
+                V_loc = coeffs[d] + theta * V_loc;
             }
+
+            V += V_loc;
+            dV_dth += dV_dth_loc;
         }
     };
 }
