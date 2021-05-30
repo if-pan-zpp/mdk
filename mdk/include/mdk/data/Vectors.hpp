@@ -5,7 +5,7 @@ namespace mdk {
     using Vector = Eigen::Vector3d;
     using VRef = Vector const&;
 
-    using VectorBase = Eigen::Matrix<double, 3, Eigen::Dynamic, Eigen::RowMajor>;
+    using VectorBase = Eigen::Matrix<double, 3, Eigen::Dynamic, Eigen::ColMajor>;
     class Vectors: public VectorBase {
     public:
         Vectors() = default;

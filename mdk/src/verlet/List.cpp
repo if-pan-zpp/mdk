@@ -4,24 +4,44 @@
 using namespace mdk;
 using namespace mdk::vl;
 
+#include <iostream>
+using namespace std;
+
+extern Pairs pairs_tp;
+#pragma omp threadprivate(pairs_tp)
+Pairs pairs_tp;
+
 void List::update() {
     auto effCutoff = cutoff + pad;
     auto effCutoffSq = pow(effCutoff, 2.0);
 
     pairs.clear();
-    for (int pt1 = 0; pt1 < r0.size(); ++pt1) {
-        auto r1 = state->r[pt1];
-        for (int pt2 = pt1+1; pt2 < r0.size(); ++pt2) {
-            auto r2 = state->r[pt2];
-            auto r12_norm2 = state->top(r2 - r1).squaredNorm();
 
-            bool cond = r12_norm2 <= effCutoffSq &&
-                chains->sepByAtLeastN(pt1, pt2, minBondSep);
+    #pragma omp parallel
+    {
+        pairs_tp.clear();
 
-            if (cond) pairs.emplace_back(pt1, pt2);
+        #pragma omp for schedule(dynamic, 10) nowait
+        for (int pt1 = 0; pt1 < r0.size(); ++pt1) {
+            auto r1 = state->r[pt1];
+            for (int pt2 = pt1+1; pt2 < r0.size(); ++pt2) {
+                auto r2 = state->r[pt2];
+                auto r12_norm2 = state->top(r2 - r1).squaredNorm();
+
+                bool cond = r12_norm2 <= effCutoffSq &&
+                    chains->sepByAtLeastN(pt1, pt2, minBondSep);
+
+                if (cond) pairs_tp.emplace_back(pt1, pt2);
+            }
+        }
+
+        #pragma omp critical
+        {
+            pairs.insert(pairs.end(), pairs_tp.begin(), pairs_tp.end());
         }
     }
 
+    sort (pairs.begin(), pairs.end());
     for (auto& force: forces) {
         force->vlUpdateHook();
     }
@@ -54,6 +74,9 @@ void List::check() {
         r0 = state->r;
         top0 = state->top;
         update();
+        // For benchmarking, it's important
+        // to keep track of VL size to ensure we do the same amount of stuff
+        cout << "PAIRS SIZE = " << pairs.size() << endl;
     }
     initial = false;
 }
