@@ -14,15 +14,23 @@ namespace mdk {
         void bind(Simulation& simulation) override;
 
         void term(int i, double phi, double& V, double& dV_dphi) const {
-            auto sin_phi = sin(phi), cos_phi = cos(phi);
+            double sin_phi = sin(phi), cos_phi = cos(phi);
+            double sin_2_phi = sin_phi * sin_phi;
+            double cos_2_phi = cos_phi * cos_phi;
 
-            auto* C = coeff[angleTypes[i]];
+            double const* C = coeff[angleTypes[i]];
 
-            V += C[0] + C[1] * sin_phi + C[2] * cos_phi + C[3] * sin_phi * sin_phi +
-                 C[4] * cos_phi * cos_phi + C[5] * sin_phi * cos_phi;
+            V += C[0]
+               + C[1] * sin_phi
+               + C[2] * cos_phi
+               + C[3] * sin_2_phi
+               + C[4] * cos_2_phi
+               + C[5] * sin_phi * cos_phi;
 
-            dV_dphi += C[1] * cos_phi - C[2] * sin_phi + 2.0 * C[3] * sin_phi -
-                       2.0 * C[4] * sin_phi + C[5] * (cos_phi - sin_phi);
+            dV_dphi += C[1] * cos_phi
+                     - C[2] * sin_phi
+                     + 2.0 * (C[3] - C[4]) * sin_phi * cos_phi
+                     + C[5] * (cos_2_phi - sin_2_phi);
         }
     };
 }

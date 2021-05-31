@@ -5,6 +5,7 @@
 
 namespace mdk {
     class Random {
+#ifdef LEGACY_MODE
     private:
         static constexpr int
             im1 = 2147483563,
@@ -26,15 +27,11 @@ namespace mdk {
 
         int iy = 0, idum = -448, idum2 = 123456789;
         int iv[ntab];
-
     public:
         Random(int seed) {
             idum = -seed;
             for (auto& x: iv) x = 0;
         }
-
-        Random(Random const& oth) = default;
-
         inline double uniform() {
             int k, j;
             if (idum <= 0) {
@@ -63,6 +60,45 @@ namespace mdk {
 
             return std::min(am * iy, rnmx);
         }
+#else
+    private:
+        uint64_t state;
+        Random() = default;
+
+    public:
+        Random(int seed) {
+            assert (seed > 0);
+            state = seed;
+
+            // Shuffle the state a bit
+            for (int i = 0; i < 100; ++i) uniform();
+        }
+
+        inline double uniform() {
+            static const double inv = 1.0 / (double) (1ull << 32);
+            uint64_t result = state * 0xd989bcacc137dcd5ull;
+            state ^= state >> 11;
+            state ^= state << 31;
+            state ^= state >> 18;
+            double res = (uint32_t) (result >> 32ull);
+            return res * inv;
+        }
+
+        /* This function is used to create a new random object
+           that won't generate similar values.
+           Uses splitmix64 to create new state */
+        Random getNewRandom() {
+            uint64_t result = state;
+            result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9;
+            result = (result ^ (result >> 27)) * 0x94D049BB133111EB;
+            result = result ^ (result >> 31);
+            Random rng;
+            rng.state = result;
+            return rng;
+        }
+
+#endif
+        Random(Random const& oth) = default;
 
         inline double uniform(double a, double b) {
             return a + (b - a) * uniform();

@@ -20,6 +20,7 @@ namespace mdk {
         Masses m;
         Vectors y0, y1, y2, y3, y4, y5;
         Random *random;
+        std::vector<Random> rngs;
         Vectors gaussianNoise;
         void generateNoise();
 

@@ -11,14 +11,22 @@ void LangPredictorCorrector::init() {
 }
 
 void LangPredictorCorrector::generateNoise() {
-    #pragma omp task
     if (initialized) {
-        // TODO: add legacy mode here
-        for (int dim = 0; dim < 3; ++dim) {
-            for (int i = 0; i < state->n; ++i) {
-                gaussianNoise[i](dim) = random->normal();
+        #ifdef LEGACY_MODE
+            #pragma omp task
+            for (int dim = 0; dim < 3; ++dim) {
+                for (int i = 0; i < state->n; ++i) {
+                    gaussianNoise[i](dim) = random -> normal();
+                }
             }
-        }
+        #else
+            for (int dim = 0; dim < 3; ++dim) {
+                #pragma omp task
+                for (int i = 0; i < state->n; ++i) {
+                    gaussianNoise[i](dim) = rngs[dim].normal();
+                }
+            }
+        #endif
     }
 }
 
@@ -74,4 +82,12 @@ void LangPredictorCorrector::bind(Simulation &simulation) {
 
     gaussianNoise = Vectors(model.n);
     simulation.addAsyncTask([this]() { this->generateNoise(); });
+
+    #ifndef LEGACY_MODE
+    Random r(*random);
+    for (int i = 0; i < 3; ++i) {
+        r = r.getNewRandom();
+        rngs.push_back(r);
+    }
+    #endif
 }
