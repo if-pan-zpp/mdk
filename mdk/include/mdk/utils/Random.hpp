@@ -110,6 +110,14 @@ namespace mdk {
             return sqrt(-2.0  * log(r1)) * cos(2.0 * M_PI * r2);
         }
 
+        inline std::pair<double, double> two_normals() {
+            double r1 = uniform();
+            double r2 = uniform();
+            double r = sqrt(-2.0  * log(r1));
+            double ang = 2.0 * M_PI * r2;
+            return {r * cos(ang), r * sin(ang)};
+        }
+
         inline double normal(double mu, double sigma) {
             return mu + sigma * normal();
         }

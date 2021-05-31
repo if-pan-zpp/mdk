@@ -22,8 +22,15 @@ void LangPredictorCorrector::generateNoise() {
         #else
             for (int dim = 0; dim < 3; ++dim) {
                 #pragma omp task
-                for (int i = 0; i < state->n; ++i) {
-                    gaussianNoise[i](dim) = rngs[dim].normal();
+                {
+                    for (int i = 0; i + 1 < state->n; i += 2) {
+                        std::pair<double, double> normals = rngs[dim].two_normals();
+                        gaussianNoise[i](dim) = normals.first;
+                        gaussianNoise[i + 1](dim) = normals.first;
+                    }
+                    if (state->n % 2) {
+                        gaussianNoise[state->n-1](dim) = rngs[dim].normal();
+                    }
                 }
             }
         #endif
