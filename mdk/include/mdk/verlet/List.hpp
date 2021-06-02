@@ -28,6 +28,14 @@ namespace mdk::vl {
         bool needToReset() const;
         void update();
 
+        Eigen::Vector3i grid;
+        std::vector<int> first, last, next;
+        double effCutoff, effCutoffSq;
+        int indexOf(Eigen::Vector3i const& loc);
+        void perPair(int c1, int c2);
+        void perCell(int c1);
+        void updateGrid();
+
     public:
         void registerNF(NonlocalForce& force, Spec const& spec);
 

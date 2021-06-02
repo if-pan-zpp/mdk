@@ -1,1 +1,2 @@
 add_subdirectory(posDiff)
+add_subdirectory(vltests)
