@@ -281,14 +281,15 @@ int main() {
     int n = 10'000;
 
     Matrix3Xd v(3, n);
-    auto vl = CellularVL(r, v);
-    auto dist = Samples();
+    auto vlS = SquareVL(r, v);
+    auto vlC = CellularVL(r, v);
 
-    for (int k = 0; k < 1000; ++k) {
+    auto dist = Samples();
+    for (int k = 0; k < 100; ++k) {
         gen(n, r, avg_neigh, v);
 
         auto then = high_resolution_clock::now();
-        vl.compute();
+        vlC.compute();
         auto now = high_resolution_clock::now();
 
         auto dur = duration_cast<microseconds>(now - then).count();
@@ -296,6 +297,20 @@ int main() {
     }
 
     cout << "[Cellular]\n" << dist << '\n';
+
+    dist = Samples();
+    for (int k = 0; k < 100; ++k) {
+        gen(n, r, avg_neigh, v);
+
+        auto then = high_resolution_clock::now();
+        vlS.compute();
+        auto now = high_resolution_clock::now();
+
+        auto dur = duration_cast<microseconds>(now - then).count();
+        dist.add((double)dur);
+    }
+
+    cout << "[Square]\n" << dist << '\n';
 
     return 0;
 }
