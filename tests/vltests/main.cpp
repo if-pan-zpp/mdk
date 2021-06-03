@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <omp.h>
 #include <chrono>
+#include <limits>
 using namespace std;
 using namespace Eigen;
 using namespace std::chrono;
@@ -87,6 +88,8 @@ public:
         Vector3d cell;
         int gridSize;
         AlignedBox3d bbox;
+
+        pairs.clear();
 
 #pragma omp parallel
         {
@@ -177,12 +180,12 @@ public:
                 perCell(c1);
             }
 
-            pairs.clear();
-
 #pragma omp critical
             {
                 pairs.insert(pairs.end(), pairsTP.begin(), pairsTP.end());
             }
+
+#pragma omp barrier
         }
 
         sort(pairs.begin(), pairs.end());
@@ -227,32 +230,72 @@ public:
     }
 };
 
-Matrix3Xd gen(int n, double r, double avg_neigh) {
+void gen(int n, double r, double avg_neigh, Matrix3Xd& v) {
     double density = avg_neigh / (4.0 / 3.0 * M_PI * r * r * r);
     double a = pow(n / density, 1.0 / 3.0);
-    return Matrix3Xd::Random(3, n) * (a / 2.0);
+    v.setRandom(3, n);
+    v *= (a / 2.0);
+}
+
+class Samples {
+public:
+    int n = 0;
+    double mean = 0.0, sd = 0.0;
+    double _min = numeric_limits<double>::max();
+    double _max = numeric_limits<double>::lowest();
+
+    void add(double x) {
+        ++n;
+        sum += x;
+
+        mean = sum / n;
+        squared_mean = mean * mean;
+        sum_of_squares += x * x;
+        mean_of_squares = sum_of_squares / n;
+
+        if (n > 1) {
+            auto var = (mean_of_squares - squared_mean) / (n - 1);
+            sd = sqrt(var);
+        }
+        _min = std::min(_min, x);
+        _max = std::max(_max, x);
+    }
+
+private:
+    double sum = 0.0, squared_mean = 0.0;
+    double sum_of_squares = 0.0, mean_of_squares = 0.0;
+};
+
+ostream& operator<<(ostream& os, Samples const& self) {
+    os << "  N    = " << self.n << '\n';
+    os << "  Mean = " << self.mean << '\n';
+    if (self.n > 0) os << "  Std  = " << self.sd << '\n';
+    os << "  Min  = " << self._min << '\n';
+    os << "  Max  = " << self._max;
+    return os;
 }
 
 int main() {
     omp_set_num_threads(8);
     double r = 30.0, avg_neigh = 10.0;
-    int n = 100'000;
+    int n = 10'000;
 
-    auto v = gen(n, r, avg_neigh);
+    Matrix3Xd v(3, n);
+    auto vl = CellularVL(r, v);
+    auto dist = Samples();
 
-    auto vl1 = SquareVL(r, v);
-    auto then1 = high_resolution_clock::now();
-    vl1.compute();
-    auto now1 = high_resolution_clock::now();
-    auto dur1 = duration_cast<microseconds>(now1 - then1).count();
-    cout << "Square: #Pairs = " << vl1.pairs.size() << "; t = " << dur1 << '\n';
+    for (int k = 0; k < 1000; ++k) {
+        gen(n, r, avg_neigh, v);
 
-    auto vl2 = CellularVL(r, v);
-    auto then2 = high_resolution_clock::now();
-    vl2.compute();
-    auto now2 = high_resolution_clock::now();
-    auto dur2 = duration_cast<microseconds>(now2 - then2).count();
-    cout << "Cell: #Pairs = " << vl2.pairs.size() << "; t = " << dur2 << '\n';
+        auto then = high_resolution_clock::now();
+        vl.compute();
+        auto now = high_resolution_clock::now();
+
+        auto dur = duration_cast<microseconds>(now - then).count();
+        dist.add((double)dur);
+    }
+
+    cout << "[Cellular]\n" << dist << '\n';
 
     return 0;
 }

@@ -86,6 +86,8 @@ void List::updateGrid() {
     effCutoff = cutoff + pad;
     effCutoffSq = pow(effCutoff, 2.0);
 
+    pairs.clear();
+
 #pragma omp parallel
     {
         bboxTP = {};
@@ -174,8 +176,6 @@ void List::updateGrid() {
         for (int c1 = 0; c1 < gridSize; ++c1) {
             perCell(c1);
         }
-
-        pairs.clear();
 
 #pragma omp critical
         {
