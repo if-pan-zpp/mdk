@@ -17,6 +17,11 @@ namespace mdk::pdb {
         std::ostream& write(std::ostream& os, Record const& other);
     };
 
+    class RemarkParser: public RecordParser {
+    public:
+        RemarkParser();
+    };
+
     class AtomParser: public RecordParser {
     public:
         AtomParser();
@@ -40,6 +45,16 @@ namespace mdk::pdb {
     class LinkParser: public RecordParser {
     public:
         LinkParser();
+    };
+
+    class ModelParser: public RecordParser {
+    public:
+        ModelParser();
+    };
+
+    class EndmdlParser: public RecordParser {
+    public:
+        EndmdlParser();
     };
 
     class EndParser: public RecordParser {

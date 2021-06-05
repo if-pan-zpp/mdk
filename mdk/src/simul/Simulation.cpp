@@ -69,3 +69,9 @@ void Simulation::step() {
         hook->execute(step_nr);
     }
 }
+
+void Simulation::step(double t) {
+    auto& state = var<State>();
+    auto t0 = state.t;
+    while (state.t - t0 < t) step();
+}

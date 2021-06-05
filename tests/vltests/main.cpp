@@ -278,7 +278,7 @@ ostream& operator<<(ostream& os, Samples const& self) {
 int main() {
     omp_set_num_threads(8);
     double r = 30.0, avg_neigh = 10.0;
-    int n = 10'000;
+    int n = 50'000;
 
     Matrix3Xd v(3, n);
     auto vlS = SquareVL(r, v);

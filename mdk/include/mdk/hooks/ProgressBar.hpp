@@ -7,7 +7,8 @@
 namespace mdk {
     class ProgressBar: public Hook, SimulVar {
     public:
-        explicit ProgressBar(double totalTime, int width = 70);
+        explicit ProgressBar(double totalTime,
+            double updatePeriod, int width = 70);
 
         void bind(Simulation& simulation) override;
         void execute(int step_nr) override;
@@ -18,7 +19,7 @@ namespace mdk {
         Simulation *simul = nullptr;
         State *state = nullptr;
         time_point realTime0;
-        double totalTime;
+        double totalTime, updatePeriod, prevTime;
         int width, pct = -1;
     };
 }

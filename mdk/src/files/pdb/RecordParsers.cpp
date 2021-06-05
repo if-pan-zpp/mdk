@@ -29,6 +29,17 @@ Record RecordParser::tryParse(const string &s) const {
     }
 }
 
+RemarkParser::RemarkParser() {
+    record = Remark();
+    auto& remark = get<Remark>(record);
+
+    fields = {
+        make_shared<Literal>(1, 6, "REMARK"),
+        make_shared<Integer>(8, 10, remark.number),
+        make_shared<String>(12, 80, remark.text)
+    };
+}
+
 AtomParser::AtomParser() {
     record = Atom();
     auto& atom = get<Atom>(record);
@@ -110,6 +121,23 @@ LinkParser::LinkParser() {
         make_shared<Char>(57, link.res[1].insertionCode),
         make_shared<SymOp>(67, 72, link.res[1].symmetryOp),
         make_shared<Real>(74, 78, 5, 2, link.linkLength, angstrom),
+    };
+}
+
+ModelParser::ModelParser() {
+    record = Model();
+    auto& model = get<Model>(record);
+
+    fields = {
+        make_unique<Literal>(1, 6, "MODEL "),
+        make_unique<Integer>(11, 14, model.serialNum)
+    };
+}
+
+EndmdlParser::EndmdlParser() {
+    record = Endmdl();
+    fields = {
+        make_unique<Literal>(1, 6, "ENDMDL")
     };
 }
 

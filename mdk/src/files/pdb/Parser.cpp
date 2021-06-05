@@ -7,11 +7,14 @@ using namespace std;
 
 Parser::Parser() {
     parsers = {
+        { ((Record)Remark()).index(), make_shared<RemarkParser>() },
         { ((Record)Atom()).index(), make_shared<AtomParser>() },
         { ((Record)SSBond()).index(), make_shared<SSBondParser>() },
         { ((Record)Cryst1()).index(), make_shared<Cryst1Parser>() },
         { ((Record)Link()).index(), make_shared<LinkParser>() },
         { ((Record)Ter()).index(), make_shared<TerParser>() },
+        { ((Record)records::Model()).index(), make_shared<ModelParser>() },
+        { ((Record)Endmdl()).index(), make_shared<EndmdlParser>() },
         { ((Record)End()).index(), make_shared<EndParser>() },
     };
 }
@@ -39,7 +42,7 @@ Data Parser::read(std::istream& is) {
 
 std::ostream &Parser::write(ostream &os, const Data &data) {
     for (auto const& record: data.records) {
-        parsers[record.index()]->write(os, record);
+        parsers[(int)record.index()]->write(os, record);
         os << endl;
     }
     return os;

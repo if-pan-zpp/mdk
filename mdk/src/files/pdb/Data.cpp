@@ -141,3 +141,52 @@ Data::Data(const pdb::Model &model) {
 
     records.emplace_back(End());
 }
+
+Data Data::onlyAtoms(const pdb::Model &model) {
+    Data data;
+
+    for (auto const& [chainIdx, chain]: model.chains) {
+        pdb::Model::Atom *finalAtom = nullptr;
+
+        for (auto const& res: chain.residues) {
+            for (auto const& atom: res->atoms) {
+                auto& record = data.records.emplace_back(Atom());
+                auto& atomRec = get<Atom>(record);
+                atomRec.atomName = atom->type;
+                atomRec.residueName = atom->res->type;
+                atomRec.residueSeqNum = atom->res->serial;
+                atomRec.serialNum = atom->serial;
+                atomRec.pos = atom->r;
+                atomRec.chainID = atom->res->chain->serial;
+                atomRec.element = atom->type[0];
+
+                finalAtom = atom;
+            }
+        }
+
+        auto& record = data.records.emplace_back(Ter());
+        auto& terRec = get<Ter>(record);
+        auto const& finalRes = finalAtom->res;
+        terRec.serialNum = finalAtom->serial + 1;
+        terRec.residueSeqNum = finalRes->serial;
+        terRec.residueName = finalRes->type;
+        terRec.chainId = chain.serial;
+    }
+
+    return data;
+}
+
+namespace mdk::pdb {
+    Data& operator<<(Data& data, records::Record const& record) {
+        data.records.push_back(record);
+        return data;
+    }
+
+    Data& operator<<(Data& data, Data const& other) {
+        data.records.insert(
+            data.records.end(),
+            other.records.begin(),
+            other.records.end());
+        return data;
+    }
+}

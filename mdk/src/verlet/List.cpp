@@ -254,7 +254,7 @@ void List::check() {
         update();
         // For benchmarking, it's important
         // to keep track of VL size to ensure we do the same amount of stuff
-        cout << "PAIRS SIZE = " << pairs.size() << endl;
+//        cout << "PAIRS SIZE = " << pairs.size() << endl;
     }
     initial = false;
 }

@@ -5,6 +5,12 @@
 #include <variant>
 
 namespace mdk::pdb::records {
+    class Remark {
+    public:
+        int number = 6;
+        std::string text = "";
+    };
+
     class Atom {
     public:
         int serialNum = 0;
@@ -73,10 +79,15 @@ namespace mdk::pdb::records {
         int serialNum = 0;
     };
 
+    class Endmdl {
+    public:
+    };
+
     class End {
     public:
     };
 
     using Record = std::variant<std::monostate,
-        Atom, SSBond, Cryst1, End, Link, Model, Ter>;
+        Remark, Atom, SSBond, Cryst1, End, Link,
+        Model, Endmdl, Ter>;
 }

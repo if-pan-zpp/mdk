@@ -78,6 +78,7 @@ namespace mdk {
 
         void init();
         void step();
+        void step(double t);
 
     private:
         Model model;

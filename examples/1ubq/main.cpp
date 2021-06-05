@@ -3,11 +3,16 @@
 #include <mdk/files/param/LegacyParser.hpp>
 #include <mdk/system/LangPredictorCorrector.hpp>
 #include <mdk/forces/All.hpp>
+#include <mdk/hooks/ProgressBar.hpp>
+#include <mdk/hooks/ExportPDB.hpp>
 #include <fstream>
+#include <omp.h>
 using namespace mdk;
 using namespace std;
 
 int main() {
+    omp_set_num_threads(1);
+
     ifstream pdb_file("data/1ubq.pdb");
     auto atomic = pdb::Parser().read(pdb_file).asModel();
 
@@ -35,9 +40,11 @@ int main() {
     simul.add<NativeContacts>();
     simul.add<PauliExclusion>();
 
-    for (int i = 0; i < 100; ++i) {
-    	simul.step();
-    }
-    cout << simul.var<State>().dyn.V << endl;
+    auto total = 15000.0*tau;
+    simul.add<ProgressBar>(total, 10.0*tau);
+    simul.add<ExportPDB>("model.pdb", 1000.0*tau);
+
+    simul.step(total);
+
     return 0;
 }
