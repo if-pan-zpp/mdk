@@ -3,7 +3,6 @@
 using namespace mdk;
 
 void HeuresticDihedral::bind(Simulation &simulation) {
-    using namespace boost::icl;
     auto& model = simulation.data<Model>();
     auto& params = simulation.data<param::Parameters>();
 

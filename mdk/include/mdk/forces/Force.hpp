@@ -4,6 +4,9 @@
 #include "../simul/Simulation.hpp"
 
 namespace mdk {
+    /**
+     * An abstract interface for force fields.
+     */
     class Force: public SimulVar {
     protected:
         State const* state = nullptr;

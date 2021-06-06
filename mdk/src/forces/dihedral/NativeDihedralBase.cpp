@@ -1,9 +1,10 @@
 #include "forces/dihedral/NativeDihedralBase.hpp"
+#include "data/Chains.hpp"
 using namespace mdk;
 
 void NativeDihedralBase::bind(Simulation &simulation) {
     auto const& model = simulation.data<Model>();
-    isNative = Bytes(model.n, false);
+    isNative = simulation.data<Chains>().nativeQuads;
     phi0 = Scalars(model.n);
 
     for (auto const& ch: model.chains) {
@@ -13,7 +14,6 @@ void NativeDihedralBase::bind(Simulation &simulation) {
             auto spEnd = ch.start + sp.off + sp.len - 1;
 
             for (int i = spStart; i < spEnd; ++i) {
-                isNative[i] = true;
                 phi0[i] = sp.dihedral[i - (ch.start + sp.off)];
             }
         }

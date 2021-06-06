@@ -25,7 +25,7 @@ int main() {
     auto rand = Random(448);
     rand.uniform();
 
-    model.legacyMorphIntoSAW(rand, false, 0, 4.56*angstrom, true);
+    model.legacyMorphIntoSAW(rand, false, 0.0, 4.56*angstrom, true);
     model.initVelocity(rand, 0.35 * eps_kB, false);
 
     Simulation simul(model, params);
@@ -42,7 +42,7 @@ int main() {
 
     auto total = 15000.0*tau;
     simul.add<ProgressBar>(total, 10.0*tau);
-    simul.add<ExportPDB>("model.pdb", 1000.0*tau);
+    simul.add<ExportPDB>("model.x.pdb", 100.0*tau);
 
     simul.step(total);
 

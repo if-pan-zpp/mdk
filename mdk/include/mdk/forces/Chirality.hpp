@@ -5,7 +5,7 @@ namespace mdk {
     class Chirality: public Force {
     private:
         Scalars d0_cube_inv, C_nat;
-        Ranges ranges;
+        Bytes inRange;
 
     public:
         double e_chi = 1.0 * eps;

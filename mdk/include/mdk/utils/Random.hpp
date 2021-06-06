@@ -3,6 +3,8 @@
 #include <random>
 #include <Eigen/Core>
 
+#define LEGACY_MODE
+
 namespace mdk {
     class Random {
 #ifdef LEGACY_MODE

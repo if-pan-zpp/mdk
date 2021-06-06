@@ -1,11 +1,12 @@
 #include "forces/angle/NativeBA.hpp"
 #include "simul/Simulation.hpp"
 #include "forces/angle/BondAngles.hpp"
+#include "data/Chains.hpp"
 using namespace mdk;
 
 void NativeBA::bind(Simulation &simulation) {
     auto const& model = simulation.data<Model>();
-    isNative = Bytes(model.n, 0);
+    isNative = simulation.data<Chains>().nativeTriples;
     theta0 = Scalars(model.n);
 
     for (auto const& ch: model.chains) {
@@ -15,7 +16,6 @@ void NativeBA::bind(Simulation &simulation) {
             auto spEnd = ch.start + sp.off + sp.len - 1;
 
             for (int i = spStart; i < spEnd; ++i) {
-                isNative[i] = 1;
                 theta0[i] = sp.angle[i - (ch.start + sp.off)];
             }
         }

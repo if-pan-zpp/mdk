@@ -1,7 +1,6 @@
 #pragma once
 #include <Eigen/Dense>
 #include "Vectors.hpp"
-#include "Ranges.hpp"
 
 namespace mdk {
     using Scalars = Eigen::VectorXd;
@@ -10,4 +9,5 @@ namespace mdk {
 
     using Bytes = std::vector<int8_t>;
     using Integers = std::vector<int>;
+    using Pairs = std::vector<std::pair<int, int>>;
 }

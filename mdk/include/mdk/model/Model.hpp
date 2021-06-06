@@ -68,6 +68,12 @@ namespace mdk {
             double minDist = 4.56 * angstrom,
             bool nativeBondLen = false);
 
+        void exactLegacySAW(Random& rand,
+            bool useTop = false,
+            double density = 0.0 * atom / pow(angstrom, 3.0),
+            double minDist = 4.56 * angstrom,
+            double bond = 3.8 * angstrom);
+
         void initVelocity(Random& rand,
                           double temperature,
                           bool useMass = true);

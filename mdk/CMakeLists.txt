@@ -1,5 +1,7 @@
 set(TARGET mdk)
 
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
 add_library(${TARGET})
 
 file(GLOB_RECURSE PUBLIC_SOURCES include/*)
@@ -35,3 +37,5 @@ target_link_libraries(${TARGET}
     PUBLIC Eigen3::Eigen
     PRIVATE Catch2::Catch2
     PRIVATE OpenMP::OpenMP_CXX)
+
+add_subdirectory(docs)

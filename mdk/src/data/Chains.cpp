@@ -1,31 +1,50 @@
 #include "data/Chains.hpp"
 using namespace mdk;
-using namespace boost::icl;
 
 Chains::Chains(const Model &model) {
-    isNative = isConnected = isTerminal = Bytes(model.n, false);
+    this->model = &model;
     chainIdx = Integers(model.n, -1);
+    isTerminal = Bytes(model.n, false);
 
     for (int chIdx = 0; chIdx < (int)model.chains.size(); ++chIdx) {
-        auto const& ch = model.chains[chIdx];
-        for (int i = ch.start; i < ch.end-1; ++i) {
-            isConnected[i] = 1;
+        auto const& chain = model.chains[chIdx];
+        for (int i = chain.start; i < chain.end; ++i) {
             chainIdx[i] = chIdx;
         }
-        if (ch.start < ch.end) {
-            chainIdx[ch.end - 1] = chIdx;
+        isTerminal[chain.start] = isTerminal[chain.end - 1] = true;
+    }
+
+    pairs = tuples(2);
+    triples = tuples(3);
+    quads = tuples(4);
+
+    nativePairs = nativeTuples(2);
+    nativeTriples = nativeTuples(3);
+    nativeQuads = nativeTuples(4);
+}
+
+Bytes Chains::tuples(int k) const {
+    Bytes res(model->n, false);
+    for (auto const& chain: model->chains) {
+        auto start = chain.start, end = chain.end;
+        for (int i = start + (k-2); i+1 < end; ++i) {
+            res[i] = true;
         }
-        isTerminal[ch.start] = isTerminal[ch.end-1] = true;
-        chainBounds.add(interval<int>::right_open(ch.start, ch.end));
+    }
+    return res;
+}
 
-        for (auto const& curSpIdx: ch.structuredParts) {
-            auto const& sp = model.structuredParts[curSpIdx];
-
-            auto istart = ch.start + sp.off;
-            auto iend = istart + sp.len;
-            for (int i = istart; i < iend; ++i) {
-                isNative[i] = true;
+Bytes Chains::nativeTuples(int k) const {
+    Bytes res(model->n, false);
+    for (auto const& chain: model->chains) {
+        for (auto const& spIdx: chain.structuredParts) {
+            auto const& sp = model->structuredParts[spIdx];
+            auto start = chain.start + sp.off;
+            auto end = chain.start + sp.off + sp.len;
+            for (int i = start + (k-2); i+1 < end; ++i) {
+                res[i] = true;
             }
         }
     }
+    return res;
 }

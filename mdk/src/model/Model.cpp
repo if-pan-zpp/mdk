@@ -246,6 +246,98 @@ void Model::legacyMorphIntoSAW(Random& rand, bool useTop, double density,
     }
 }
 
+void Model::exactLegacySAW(Random &rand, bool useTop, double density,
+    double minDist, double bond) {
+
+    auto minDistSq = pow(minDist, 2.0);
+
+    Eigen::AlignedBox3d box;
+    if (density > 0) {
+        auto startvolume = residues.size() / density;
+        auto startboxsize = 0.5 * pow(startvolume, 1.0/3.0);
+        box.min() = Vector::Constant(-startboxsize);
+        box.max() = -box.min();
+
+        if (useTop) {
+            top.setCell(box.max() - box.min());
+        }
+    }
+    else {
+        if (useTop) throw;
+
+        box.min() = box.max() = Vector::Zero();
+    }
+
+    for (auto& chain: chains) {
+        int n = chain.end - chain.start;
+        for (int kter = 0; kter < 9000; ++kter) {
+            std::vector<double> phi(n), theta(n);
+
+            auto pi = acos(-1.0);
+
+            phi[0] = pi / 2.0;
+            theta[0] = 0.0;
+
+            phi[1] = 0.0;
+            theta[1] = rand.uniform(0.0, M_PI/3.0);
+
+            for (int i = 2; i < n - 1; ++i) {
+                phi[i] = rand.uniform(-M_PI, M_PI);
+                theta[i] = rand.uniform(0.0, M_PI/3.0);
+            }
+
+            std::vector<Eigen::Matrix3d> T(n);
+            for (int i = 0; i < n - 1; ++i) {
+                auto ct = cos(theta[i]), st = sin(theta[i]),
+                     cp = cos(phi[i]), sp = sin(phi[i]);
+
+                T[i] << ct,      st,       0.0,
+                        st * cp, -ct * cp,  sp,
+                        st * sp, -ct * sp, -cp;
+            }
+
+            auto theta0 = acos(-rand.uniform(-1.0, 1.0));
+            auto phi0 = rand.uniform(0.0, 2.0 * pi);
+
+            std::vector<Vector> R(n);
+            for (int i = 0; i < n - 1; ++i) {
+                Vector r;
+                r << bond * sin(theta0) * cos(phi0),
+                     bond * sin(theta0) * sin(phi0),
+                     bond * cos(theta0);
+
+                for (int j = i; j >= 0; --j) {
+                    R[i] = T[j] * r;
+                    r = R[i];
+                }
+            }
+
+            Vector ran = sampleBox(box, rand);
+            for (int i = 0; i < n; ++i) {
+                Vector r = ran;
+                for (int j = 0; j < i; ++j) {
+                    r += R[j];
+                }
+                residues[i].r = r;
+            }
+
+            bool nonIntersecting = true;
+            for (int i = 0; i < n - 3 && nonIntersecting; ++i) {
+                auto r1 = residues[i].r;
+                for (int j = i + 3; j < n && nonIntersecting; ++j) {
+                    auto r2 = residues[j].r;
+                    Vector dx = !useTop ? (r2 - r1) : top(r2 - r1);
+                    if (dx.squaredNorm() < minDistSq) {
+                        nonIntersecting = false;
+                    }
+                }
+            }
+
+            if (nonIntersecting) break;
+        }
+    }
+}
+
 void Model::initVelocity(Random& rand, double temperature, bool useMass) {
     int n = residues.size();
     vector<double> masses(n, 1.0 * f77mass);

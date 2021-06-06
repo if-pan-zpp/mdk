@@ -171,10 +171,13 @@ void PseudoImproperDihedral::asyncPart(Dynamics &dyn) {
 void PseudoImproperDihedral::vlUpdateHook() {
     pairs.clear();
     for (auto const& [i1, i2]: vl->pairs) {
-        if (seqs->sepByN(i1, i2, 4) || seqs->isTerminal[i1] || !seqs->isTerminal[i2])
-            continue;
+        bool cond = seqs->sepByN(i1, i2, 4) &&
+            !seqs->isTerminal[i1] &&
+            !seqs->isTerminal[i2];
 
-        pairs.emplace_back(i1, i2);
+        if (cond) {
+            pairs.emplace_back(i1, i2);
+        }
     }
 }
 

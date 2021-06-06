@@ -1,16 +1,9 @@
 #include "data/DataFactory.hpp"
-#include "data/BondAngleRanges.hpp"
 #include "data/Chains.hpp"
 #include "data/Charges.hpp"
-#include "data/DihedralRanges.hpp"
 #include "data/Masses.hpp"
 #include "data/Types.hpp"
 using namespace mdk;
-
-template<>
-BondAngleRanges DataFactory::create<BondAngleRanges>() const {
-    return BondAngleRanges(*model);
-}
 
 template<>
 Chains DataFactory::create<Chains>() const {
@@ -20,11 +13,6 @@ Chains DataFactory::create<Chains>() const {
 template<>
 Charges DataFactory::create<Charges>() const {
     return Charges(*model, *params);
-}
-
-template<>
-DihedralRanges DataFactory::create<DihedralRanges>() const {
-    return DihedralRanges(*model);
 }
 
 template<>

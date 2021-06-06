@@ -249,12 +249,12 @@ void QuasiAdiabatic::syncPart(Dynamics &dyn) {
 }
 
 void QuasiAdiabatic::computeNH() {
-    for (auto intv: chains->chainBounds) {
-        for (auto i = intv.lower()+1; i < intv.upper()-1; ++i) {
-            auto r0 = state->r[i-1], r1 = state->r[i], r2 = state->r[i+1];
-            auto v0 = r1 - r0, v1 = r2 - r1;
-            n[i] = (v1 - v0).normalized();
-            h[i] = (v1.cross(v0)).normalized();
-        }
+    for (int i = 0; i < (int)chains->triples.size(); ++i) {
+        if (!chains->triples[i]) continue;
+
+        auto r0 = state->r[i-1], r1 = state->r[i], r2 = state->r[i+1];
+        auto v0 = r1 - r0, v1 = r2 - r1;
+        n[i] = (v1 - v0).normalized();
+        h[i] = (v1.cross(v0)).normalized();
     }
 }

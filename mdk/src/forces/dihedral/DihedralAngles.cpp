@@ -1,16 +1,10 @@
 #include "forces/dihedral/DihedralAngles.hpp"
+#include "data/Chains.hpp"
 using namespace mdk;
 
 void DihedralAngles::bind(Simulation &simulation) {
     Force::bind(simulation);
-    inRange =  Bytes(state->n, false);
-
-    auto const& model = simulation.data<Model>();
-    for (auto const& ch: model.chains) {
-        auto start = ch.start + 2, end = ch.end - 1;
-        for (int i = start; i < end; ++i)
-            inRange[i] = true;
-    }
+    inRange = simulation.data<Chains>().quads;
 }
 
 void DihedralAngles::asyncPart(Dynamics &dyn) {

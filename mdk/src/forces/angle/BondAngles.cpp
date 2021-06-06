@@ -1,17 +1,11 @@
 #include "forces/angle/BondAngles.hpp"
+#include "data/Chains.hpp"
 using namespace mdk;
 using namespace std;
 
 void BondAngles::bind(Simulation &simulation) {
     Force::bind(simulation);
-    inRange = Bytes(state->n, false);
-
-    auto const& model = simulation.data<Model>();
-    for (auto const& ch: model.chains) {
-        auto start = ch.start + 1, end = ch.end - 1;
-        for (int i = start; i < end; ++i)
-            inRange[i] = true;
-    }
+    inRange = simulation.data<Chains>().triples;
 }
 
 void BondAngles::asyncPart(Dynamics &dyn) {
