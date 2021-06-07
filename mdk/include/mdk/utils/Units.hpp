@@ -3,6 +3,13 @@
 
 namespace mdk
 {
+    /**
+     * This file contains definitions of various physical units.
+     * We have decided to make the units more explicit in the program;
+     * since they are inline constexpr, there should be no runtime overhead
+     * on its use, and it makes for a less bug-prone and more clear code.
+     * It also makes switching scales _far_ easier and less bug-prone.
+     */
 #define Unit inline constexpr double
 
     /* Distance */
@@ -33,9 +40,14 @@ namespace mdk
     Unit Kelvin = 1.380649e-23 * Joule / kB;
 
     /* Mass */
-    Unit reducedMass = 1.0;
     Unit kg = Joule * second * second / (meter * meter);
     Unit au = kg * 0.99999999965e-3 / mol;
+
+    /**
+     * In the Fortran version of the model, distance of \p f77unit, time of
+     * \p tau, energy of \p eps and the average mass of an aminoacid were units;
+     * these are however incongruent, it's a confirmed bug.
+     */
     Unit f77mass = eps * tau * tau / (f77unit * f77unit);
 
     /* EM stuff */

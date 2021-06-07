@@ -25,3 +25,5 @@ Docs
 
 .. doxygennamespace:: mdk
    :members:
+   :protected-members:
+   :private-members:

@@ -145,6 +145,7 @@ Data::Data(const pdb::Model &model) {
 Data Data::onlyAtoms(const pdb::Model &model) {
     Data data;
 
+    int curSerial = 0;
     for (auto const& [chainIdx, chain]: model.chains) {
         pdb::Model::Atom *finalAtom = nullptr;
 
@@ -155,7 +156,7 @@ Data Data::onlyAtoms(const pdb::Model &model) {
                 atomRec.atomName = atom->type;
                 atomRec.residueName = atom->res->type;
                 atomRec.residueSeqNum = atom->res->serial;
-                atomRec.serialNum = atom->serial;
+                atomRec.serialNum = curSerial++;
                 atomRec.pos = atom->r;
                 atomRec.chainID = atom->res->chain->serial;
                 atomRec.element = atom->type[0];
@@ -167,7 +168,7 @@ Data Data::onlyAtoms(const pdb::Model &model) {
         auto& record = data.records.emplace_back(Ter());
         auto& terRec = get<Ter>(record);
         auto const& finalRes = finalAtom->res;
-        terRec.serialNum = finalAtom->serial + 1;
+        terRec.serialNum = curSerial++;
         terRec.residueSeqNum = finalRes->serial;
         terRec.residueName = finalRes->type;
         terRec.chainId = chain.serial;

@@ -3,6 +3,9 @@
 #include "../model/Model.hpp"
 
 namespace mdk {
+    /**
+     * Data class containing masses associated with residues, in an array form.
+     */
     class Masses: public Scalars {
     public:
         Masses() = default;

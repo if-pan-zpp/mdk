@@ -4,10 +4,17 @@
 #include <string>
 
 namespace mdk {
+    /**
+     * An underlying contact type index.
+     */
     enum class ContactTypeIdx: int8_t {
         NAT, NAT_BB, NAT_BS, NAT_SB, NAT_SS, SSBOND
     };
 
+    /**
+     * An object representing a contact type, along with a number of
+     * facilities, conversions from/to other types etc.
+     */
     class ContactType {
     public:
         ContactType() = default;
@@ -28,6 +35,10 @@ namespace mdk {
 }
 
 namespace std {
+    /**
+     * A \p std::hash instantiation for \p ContactType, allows us to use
+     * \p ContactType as keys in STL maps.
+     */
     template<>
     struct hash<mdk::ContactType> {
         size_t operator()(mdk::ContactType const &resType) const {

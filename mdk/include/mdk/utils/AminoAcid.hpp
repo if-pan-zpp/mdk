@@ -5,22 +5,44 @@
 #include <unordered_set>
 
 namespace mdk {
+    /**
+     * An underlying amino acid index.
+     */
     enum class AminoAcidIdx: int8_t {
         ALA, ARG, ASN, ASP, CYS, GLU, GLN, GLY, HIS, ILE,
         LEU, LYS, MET, PHE, PRO, SER, THR, TRP, TYR, VAL
     };
 
+    /**
+     * Info pertaining to a single atom type in an amino acid (for example
+     * SG in cysteine).
+     */
     struct AAAtomInfo {
         double radius;
         bool inBackbone = false;
     };
 
+    /**
+     * Info pertaining to an amino acid type.
+     */
     struct AminoAcidInfo {
         double mass;
+
+        /**
+         * A set of names of the heavy atoms for the amino acid.
+         */
         std::unordered_set<std::string> heavyAtoms;
+
+        /**
+         * A map from the heavy atom names to the atom info structures.
+         */
         std::unordered_map<std::string, AAAtomInfo> atomInfo;
     };
 
+    /**
+     * An object representing an amino acid type, along with a number of
+     * facilities, conversion from/to other types, general static data etc.
+     */
     class AminoAcid {
     public:
         AminoAcid() = default;
@@ -33,11 +55,16 @@ namespace mdk {
         constexpr AminoAcid(int8_t x): AminoAcid((AminoAcidIdx)x) {};
         operator int8_t() const;
 
-        static bool isProper(char code);
         explicit AminoAcid(char code);
         static std::string codes();
         explicit operator char const&() const;
 
+        /**
+         * Check whether a string corresponds to an amino acid proper name.
+         * @param name Text to check.
+         * @return true if \p name corresponds to an amino acid, false
+         * otherwise.
+         */
         static bool isProper(std::string const& name);
         explicit AminoAcid(std::string const& name);
         static std::vector<std::string> names();
@@ -61,6 +88,10 @@ namespace mdk {
 }
 
 namespace std {
+    /**
+     * A \p std::hash instantiation for \p AminoAcid, allows us to use
+     * \p AminoAcid as keys in STL maps.
+     */
     template<>
     struct hash<mdk::AminoAcid> {
         size_t operator()(mdk::AminoAcid const &aminoAcid) const {

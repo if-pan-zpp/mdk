@@ -6,21 +6,48 @@
 #include "../files/param/Parameters.hpp"
 
 namespace mdk {
+    /**
+     * An object containing stats for the residues. Also initializes
+     * these numbers in one place.
+     */
     class Stats: public SimulVar {
     private:
+        /**
+         * Types of amino acids.
+         */
         Types const *types = nullptr;
+
+        /**
+         * List of polarization values taken from the \p param::Parameters
+         * object.
+         */
         std::vector<param::Polarization> polarization;
 
     public:
+        /**
+         * List of stats for each residue.
+         */
         std::vector<Stat> stats;
-        bool used = false;
 
         void bind(Simulation& simulation) override;
 
+        /**
+         * Type of a contact (backbone-backbone etc.).
+         */
         enum class Type: int8_t {
             BB, BS, SB, SS
         };
 
+        /**
+         * Generate diffs for if a contact between residues \p i1 and \p i2
+         * of type \p type were created. It's inline so as for the compiler to
+         * insert it and not have to call the function.
+         * @param i1 First residue.
+         * @param i2 Second residue.
+         * @param type Type of a contact.
+         * @param diffs An array of diffs; diffs[0] is the diff for the first
+         * residue, diffs[1] is the diff for the second residue.
+         */
         inline void creationDiffs(int i1, int i2, Type type, Stat diffs[2]) const {
             diffs[0] = diffs[1] = Stat();
 

@@ -7,7 +7,6 @@ PauliExclusion::PauliExclusion() :
 
 void PauliExclusion::bind(Simulation &simulation) {
     NonlocalForce::bind(simulation);
-    chains = &simulation.data<Chains>();
     installIntoVL();
 }
 
@@ -21,8 +20,6 @@ vl::Spec PauliExclusion::spec() const {
 void PauliExclusion::asyncPart(Dynamics &dyn) {
     #pragma omp for nowait
     for (auto const& [i1, i2]: exclPairs) {
-        if (not (chains -> sepByAtLeastN(i1, i2, 2))) continue;
-
         auto r12 = state->top(state->r[i1] - state->r[i2]);
         auto x2 = r12.squaredNorm();
         if (x2 > savedSpec.cutoffSq) continue;
@@ -30,7 +27,7 @@ void PauliExclusion::asyncPart(Dynamics &dyn) {
         auto x = sqrt(x2);
         auto unit = r12/x;
 
-        stlj.asForce(unit, x, dyn.V, dyn.F[i1], dyn.F[i2]);
+        stlj.computeF(unit, x, dyn.V, dyn.F[i1], dyn.F[i2]);
     }
 }
 

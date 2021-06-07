@@ -5,5 +5,5 @@ using namespace mdk;
 void SimpleNativeDihedral::bind(Simulation &simulation) {
     NativeDihedralBase::bind(simulation);
     auto& unifiedDih = simulation.var<DihedralAngles>();
-    unifiedDih.simpNatDih = this;
+    unifiedDih.natDih = this;
 }

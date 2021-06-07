@@ -31,7 +31,7 @@ void perLambda(LambdaPeak const& lambda, LJ const& lj, double psi[2],
             lambda.eval(psi[m], L[m], dL_dpsi[m]);
 
         double ljV = 0.0, dljV_dn = 0.0;
-        lj.kernel(norm, ljV, dljV_dn);
+        lj.computeV(norm, ljV, dljV_dn);
 
         A += dL_dpsi[0] * L[1] * ljV;
         B += dL_dpsi[1] * L[0] * ljV;
@@ -39,10 +39,10 @@ void perLambda(LambdaPeak const& lambda, LJ const& lj, double psi[2],
     }
 }
 
-void PseudoImproperDihedral::deriveAngles(int _i1, int _i2, double norm,
-    const Vector &unit, double *psi, Vector (*dpsi_dr)[6]) const {
+void PseudoImproperDihedral::deriveAngles(vl::PairInfo const& pair,
+    double *psi, Vector (*dpsi_dr)[6]) const {
 
-    int idx[2] = { _i1, _i2 };
+    int idx[2] = { pair.i1, pair.i2 };
     for (int m = 0; m < 2; ++m) {
         for (int ix = 0; ix < 6; ++ix) {
             dpsi_dr[m][ix].setZero();
@@ -54,7 +54,7 @@ void PseudoImproperDihedral::deriveAngles(int _i1, int _i2, double norm,
         int loc1 = 3*m, loc2 = 3*m+1, loc3 = 3*m+2, loc4 = 3*(1-m)+1;
 
         Vector r1 = state->r[i1], r2 = state->r[i2], r3 = state->r[i3];
-        Vector r24 = (m == 0 ? 1 : -1) * norm * unit;
+        Vector r24 = (m == 0 ? 1 : -1) * pair.norm * pair.unit;
         Vector r12 = r2 - r1, r23 = r3 - r2, r13 = r3 - r1, r14 = r12 + r24;
 
         Vector rij = -r23, rkj = -r13, rkl = -r14;
@@ -141,10 +141,16 @@ void PseudoImproperDihedral::asyncPart(Dynamics &dyn) {
 
         auto norm = sqrt(r12_normsq);
         auto unit = r12 / norm;
+        vl::PairInfo pair;
+        pair.i1 = i1;
+        pair.i2 = i2;
+        pair.norm = norm;
+        pair.unit = unit;
 
         double psi[2];
         Vector dpsi_dr[2][6];
-        deriveAngles(i1, i2, norm, unit, psi, dpsi_dr);
+
+        deriveAngles(pair, psi, dpsi_dr);
 
         double A = 0.0, B = 0.0, C = 0.0;
         auto type1 = (int8_t)(*types)[i1], type2 = (int8_t)(*types)[i2];
@@ -171,7 +177,7 @@ void PseudoImproperDihedral::asyncPart(Dynamics &dyn) {
 void PseudoImproperDihedral::vlUpdateHook() {
     pairs.clear();
     for (auto const& [i1, i2]: vl->pairs) {
-        bool cond = seqs->sepByN(i1, i2, 4) &&
+        bool cond = seqs->sepByAtLeastN(i1, i2, 4) &&
             !seqs->isTerminal[i1] &&
             !seqs->isTerminal[i2];
 

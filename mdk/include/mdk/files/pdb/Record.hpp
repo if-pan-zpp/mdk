@@ -4,6 +4,10 @@
 #include <string>
 #include <variant>
 
+/**
+ * A namespace containing PODs of PDB records. For reference, see PDB format
+ * report.
+ */
 namespace mdk::pdb::records {
     class Remark {
     public:
@@ -13,12 +17,12 @@ namespace mdk::pdb::records {
 
     class Atom {
     public:
-        int serialNum = 0;
+        int serialNum = 0; // Zero-indexed here.
         std::string atomName;
         char altLocation = ' ';
         std::string residueName;
         char chainID = 'A';
-        int residueSeqNum = 0;
+        int residueSeqNum = 0; // Zero-indexed here.
         char insertionCode = ' ';
         Eigen::Vector3d pos;
         double occupancy = 1.0;
@@ -33,7 +37,7 @@ namespace mdk::pdb::records {
 
         struct PerResidueData {
             char chainId = 'A';
-            int residueSeqNum = 0;
+            int residueSeqNum = 0; // Zero-indexed here.
             char insertionCode = ' ';
             std::string symmetryOp;
         };
@@ -52,10 +56,10 @@ namespace mdk::pdb::records {
 
     class Ter {
     public:
-        int serialNum = 0;
+        int serialNum = 0; // Zero-indexed here.
         std::string residueName;
         char chainId = 'A';
-        int residueSeqNum = 0;
+        int residueSeqNum = 0; // Zero-indexed here.
         char insertionCode = ' ';
     };
 
@@ -76,7 +80,7 @@ namespace mdk::pdb::records {
 
     class Model {
     public:
-        int serialNum = 0;
+        int serialNum = 0; // Zero-indexed here.
     };
 
     class Endmdl {
@@ -87,6 +91,10 @@ namespace mdk::pdb::records {
     public:
     };
 
+    /**
+     * A variant type denoting either a record of some type, or no record
+     * \p std::monostate in the case of a parsing failure.
+     */
     using Record = std::variant<std::monostate,
         Remark, Atom, SSBond, Cryst1, End, Link,
         Model, Endmdl, Ter>;

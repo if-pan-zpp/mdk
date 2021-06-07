@@ -33,10 +33,12 @@ void DihedralAngles::asyncPart(Dynamics &dyn) {
             auto phi = acos(cos_phi), dV_dphi = 0.0;
             if (r12_x_r23.dot(r34) < 0.0) phi = -phi;
 
-            if (compNatDih && compNatDih->isNative[i]) {
+            if (std::holds_alternative<ComplexNativeDihedral*>(natDih)) {
+                auto *compNatDih = std::get<ComplexNativeDihedral*>(natDih);
                 compNatDih->term(i, phi, dyn.V, dV_dphi);
             }
-            else if (simpNatDih && simpNatDih->isNative[i]) {
+            else if (std::holds_alternative<SimpleNativeDihedral*>(natDih)) {
+                auto *simpNatDih = std::get<SimpleNativeDihedral*>(natDih);
                 simpNatDih->term(i, phi, dyn.V, dV_dphi);
             }
             else if (heurDih) {

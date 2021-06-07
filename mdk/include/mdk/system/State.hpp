@@ -5,6 +5,11 @@
 #include "../simul/SimulVar.hpp"
 
 namespace mdk {
+    /**
+     * An object containing the dynamical state of the simulation,
+     * i.e. forces and the potential energy.
+     * TODO: better name?
+     */
     struct Dynamics {
         double V = 0.0;
         Vectors F;
@@ -15,6 +20,10 @@ namespace mdk {
         }
     };
 
+    /**
+     * An object containing the physical state of the simulation, i.e.
+     * current positions, velocities of the residues, time and the box shape.
+     */
     class State: public SimulVar {
     public:
         int n;
@@ -27,6 +36,12 @@ namespace mdk {
         void prepareDyn();
         void updateWithDyn(Dynamics const& othDyn);
         void bind(Simulation& simul) override;
-        void exportTo(Model& model);
+
+        /**
+         * Set the positions and velocities of the residues in a \p Model
+         * object to the current values.
+         * @param model
+         */
+        void exportTo(Model& model) const;
     };
 }

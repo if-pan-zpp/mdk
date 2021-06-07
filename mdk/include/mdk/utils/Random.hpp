@@ -3,9 +3,12 @@
 #include <random>
 #include <Eigen/Core>
 
-#define LEGACY_MODE
-
 namespace mdk {
+    /**
+     * A random number generator. We use two versions: a legacy version taken
+     * from Fortran, and a modern version. Aside from sampling from [0, 1], we
+     * add sampling from [a, b], N(0, 1), N(mu, sigma^2) or points on S^2.
+     */
     class Random {
 #ifdef LEGACY_MODE
     private:

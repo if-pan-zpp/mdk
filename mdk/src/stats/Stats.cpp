@@ -9,7 +9,6 @@ void Stats::bind(Simulation &simulation) {
     stats = std::vector<Stat>(model.n);
     types = &simulation.data<Types>();
     polarization = std::vector<param::Polarization>(model.n);
-    used = false;
 
     for (int i = 0; i < model.n; ++i) {
         auto& stat = stats[i];

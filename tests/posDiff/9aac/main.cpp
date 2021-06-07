@@ -20,7 +20,7 @@ int main() {
     Simulation simul(model, params);
 
     simul.add<Leapfrog>(0.002 * tau);
-    simul.add<PositionDiff>(model, "data/positions.txt", "posDiffs.out");
+    simul.add<PositionDiff>("data/positions.txt", "posDiffs.out");
 
     for (int i = 0; i < 100; ++i) {
     	simul.step();

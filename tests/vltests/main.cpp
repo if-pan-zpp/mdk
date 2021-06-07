@@ -278,14 +278,14 @@ ostream& operator<<(ostream& os, Samples const& self) {
 int main() {
     omp_set_num_threads(8);
     double r = 30.0, avg_neigh = 10.0;
-    int n = 50'000;
+    int n = 5'000;
 
     Matrix3Xd v(3, n);
     auto vlS = SquareVL(r, v);
     auto vlC = CellularVL(r, v);
 
     auto dist = Samples();
-    for (int k = 0; k < 100; ++k) {
+    for (int k = 0; k < 1000; ++k) {
         gen(n, r, avg_neigh, v);
 
         auto then = high_resolution_clock::now();
@@ -299,7 +299,7 @@ int main() {
     cout << "[Cellular]\n" << dist << '\n';
 
     dist = Samples();
-    for (int k = 0; k < 100; ++k) {
+    for (int k = 0; k < 1000; ++k) {
         gen(n, r, avg_neigh, v);
 
         auto then = high_resolution_clock::now();

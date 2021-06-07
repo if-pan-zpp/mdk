@@ -2,6 +2,12 @@
 #include "../data/Primitives.hpp"
 
 namespace mdk {
+    /**
+     * An object representing the "topology" of the simulation box.
+     * In particular, we want to compute PBC-adjusted distances between
+     * residues.
+     * TODO: physicists wanted to change the name of this.
+     */
     class Topology {
     public:
         Vector cell, cellInv;

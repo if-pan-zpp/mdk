@@ -34,7 +34,7 @@ int main() {
     simul.add<Random>(rand);
     simul.add<LangPredictorCorrector>(0.005 * tau);
 
-    simul.add<PositionDiff>(model, "data/positions.txt", "posDiffs.out");
+    simul.add<PositionDiff>("data/positions.txt", "posDiffs.out");
 
     simul.add<Tether>(true);
     simul.add<NativeBA>();

@@ -48,9 +48,9 @@ void Simulation::init() {
     calcForces();
     integrator->init();
 
-//    for (auto* hook: hooks) {
-//        hook->execute(0);
-//    }
+    for (auto* hook: hooks) {
+        hook->execute(0);
+    }
     
     initialized = true;
 }

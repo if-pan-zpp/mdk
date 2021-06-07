@@ -85,6 +85,6 @@ void NativeContacts::asyncPart(Dynamics &dyn) {
         auto unit = r12/x;
 
         auto lj = LennardJones(cont.r_min, depth);
-        lj.asForce(unit, x, dyn.V, dyn.F[cont.i1], dyn.F[cont.i2]);
+        lj.computeF(unit, x, dyn.V, dyn.F[cont.i1], dyn.F[cont.i2]);
     }
 }

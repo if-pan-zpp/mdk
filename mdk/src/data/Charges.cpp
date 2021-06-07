@@ -9,13 +9,13 @@ Charges::Charges(const Model &model, param::Parameters const& params) {
         auto pol = params.specificity.at(acid).polarization;
 
         if (pol == param::Polarization::POLAR_POS) {
-            (*this)[i] = 1;
+            (*this)[i] = 1 * echarge;
         }
         else if (pol == param::Polarization::POLAR_NEG) {
-            (*this)[i] = -1;
+            (*this)[i] = -1 * echarge;
         }
         else {
-            (*this)[i] = 0;
+            (*this)[i] = 0 * echarge;
         }
     }
 }

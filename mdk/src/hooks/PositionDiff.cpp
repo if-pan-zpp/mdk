@@ -5,11 +5,13 @@
 using namespace mdk;
 using namespace std;
 
-PositionDiff::PositionDiff(Model const& model, std::string inputPath, std::string outputPath):
-    input(inputPath, std::ifstream::in),
-    output(outputPath, std::ofstream::out) {
+void PositionDiff::bind(Simulation& simulation) {
+    state = &simulation.var<State>();
 
+    auto& model = simulation.data<Model>();
     string token;
+    std::ifstream input(inputPath, std::ifstream::in);
+
     while (input >> token) {
         if (token != "STEP") continue;
         int step_nr;
@@ -23,10 +25,6 @@ PositionDiff::PositionDiff(Model const& model, std::string inputPath, std::strin
 
         refPositions[step_nr] = r;
     }
-}
-
-void PositionDiff::bind(Simulation& simulation) {
-    state = &simulation.var<State>();
 }
 
 void PositionDiff::execute(int step_nr) {

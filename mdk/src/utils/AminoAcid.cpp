@@ -29,11 +29,6 @@ AminoAcid::operator int8_t() const {
     return (int8_t)type;
 }
 
-bool AminoAcid::isProper(char code) {
-    static const auto _codes = codes();
-    return _codes.find(code) != string::npos;
-};
-
 AminoAcid::AminoAcid(char code) {
     static const auto _codes = codes();
     type = (AminoAcidIdx)_codes.find(code);

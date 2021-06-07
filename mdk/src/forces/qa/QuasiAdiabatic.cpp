@@ -60,16 +60,18 @@ void QuasiAdiabatic::asyncPart(Dynamics &dyn) {
 
         if (stage > 0.0) {
             if (cont.type == Stats::Type::BB) {
-                bb_lj.asForce(unit, norm, dyn.V, dyn.F[cont.i1], dyn.F[cont.i2]);
+                bb_lj.computeF(unit, norm, dyn.V, dyn.F[cont.i1],
+                    dyn.F[cont.i2]);
                 r_min = bb_lj.r_min;
             }
             else if (cont.type != Stats::Type::SS) {
-                bs_lj.asForce(unit, norm, dyn.V, dyn.F[cont.i1], dyn.F[cont.i2]);
+                bs_lj.computeF(unit, norm, dyn.V, dyn.F[cont.i1],
+                    dyn.F[cont.i2]);
                 r_min = bs_lj.r_min;
             }
             else {
                 auto const& ss_lj = ss_ljs[(*types)[cont.i1]][(*types)[cont.i2]];
-                ss_lj.asForce(unit, norm, dyn.V, dyn.F[cont.i1], dyn.F[cont.i2]);
+                ss_lj.computeF(unit, norm, dyn.V, dyn.F[cont.i1], dyn.F[cont.i2]);
                 r_min = ss_lj.sink_max;
             }
 
@@ -148,7 +150,7 @@ void QuasiAdiabatic::vlUpdateHook() {
     }
 }
 
-bool QuasiAdiabatic::geometryPhase(PairInfo const& p, QADiff &diff) const {
+bool QuasiAdiabatic::geometryPhase(vl::PairInfo const& p, QADiff &diff) const {
     Vector h1 = h[p.i1], h2 = h[p.i2];
     double cos_h1_r12 = h1.dot(p.unit), cos_h2_r12 = h2.dot(p.unit),
         cos_h1_h2 = h1.dot(h2);
@@ -196,7 +198,7 @@ void QuasiAdiabatic::syncPart(Dynamics &dyn) {
         if (p.status == QAFreePair::Status::TAKEN)
             continue;
 
-        PairInfo pairInfo;
+        vl::PairInfo pairInfo;
         pairInfo.i1 = p.i1;
         pairInfo.i2 = p.i2;
 

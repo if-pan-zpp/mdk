@@ -18,7 +18,6 @@ Chains::Chains(const Model &model) {
     triples = tuples(3);
     quads = tuples(4);
 
-    nativePairs = nativeTuples(2);
     nativeTriples = nativeTuples(3);
     nativeQuads = nativeTuples(4);
 }

@@ -2,7 +2,7 @@
 #include "simul/Simulation.hpp"
 using namespace mdk;
 
-void State::exportTo(Model &model) {
+void State::exportTo(Model &model) const {
     for (int i = 0; i < model.n; ++i) {
         auto& res = model.residues[i];
         res.r = r[i];
