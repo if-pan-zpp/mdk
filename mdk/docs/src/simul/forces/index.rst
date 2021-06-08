@@ -11,6 +11,7 @@ Forces
    bondangle
    dihedral
    chiral
+   nonlocal
    gomodel
    es
    pauli

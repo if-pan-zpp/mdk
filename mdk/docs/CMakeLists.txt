@@ -39,7 +39,7 @@ add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
     MAIN_DEPENDENCY ${SPHINX_SOURCE}/conf.py
     COMMENT "Generating documentation with Sphinx")
 
-set(LOCAL_SPHINX_BUILD ${CMAKE_CURRENT_LIST_DIR}/_build)
+set(LOCAL_SPHINX_BUILD ${PROJECT_SOURCE_DIR}/docs)
 set(LOCAL_SPHINX_INDEX ${LOCAL_SPHINX_BUILD}/index.html)
 
 add_custom_command(OUTPUT ${LOCAL_SPHINX_INDEX}
