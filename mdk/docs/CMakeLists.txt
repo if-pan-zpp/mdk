@@ -47,6 +47,8 @@ add_custom_command(OUTPUT ${LOCAL_SPHINX_INDEX}
     ${CMAKE_COMMAND} -E rm -rf ${LOCAL_SPHINX_BUILD}
     COMMAND
     ${CMAKE_COMMAND} -E copy_directory ${SPHINX_BUILD}/ ${LOCAL_SPHINX_BUILD}
+    COMMAND
+    ${CMAKE_COMMAND} -E touch ${LOCAL_SPHINX_BUILD}/.nojekyll
     DEPENDS ${SPHINX_INDEX_FILE}
     COMMENT "Copying the generated docs to _build")
 
