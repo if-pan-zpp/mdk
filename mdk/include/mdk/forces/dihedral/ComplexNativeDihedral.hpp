@@ -27,7 +27,7 @@ namespace mdk {
          * @param phi Dihedral angle between planes defined by sequences
          * i-2, i-1, i and i-1, i, i+1.
          * @param V Potential energy reference to add to.
-         * @param dV_dth Derivative of potential energy wrt the angle $\phi$
+         * @param dV_dphi Derivative of potential energy wrt the angle phi
          * to add to.
          */
         void term(int i, double phi, double& V, double& dV_dphi) const {

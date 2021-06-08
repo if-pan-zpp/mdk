@@ -8,7 +8,7 @@
 
 namespace mdk {
     /**
-     * An object representing either of the three $\lambda$ functions. It is
+     * An object representing either of the three lambda functions. It is
      * theoretically a Gaussian function, but we implement it here in terms of
      * computationally faster functions (either cosine or an "algebraic version"
      * thereof, with a cutoff at the far ends).

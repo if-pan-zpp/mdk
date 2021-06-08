@@ -42,7 +42,7 @@ namespace mdk {
          * @param i The index i in the triple (i-1, i, i+1).
          * @param theta Value of the bond angle between i-1, i and i+1.
          * @param V Potential energy reference to add to.
-         * @param dV_dth Derivative of potential energy wrt the angle $\theta$
+         * @param dV_dth Derivative of potential energy wrt the angle theta
          * to add to.
          */
         void term(int i, double theta, double& V, double& dV_dth) const {

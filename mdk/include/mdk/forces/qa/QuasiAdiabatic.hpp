@@ -181,19 +181,19 @@ namespace mdk {
         double formationMaxDistSq;
 
         /**
-         * Minimum value of $|\langle h_i, r_j \rangle|$ for the formation of
+         * Minimum value of <h_i, r_j> for the formation of
          * a backbone contact (with backbone part for i).
          */
         double hr_abs_min = 0.92;
 
         /**
-         * Minimum value of $|\langle h_i, h_j \rangle|$ for the formation of
+         * Minimum value of <h_i, h_j> for the formation of
          * a backbone-backbone contact to occur.
          */
         double hh_abs_min = 0.75;
 
         /**
-         * Maximum value of $|\langle n_i, r_j \rangle|$ for the formation of
+         * Maximum value of <n_i, r_j> for the formation of
          * a sidechain contact (with sidechain part for i).
          */
         double nr_max = 0.5;

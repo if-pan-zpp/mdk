@@ -4,7 +4,7 @@
 namespace mdk {
     /**
      * Debye-Hueckel screened electrostatic potential with a distance-dependent
-     * electric permittivity (specifically $\eps_r = r_0/r$).
+     * electric permittivity (specifically eps_r = r_0/r).
      */
     class RelativeDH: public ESBase {
     protected:

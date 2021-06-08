@@ -6,7 +6,7 @@ namespace mdk {
     /// A list of scalars (i.e. doubles).
     using Scalars = Eigen::VectorXd;
 
-    /// A vector (writing Eigen::Vector3d everything is annoying).
+    /// A vector (writing \p Eigen::Vector3d everywhere is annoying).
     using Vector = Eigen::Vector3d;
 
     /**

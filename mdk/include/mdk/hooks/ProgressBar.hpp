@@ -18,7 +18,7 @@ namespace mdk {
          * Construct a \p ProgressBar object.
          * @param totalTime Total span of the simulation; used for normalizing
          * the current time to display it as a percentage.
-         * @param update Period How often to update the progrss bar.
+         * @param updatePeriod How often to update the progrss bar.
          * @param width Width of the progress bar in characters.
          */
         explicit ProgressBar(double totalTime,

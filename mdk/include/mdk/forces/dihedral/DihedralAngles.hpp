@@ -43,6 +43,6 @@ namespace mdk {
          * "Asynchronous" part of the potential. Here it's the only part.
          * @param dynamics Dynamics object to add potential energy and forces to.
          */
-        void asyncPart(Dynamics &) override;
+        void asyncPart(Dynamics &dynamics) override;
     };
 }
