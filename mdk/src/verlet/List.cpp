@@ -63,6 +63,11 @@ void List::perCell(int c1) {
         for (d.y() = -1; d.y() <= 1; ++d.y()) {
             for (d.z() = -1; d.z() <= 1; ++d.z()) {
                 Eigen::Vector3i loc2 = loc1 + d;
+                /* This part denotes that the space of the cells is organized
+                 * in a "modular" fashion, i.e. the cells at the opposite sides
+                 * are regarded as neighbours. This is done for the purposes
+                 * of PBC-aware Verlet list construction.
+                 */
                 for (int dim = 0; dim < 3; ++dim) {
                     if (loc2[dim] >= grid[dim])
                         loc2[dim] = 0;
@@ -90,6 +95,11 @@ void List::updateGrid() {
 
 #pragma omp parallel
     {
+        /* First, we determine the (axis-aligned) box containing all the
+         * pseudoatoms.
+         * TODO: If less cubic conformations are common, one could try to
+         * TODO: compute a rotated box.
+         */
         bboxTP = {};
 
 #pragma omp for schedule(dynamic, 10) nowait
@@ -105,7 +115,18 @@ void List::updateGrid() {
 
 #pragma omp single
         {
+            /* Next, we compute the integral size of the grid, and consequently
+             * adjust the cell sizes. They will be slightly larger than
+             * \p effCutoff. This is done in order to have the bounding box
+             * divided into an integral number of cells along each axis, as
+             * otherwise some would intuitively "stick out" which would be
+             * troublesome for computing neighbors with PBC.
+             */
             grid = floor(bbox.sizes() / effCutoff);
+            for (int dim = 0; dim < 3; ++dim) {
+                if (grid[dim] == 0) grid[dim] = 1;
+            }
+
             cell = Eigen::Vector3d {
                 bbox.sizes().x() / grid.x(),
                 bbox.sizes().y() / grid.y(),
@@ -114,6 +135,9 @@ void List::updateGrid() {
 
             gridSize = grid.x() * grid.y() * grid.z();
 
+            /* Then, we initialize the linked lists for each cell and the
+             * \p next indicators.
+             */
             first.resize(gridSize);
             std::fill(first.begin(), first.end(), -1);
 
@@ -135,11 +159,16 @@ void List::updateGrid() {
         for (int i = 0; i < state->n; ++i) {
             auto v = state->top(state->r[i]);
 
+            /* For each pseudoatom, we find which cell it should belong to,
+             * and add it to the appropriate linked list.
+             */
             Eigen::Vector3i loc = {
                 (int)std::floor((v.x() - bbox.min().x()) / cell.x()),
                 (int)std::floor((v.y() - bbox.min().y()) / cell.y()),
                 (int)std::floor((v.z() - bbox.min().z()) / cell.z()),
             };
+
+            /* This is just for edge cases. */
             for (int dim = 0; dim < 3; ++dim) {
                 if (loc[dim] >= grid[dim])
                     loc[dim] = grid[dim]-1;
@@ -154,6 +183,8 @@ void List::updateGrid() {
             }
         }
 
+        /* Here we merge the thread-private lists into a single one.
+         */
 #pragma omp critical
         {
             for (int c = 0; c < gridSize; ++c) {
@@ -172,11 +203,16 @@ void List::updateGrid() {
 
         pairsTP.clear();
 
+        /* Next, we go through the cells and investigate the pairs of
+         * neighbouring cells.
+         */
 #pragma omp for schedule(dynamic, 10) nowait
         for (int c1 = 0; c1 < gridSize; ++c1) {
             perCell(c1);
         }
 
+        /* Finally, we merge thread-private lists into a single one.
+         */
 #pragma omp critical
         {
             pairs.insert(pairs.end(), pairsTP.begin(), pairsTP.end());
@@ -254,7 +290,7 @@ void List::check() {
         update();
         // For benchmarking, it's important
         // to keep track of VL size to ensure we do the same amount of stuff
-//        cout << "PAIRS SIZE = " << pairs.size() << endl;
+        cout << "PAIRS SIZE = " << pairs.size() << endl;
     }
     initial = false;
 }

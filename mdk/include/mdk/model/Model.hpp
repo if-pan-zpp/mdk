@@ -35,7 +35,17 @@ namespace mdk {
          * model.
          */
         struct Residue {
-            int idx, chainIdx;
+            /**
+             * Index of the residue in \p residues.
+             */
+            int idx;
+
+            /**
+             * Index of the parent chain, or -1 if it doesn't belong to any
+             * chain.
+             */
+            int chainIdx;
+
             Vector r, v;
             double mass;
             ResType type;

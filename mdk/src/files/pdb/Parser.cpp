@@ -6,6 +6,9 @@ using namespace mdk::pdb;
 using namespace std;
 
 Parser::Parser() {
+    /* Here we register the record parsers. The "...index()" part is for
+     * identifying which parser to use for a record on writing.
+     */
     parsers = {
         { ((Record)Remark()).index(), make_shared<RemarkParser>() },
         { ((Record)Atom()).index(), make_shared<AtomParser>() },
@@ -23,9 +26,17 @@ Data Parser::read(std::istream& is) {
     Data data;
 
     for (string line; getline(is, line); ) {
+        /* Per PDB format specs, lines should have exactly 80 characters
+         * or else the file is invalid; we will be more lenient and simply pad
+         *
+         */
         if (line.size() < 80)
             line.insert(line.size(), 80 - line.size(), ' ');
 
+        /* We go over the parsers, and if one succeeds we break out of the
+         * parser loop. Additionally, if the record is End, then we complete
+         * the parsing.
+         */
         for (auto const& [idx, parser]: parsers) {
             auto record = parser->tryParse(line);
             if (!holds_alternative<monostate>(record)) {
@@ -41,6 +52,9 @@ Data Parser::read(std::istream& is) {
 }
 
 std::ostream &Parser::write(ostream &os, const Data &data) {
+    /* For each record in the \p Data structure, we fetch an
+     * appropriate parser and write out the result to \p os
+     */
     for (auto const& record: data.records) {
         parsers[(int)record.index()]->write(os, record);
         os << endl;

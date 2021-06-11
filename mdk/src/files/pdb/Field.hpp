@@ -5,7 +5,8 @@
 namespace mdk::pdb {
     /**
      * An object representing a single field of a PDB record, along with
-     * the means of parsing and printing it.
+     * the means of parsing and printing it. The field objects signal parsing
+     * failure by throwing.
      */
     class Field {
     public:

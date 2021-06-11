@@ -9,6 +9,14 @@ void Integer::read(const string &s) {
     *v = stoi((string)view(s, i, j)) + offset;
 }
 
+/**
+ * This is an analogue of \p snprintf, i.e. it takes a format string and
+ * outputs the result into a \p std::string_view.
+ * @tparam Args Format argument types.
+ * @param sv Destination \p std::string_view.
+ * @param fmt Format string.
+ * @param args Format arguments.
+ */
 template<typename... Args>
 void format(string_view sv, const char *fmt, Args const&... args) {
     string buf(81, ' ');
@@ -39,6 +47,9 @@ void String::write(string &s) const {
     auto sv = view(s, i, j);
     if (mode & Trim) *v = trim(*v);
 
+    /** Here we determine how much to offset the string when using
+     * \p Left or \p Right mode.
+     */
     int size = min(sv.size(), v->size());
     int offset = (mode & Left) ? 0 : max<int>(0, sv.size() - v->size());
     memcpy((char*)sv.data() + offset, v->data(), size);

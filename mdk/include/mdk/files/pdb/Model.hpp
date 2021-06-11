@@ -27,7 +27,7 @@ namespace mdk::pdb {
 
             /**
              * Index of an atom in the \p Residue::atoms list of the
-             * parent residue.
+             * parent residue, or -1 if it's not a part of any residue.
              */
             int idxInRes;
 
@@ -62,7 +62,10 @@ namespace mdk::pdb {
             /// Serial number of a residue. 0-indexed.
             int serial;
 
-            /// Index in the \p Chain::residues of the  parent chain.
+            /**
+             * Index in the \p Chain::residues of the parent chain, or -1 if
+             * it's not in any chain.
+             */
             int idxInChain;
 
             /// Parent chain.

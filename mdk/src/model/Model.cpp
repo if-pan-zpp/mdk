@@ -63,6 +63,11 @@ static Eigen::Vector3d sampleSphere(Random& rand) {
     return v.normalized();
 }
 
+/**
+ * Find a vector perpendicular to \p v.
+ * @param v
+ * @return
+ */
 static Eigen::Vector3d findPerp(Eigen::Vector3d const& v) {
     auto perp1 = v.cross(Eigen::Vector3d::UnitX());
     auto perp2 = v.cross(Eigen::Vector3d::UnitY());

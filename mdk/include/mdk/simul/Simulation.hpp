@@ -54,8 +54,8 @@ namespace mdk {
          * functions of the simulation (for example the physical state or the
          * Verlet list). If the referenced variable has not been yet added,
          * the function tries to emplace it (if it's default-constructible) --
-         * such is, for example, the case with \p State or \p vl::List.
-         * The reference is never invalidated.
+         * such is, for example, the case with \p State or \p vl::List. Cannot be
+         * run after simulation initialization. The reference is never invalidated.
          * @tparam Var Type of the variable to access.
          * @return Accessed variable. The function returns a non-const reference,
          * thus care must be taken as to modify the variables only on agreed-upon
@@ -63,6 +63,10 @@ namespace mdk {
          */
         template<typename Var>
         Var& var() {
+            if (initialized) {
+                throw std::runtime_error("Cannot access state vars after initialization");
+            }
+
             auto idx = std::type_index(typeid(Var));
             if (vars.find(idx) == vars.end()) {
                 // The variable has not been found, we try to construct it.
@@ -84,7 +88,8 @@ namespace mdk {
          * Add a variable to the simulation. Depending on the type of the
          * variable, additional actions may be performed (such as binding to the
          * simulation or adding forces and/or nonlocal forces to appropriate lists).
-         * The reference is never invalidated.
+         * Cannot be run after simulation initialization. The reference is
+         * never invalidated.
          * @tparam T Type of the variable to add.
          * @tparam Args Types of arguments to use in construction.
          * @param args Values of arguments to use in construction.
@@ -92,6 +97,10 @@ namespace mdk {
          */
         template<typename T, typename... Args>
         T& add(Args&&... args) {
+            if (initialized) {
+                throw std::runtime_error("Cannot add state vars after initialization");
+            }
+
             // Create the variables as \p std::shared_ptr<T>
             auto _var = std::make_shared<T>(std::forward<Args>(args)...);
 
@@ -131,12 +140,16 @@ namespace mdk {
         }
 
         /**
-         * Add an "async task".
+         * Add an "async task".  Cannot be run after simulation initialization.
          * TODO: Ask Kuba Boguta what it's for.
          * @param f Function/lambda to add. (Seemingly the lambda cannot
          * capture the environment, i.e. must be trivial)
          */
         inline void addAsyncTask(std::function<void()> const& f) {
+            if (initialized) {
+                throw std::runtime_error("Cannot add async tasks after initialization");
+            }
+
             asyncTasks.push_back(f);
         }
 

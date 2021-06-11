@@ -3515,12 +3515,14 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk5Model7Residue3idxE">
 <span id="_CPPv3N3mdk5Model7Residue3idxE"></span><span id="_CPPv2N3mdk5Model7Residue3idxE"></span><span id="mdk::Model::Residue::idx__i"></span><span class="target" id="structmdk_1_1Model_1_1Residue_1a911032c21521dd9ed86d0f73c23a3749"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">idx</span></span></span><br /></dt>
-<dd></dd></dl>
+<dd><p>Index of the residue in <code class="docutils literal notranslate"><span class="pre">residues</span></code>. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk5Model7Residue8chainIdxE">
 <span id="_CPPv3N3mdk5Model7Residue8chainIdxE"></span><span id="_CPPv2N3mdk5Model7Residue8chainIdxE"></span><span id="mdk::Model::Residue::chainIdx__i"></span><span class="target" id="structmdk_1_1Model_1_1Residue_1a56ab80ef0a85a1099a5d7dd11422badc"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">chainIdx</span></span></span><br /></dt>
-<dd></dd></dl>
+<dd><p>Index of the parent chain, or -1 if it doesn’t belong to any chain. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk5Model7Residue1rE">
@@ -3628,7 +3630,7 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4I0EN3mdk10Simulation3varER3Varv">
 <span id="_CPPv3I0EN3mdk10Simulation3varEv"></span><span id="_CPPv2I0EN3mdk10Simulation3varEv"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Var</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classmdk_1_1Simulation_1adbc17db203117ec486fc8fc8f5494f9f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="simul/simulation.html#_CPPv4I0EN3mdk10Simulation3varER3Varv" title="mdk::Simulation::var::Var"><span class="n"><span class="pre">Var</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">var</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
-<dd><p>Accesses the variables associated with the simulation. The access is by type, thus it’s most suited to variables that are effectively functions of the simulation (for example the physical state or the Verlet list). If the referenced variable has not been yet added, the function tries to emplace it (if it’s default-constructible)  such is, for example, the case with <code class="docutils literal notranslate"><a class="reference internal" href="simul/state.html#classmdk_1_1State"><span class="std std-ref"><span class="pre">State</span></span></a></code> or <code class="docutils literal notranslate"><a class="reference internal" href="simul/verlet.html#classmdk_1_1vl_1_1List"><span class="std std-ref"><span class="pre">vl::List</span></span></a></code>. The reference is never invalidated. </p>
+<dd><p>Accesses the variables associated with the simulation. The access is by type, thus it’s most suited to variables that are effectively functions of the simulation (for example the physical state or the Verlet list). If the referenced variable has not been yet added, the function tries to emplace it (if it’s default-constructible)  such is, for example, the case with <code class="docutils literal notranslate"><a class="reference internal" href="simul/state.html#classmdk_1_1State"><span class="std std-ref"><span class="pre">State</span></span></a></code> or <code class="docutils literal notranslate"><a class="reference internal" href="simul/verlet.html#classmdk_1_1vl_1_1List"><span class="std std-ref"><span class="pre">vl::List</span></span></a></code>. Cannot be run after simulation initialization. The reference is never invalidated. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Template Parameters</dt>
 <dd class="field-odd"><p><strong>Var</strong> – Type of the variable to access. </p>
@@ -3642,7 +3644,7 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4I0DpEN3mdk10Simulation3addER1TDpRR4Args">
 <span id="_CPPv3I0DpEN3mdk10Simulation3addEDpRR4Args"></span><span id="_CPPv2I0DpEN3mdk10Simulation3addEDpRR4Args"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">Args</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classmdk_1_1Simulation_1a7351ccd0153d05284379f65c468f9150"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="simul/simulation.html#_CPPv4I0DpEN3mdk10Simulation3addER1TDpRR4Args" title="mdk::Simulation::add::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">add</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="simul/simulation.html#_CPPv4I0DpEN3mdk10Simulation3addER1TDpRR4Args" title="mdk::Simulation::add::Args"><span class="n"><span class="pre">Args</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">...</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">args</span></span><span class="sig-paren">)</span><br /></dt>
-<dd><p>Add a variable to the simulation. Depending on the type of the variable, additional actions may be performed (such as binding to the simulation or adding forces and/or nonlocal forces to appropriate lists). The reference is never invalidated. </p>
+<dd><p>Add a variable to the simulation. Depending on the type of the variable, additional actions may be performed (such as binding to the simulation or adding forces and/or nonlocal forces to appropriate lists). Cannot be run after simulation initialization. The reference is never invalidated. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Template Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -3662,7 +3664,7 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk10Simulation12addAsyncTaskERKNSt8functionIFvvEEE">
 <span id="_CPPv3N3mdk10Simulation12addAsyncTaskERKNSt8functionIFvvEEE"></span><span id="_CPPv2N3mdk10Simulation12addAsyncTaskERKNSt8functionIFvvEEE"></span><span class="target" id="classmdk_1_1Simulation_1a19a2e8a16ff4d7c7ef1e64f4f951f422"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">addAsyncTask</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="utils/aminoacid.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">f</span></span><span class="sig-paren">)</span><br /></dt>
-<dd><p>Add an “async task”. TODO: Ask Kuba Boguta what it’s for. </p>
+<dd><p>Add an “async task”. Cannot be run after simulation initialization. TODO: Ask Kuba Boguta what it’s for. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>f</strong> – Function/lambda to add. (Seemingly the lambda cannot capture the environment, i.e. must be trivial) </p>
@@ -5341,7 +5343,7 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk3pdb5Model4Atom8idxInResE">
 <span id="_CPPv3N3mdk3pdb5Model4Atom8idxInResE"></span><span id="_CPPv2N3mdk3pdb5Model4Atom8idxInResE"></span><span id="mdk::pdb::Model::Atom::idxInRes__i"></span><span class="target" id="structmdk_1_1pdb_1_1Model_1_1Atom_1a479fcfa4586ce0f826b1774207620173"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">idxInRes</span></span></span><br /></dt>
-<dd><p>Index of an atom in the <code class="docutils literal notranslate"><a class="reference internal" href="prep/pdb/model.html#structmdk_1_1pdb_1_1Model_1_1Residue_1a94c4f3cb4bb247d853c010bd018cd079"><span class="std std-ref"><span class="pre">Residue::atoms</span></span></a></code> list of the parent residue. </p>
+<dd><p>Index of an atom in the <code class="docutils literal notranslate"><a class="reference internal" href="prep/pdb/model.html#structmdk_1_1pdb_1_1Model_1_1Residue_1a94c4f3cb4bb247d853c010bd018cd079"><span class="std std-ref"><span class="pre">Residue::atoms</span></span></a></code> list of the parent residue, or -1 if it’s not a part of any residue. </p>
 </dd></dl>
 
 <dl class="cpp var">
@@ -5451,7 +5453,7 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk3pdb5Model7Residue10idxInChainE">
 <span id="_CPPv3N3mdk3pdb5Model7Residue10idxInChainE"></span><span id="_CPPv2N3mdk3pdb5Model7Residue10idxInChainE"></span><span id="mdk::pdb::Model::Residue::idxInChain__i"></span><span class="target" id="structmdk_1_1pdb_1_1Model_1_1Residue_1aaee87659d8d83eb3cbd8ab56e45952cf"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">idxInChain</span></span></span><br /></dt>
-<dd><p>Index in the <code class="docutils literal notranslate"><a class="reference internal" href="prep/pdb/model.html#structmdk_1_1pdb_1_1Model_1_1Chain_1a61cff09901d60306544469c83b980354"><span class="std std-ref"><span class="pre">Chain::residues</span></span></a></code> of the parent chain. </p>
+<dd><p>Index in the <code class="docutils literal notranslate"><a class="reference internal" href="prep/pdb/model.html#structmdk_1_1pdb_1_1Model_1_1Chain_1a61cff09901d60306544469c83b980354"><span class="std std-ref"><span class="pre">Chain::residues</span></span></a></code> of the parent chain, or -1 if it’s not in any chain. </p>
 </dd></dl>
 
 <dl class="cpp var">
@@ -5534,7 +5536,7 @@
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk3pdb5FieldE">
 <span id="_CPPv3N3mdk3pdb5FieldE"></span><span id="_CPPv2N3mdk3pdb5FieldE"></span><span id="mdk::pdb::Field"></span><span class="target" id="classmdk_1_1pdb_1_1Field"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Field</span></span></span><br /></dt>
-<dd><em>#include &lt;Field.hpp&gt;</em><p>An object representing a single field of a PDB record, along with the means of parsing and printing it. </p>
+<dd><em>#include &lt;Field.hpp&gt;</em><p>An object representing a single field of a PDB record, along with the means of parsing and printing it. The field objects signal parsing failure by throwing. </p>
 <p>Subclassed by <a class="reference internal" href="prep/pdb/fields.html#classmdk_1_1pdb_1_1Char"><span class="std std-ref">mdk::pdb::Char</span></a>, <a class="reference internal" href="prep/pdb/fields.html#classmdk_1_1pdb_1_1Integer"><span class="std std-ref">mdk::pdb::Integer</span></a>, <a class="reference internal" href="prep/pdb/fields.html#classmdk_1_1pdb_1_1Literal"><span class="std std-ref">mdk::pdb::Literal</span></a>, <a class="reference internal" href="prep/pdb/fields.html#classmdk_1_1pdb_1_1Real"><span class="std std-ref">mdk::pdb::Real</span></a>, <a class="reference internal" href="prep/pdb/fields.html#classmdk_1_1pdb_1_1String"><span class="std std-ref">mdk::pdb::String</span></a>, <a class="reference internal" href="prep/pdb/fields.html#classmdk_1_1pdb_1_1SymOp"><span class="std std-ref">mdk::pdb::SymOp</span></a></p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>

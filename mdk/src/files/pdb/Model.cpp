@@ -78,6 +78,9 @@ Model::Model(mdk::Model const& coarse) {
 }
 
 void Model::addContactsFromAtomOverlap() {
+    /* First, we populate an array of amino acid residues in the \p Model,
+     * i.e. "contact atoms".
+     */
     std::vector<Atom*> contactAtoms;
     for (auto& [idx, atom]: atoms) {
         if (!atom.res) continue;
@@ -87,6 +90,10 @@ void Model::addContactsFromAtomOverlap() {
 
     double alpha = pow(26.0/7.0, 1.0/6.0); /* cg.f:4906 */
 
+    /* Then, we iterate over pairs of these contact atoms and check whether
+     * they are in contact; we don't do any Verlet list-like optimizations
+     * because it's the prep layer.
+     */
     for (int idx1 = 0; idx1 < (int)contactAtoms.size(); ++idx1) {
         auto *atom1 = contactAtoms[idx1];
         auto const& info1 = AminoAcid(atom1->res->type).info()
@@ -99,12 +106,19 @@ void Model::addContactsFromAtomOverlap() {
                 .atomInfo.at(atom2->type);
             string type2 = info2.inBackbone ? "B" : "S";
 
+            /* If the two atoms are in the same residue or in different
+             * residues which are in bond distance of less than three, they
+             * cannot form contact.
+             */
             if (atom1->res == atom2->res)
                 continue;
             if (atom1->res->chain == atom2->res->chain and
                 abs(atom1->res->idxInChain - atom2->res->idxInChain) < 3)
                 continue;
 
+            /* Last, we check whether the spheres overlap, and if they do,
+             * determine the type of the contact and add it.
+             */
             auto dist = (atom1->r - atom2->r).norm();
             auto overlapR = info1.radius + info2.radius;
             if (dist <= alpha * overlapR) {
@@ -119,6 +133,9 @@ void Model::addContactsFromAtomOverlap() {
 }
 
 void Model::addContactsFromResOverlap(const param::Parameters &params) {
+    /* The logic is similar to \p addContactsFromAtomOverlap, but for
+     * residues only.
+     */
     vector<Atom*> contactAtoms;
     for (auto& [idx, res]: residues) {
         if (!AminoAcid::isProper(res.type)) continue;
@@ -159,10 +176,15 @@ mdk::Model Model::coarsen() {
     std::unordered_map<char, int> chainIdxMap;
 
     for (auto const& [chainIdx, chain]: chains) {
+        /* For each \p pdb::Model chain we add a corresponding \p Model chain.
+         */
         auto& chainThere = model.addChain();
         chainIdxMap[chain.serial] = chainThere.idx;
         int n = chain.residues.size();
 
+        /* For each \p pdb::Model residue we add a \p Model residue, with the
+         * position derived from the CA atom.
+         */
         for (int resIdx = 0; resIdx < n; ++resIdx) {
             auto& res = chain.residues[resIdx];
             auto& resThere = model.addResidue(&chainThere);
@@ -174,6 +196,9 @@ mdk::Model Model::coarsen() {
             resThere.mass = 1.0;
         }
 
+        /* Finally, we manually construct a structured part corresponding to
+         * the native structure in the \p pdb::Model file.
+         */
         auto& sp = model.addSP();
         chainThere.structuredParts.push_back(sp.idx);
         sp.len = n;
@@ -197,6 +222,12 @@ mdk::Model Model::coarsen() {
         }
     }
 
+    /* For each \p pdb::Model contact we add a \p Model contact between the
+     * parent residues of the atoms with the corresponding type.
+     * TODO: this might be a problem if (a) one of the atoms is parentless,
+     * TODO: (b) if between a pair of \p pdb::Model residues there are many
+     * TODO: contacts.
+     */
     for (auto const& cont: contacts) {
         if (!cont.atom[0]->res || !cont.atom[1]->res) continue;
         auto& contThere = model.addContact();

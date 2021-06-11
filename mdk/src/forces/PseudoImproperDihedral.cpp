@@ -152,6 +152,15 @@ void PseudoImproperDihedral::asyncPart(Dynamics &dyn) {
 
         deriveAngles(pair, psi, dpsi_dr);
 
+        /* PID potential is described by a formula:
+         *   \sum_i \lambda_i(\psi_{12}) \lambda_i(\psi_{21}) \phi(r_{12})
+         * Thus the derivative wrt q is:
+         *   \sum_i (d\lambda_i/d\psi) d\psi_{12}/dq \lambda_i(\psi_{21}) \phi(r_{12}) +
+         *          \lambda_i (d\lambda_i/d\psi) d\psi_{21}/dq \phi(r_{12}) +
+         *          \lambda_i(\psi_{12}) \lambda_i(\psi_{21}) d\phi/dq
+         *   = A d\psi_{12}/dq + B d\psi_{21}/dq + C d\phi/dq
+         */
+
         double A = 0.0, B = 0.0, C = 0.0;
         auto type1 = (int8_t)(*types)[i1], type2 = (int8_t)(*types)[i2];
 

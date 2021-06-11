@@ -15,6 +15,9 @@ pdb::Model Data::asModel() const {
         if (holds_alternative<Atom>(record)) {
             auto& data = get<Atom>(record);
 
+            /* This sequence of if's etc. adds an atom, whilst also possibly
+             * adding the parent residue and its parent chain.
+             * */
             if (model.chains.count(data.chainID) == 0) {
                 model.addChain(data.chainID);
             }
@@ -46,6 +49,11 @@ pdb::Model Data::asModel() const {
             ssbond.type = "SSBOND";
             ssbond.dist0 = data.dist0;
 
+            /* Since in the \p pdb::Model the contacts are defined between
+             * atoms, we define an SSBOND to be the contact between SG atoms of
+             * CYS residues; the method doesn't necessarily check whether the
+             * residues are CYS, though.
+             * */
             for (int i = 0; i < 2; ++i) {
                 auto& info = data.res[i];
                 auto& res = model.residues[info.residueSeqNum];
@@ -56,6 +64,9 @@ pdb::Model Data::asModel() const {
             auto& data = get<Link>(record);
 
             auto& link = model.addContact();
+            /* The contacts between atoms don't have a well-defined notion of
+             * being, say, backbone-backbone.
+             */
             link.type = "NATIVE";
             link.dist0 = data.linkLength;
 
@@ -86,6 +97,7 @@ Data::Data(const pdb::Model &model) {
     }
 
     for (auto const& [chainIdx, chain]: model.chains) {
+        // We need some way of finding a final ATOM record for a chain.
         pdb::Model::Atom *finalAtom = nullptr;
 
         for (auto const& res: chain.residues) {
