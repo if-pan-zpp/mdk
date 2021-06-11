@@ -11,3 +11,5 @@ Authors:
 - Paweł Kopaczyk
 - Juliusz Pham
 - Jan Urbanek
+
+Documentation: https://if-pan-zpp.github.io/mdk/
