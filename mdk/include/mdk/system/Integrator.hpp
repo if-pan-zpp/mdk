@@ -22,5 +22,8 @@ namespace mdk {
         virtual void init() = 0;
 
         virtual void integrate() = 0;
+        
+        void serialize(std::ostream &ostream) override;
+        void deserialize(std::istream &istream) override;
     };
 }

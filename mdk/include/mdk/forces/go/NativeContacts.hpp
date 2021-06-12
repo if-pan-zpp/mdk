@@ -29,6 +29,9 @@ namespace mdk {
          */
         void bind(Simulation &simulation) override;
 
+        void serialize(std::ostream &ostream) override;
+        void deserialize(std::istream &istream) override;
+
         /**
          * Asynchronous part of the force computation.
          * @param dynamics Dynamics object to add potential energy and forces to.

@@ -18,7 +18,8 @@ namespace mdk {
         void bind(Simulation& simulation) override;
         void init() override;
         void integrate() override;
-
+        void serialize(std::ostream &ostream) override;
+        void deserialize(std::istream &istream) override;
         /**
          * Value of gamma for the Langevin noise.
          */

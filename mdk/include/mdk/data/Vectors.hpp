@@ -61,5 +61,21 @@ namespace mdk {
         inline auto operator[](int i) const {
             return col(i);
         }
+        
+        void serialize(int n, std::ostream &ostream) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < 3; j++) {
+                    ostream << *(reinterpret_cast<uint64_t*>(&(*this)(j,i))) << ' ';
+                }
+            }
+        }
+
+        void deserialize(int n, std::istream &istream) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < 3; j++) {
+                    istream >> *(reinterpret_cast<uint64_t*>(&(*this)(j,i)));
+                }
+            }
+        }
     };
 }

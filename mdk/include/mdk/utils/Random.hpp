@@ -65,6 +65,15 @@ namespace mdk {
 
             return std::min(am * iy, rnmx);
         }
+        void serialize(std::ostream &ostream) {
+            ostream << iy << ' ' << idum << ' ' << idum2 << '\n';
+            for (int i = 0; i < ntab; i++) ostream << iv[i] << ' ';
+            ostream << '\n';
+        }
+        void deserialize(std::istream &istream) {
+            istream >> iy >> idum >> idum2;
+            for (int i = 0; i < ntab; i++) istream >> iv[i];
+        }
 #else
     private:
         uint64_t state;
@@ -102,6 +111,8 @@ namespace mdk {
             return rng;
         }
 
+        void serialize(std::ostream &ostream) { ostream << state << '\n'; }
+        void deserialize(std::istream &istream) { istream >> state; }
 #endif
         Random(Random const& oth) = default;
 

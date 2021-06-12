@@ -1,5 +1,8 @@
 #pragma once
 
+#include <istream>
+#include <ostream>
+
 namespace mdk {
     class Simulation;
 
@@ -14,5 +17,8 @@ namespace mdk {
          * @param simulation Simulation to bind the object to.
          */
         virtual void bind(Simulation& simulation) = 0;
+        
+        virtual void serialize(std::ostream &ostream) = 0;
+        virtual void deserialize(std::istream &istream) = 0;
     };
 }

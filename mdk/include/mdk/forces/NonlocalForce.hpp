@@ -46,6 +46,9 @@ namespace mdk {
          * @param simulation Simulation to bind to.
          */
         void bind(Simulation& simulation) override;
+        
+        void serialize(std::ostream &ostream) override;
+        void deserialize(std::istream &istream) override;
 
         /**
          * An action to be performed when Verlet list is updated; usually one

@@ -43,6 +43,8 @@ namespace mdk {
          */
         void bind(Simulation& simulation) override;
 
+        void serialize(std::ostream &ostream) override;
+        void deserialize(std::istream &istream) override;
         /**
          * An action to be performed when the Verlet list is updated. Here we
          * want to recreate \p pairs, i.e. filter the Verlet list so that only

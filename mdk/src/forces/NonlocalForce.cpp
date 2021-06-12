@@ -11,3 +11,7 @@ void NonlocalForce::installIntoVL() {
     savedSpec = spec();
     vl->registerNF(*this, savedSpec);
 }
+
+void NonlocalForce::serialize(std::ostream &ostream) {}
+
+void NonlocalForce::deserialize(std::istream &istream) {}

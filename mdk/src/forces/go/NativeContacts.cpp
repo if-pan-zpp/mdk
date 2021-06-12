@@ -88,3 +88,27 @@ void NativeContacts::asyncPart(Dynamics &dyn) {
         lj.computeF(unit, x, dyn.V, dyn.F[cont.i1], dyn.F[cont.i2]);
     }
 }
+void NativeContacts::serialize(std::ostream &ostream) {
+    ostream << curPairs.size() << '\n';
+    for (Contact const &c: curPairs) {
+        ostream << c.i1 << ' ' << c.i2 << ' ' << *(reinterpret_cast<const uint64_t*>(&c.r_min)) << '\n';
+    }
+    ostream << allContacts.size() << '\n';
+    for (Contact const &c: allContacts) {
+        ostream << c.i1 << ' ' << c.i2 << ' ' << *(reinterpret_cast<const uint64_t*>(&c.r_min)) << '\n';
+    }
+}
+
+void NativeContacts::deserialize(std::istream &istream) {
+    size_t size;
+    istream >> size;
+    curPairs.resize(size);
+    for (Contact &c: curPairs) {
+        istream >> c.i1 >> c.i2 >> *(reinterpret_cast<uint64_t*>(&c.r_min));
+    }
+    istream >> size;
+    allContacts.resize(size);
+    for (Contact &c: allContacts) {
+        istream >> c.i1 >> c.i2 >> *(reinterpret_cast<uint64_t*>(&c.r_min));
+    }
+}

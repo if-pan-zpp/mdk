@@ -98,3 +98,37 @@ void LangPredictorCorrector::bind(Simulation &simulation) {
     }
     #endif
 }
+
+void LangPredictorCorrector::serialize(std::ostream &ostream) {
+    Integrator::serialize(ostream);
+    
+    y0.serialize(state->n, ostream);
+    y1.serialize(state->n, ostream);
+    y2.serialize(state->n, ostream);
+    y3.serialize(state->n, ostream);
+    y4.serialize(state->n, ostream);
+    y5.serialize(state->n, ostream);
+    
+    random->serialize(ostream);
+    
+    #ifndef LEGACY_MODE
+    for (int dim = 0; dim < 3; ++dim) rngs[dim].serialize(ostream);
+    #endif
+}
+
+void LangPredictorCorrector::deserialize(std::istream &istream) {
+    Integrator::deserialize(istream);
+    
+    y0.deserialize(state->n, istream);
+    y1.deserialize(state->n, istream);
+    y2.deserialize(state->n, istream);
+    y3.deserialize(state->n, istream);
+    y4.deserialize(state->n, istream);
+    y5.deserialize(state->n, istream);
+    
+    random->deserialize(istream);
+    
+    #ifndef LEGACY_MODE
+    for (int dim = 0; dim < 3; ++dim) rngs[dim].deserialize(istream);
+    #endif
+}

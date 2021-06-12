@@ -36,6 +36,8 @@ namespace mdk {
         void prepareDyn();
         void updateWithDyn(Dynamics const& othDyn);
         void bind(Simulation& simul) override;
+        void serialize(std::ostream &ostream) override;
+        void deserialize(std::istream &istream) override;
 
         /**
          * Set the positions and velocities of the residues in a \p Model

@@ -38,3 +38,19 @@ void ESBase::vlUpdateHook() {
         }
     }
 }
+
+void ESBase::serialize(std::ostream &ostream) {
+    ostream << pairs.size() << '\n';
+    for (Contact const &c: pairs) {
+        ostream << c.i1 << ' ' << c.i2 << ' ' << *(reinterpret_cast<const uint64_t*>(&c.q1_x_q2)) << '\n';
+    }
+}
+
+void ESBase::deserialize(std::istream &istream) {
+    size_t size;
+    istream >> size;
+    pairs.resize(size);
+    for (Contact &c: pairs) {
+        istream >> c.i1 >> c.i2 >> *(reinterpret_cast<uint64_t*>(&c.q1_x_q2));
+    }
+}
