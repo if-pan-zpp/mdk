@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.17)
 project(mdk LANGUAGES CXX)
 
 option(LEGACY_MODE "Work as close to f77 version as possible." OFF)
