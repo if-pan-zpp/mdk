@@ -1,3 +1,0 @@
-Concepts and the design of the library
-======================================
-
