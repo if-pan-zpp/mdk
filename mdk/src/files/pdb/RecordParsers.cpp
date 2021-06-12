@@ -58,8 +58,8 @@ AtomParser::AtomParser() {
         make_shared<Real>(47, 54, 8, 3, atom.pos.z(), angstrom),
         make_shared<Real>(55, 60, 6, 2, atom.occupancy),
         make_shared<Real>(61, 66, 6, 2, atom.tempFactor),
-        make_shared<String>(77, 78, atom.element, 2, Trim | Right),
-        make_shared<String>(79, 80, atom.charge, 2)
+        make_shared<String>(77, 78, atom.element, Trim | Right),
+        make_shared<String>(79, 80, atom.charge)
     };
 }
 
