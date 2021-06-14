@@ -73,5 +73,30 @@ void Simulation::step() {
 void Simulation::step(double t) {
     auto& state = var<State>();
     auto t0 = state.t;
-    while (state.t - t0 < t) step();
+    while (state.t - t0 < t) {
+        step();
+        if (!checkpoints.empty() && state.t - t0 >= checkpoints.front().first) {
+            std::fstream fs;
+            fs.open(checkpoints.front().second.data(), std::fstream::out);
+            serialize(fs);
+            fs.close();
+            checkpoints.pop();
+        }
+    }
+}
+
+void Simulation::setCheckpoint(double t, std::string const& filename) {
+    checkpoints.emplace(t, filename);
+}
+
+void Simulation::serialize(std::ostream &ostream) {
+    for (NonlocalForce* f: nonlocalForces) f->serialize(ostream);
+    integrator->serialize(ostream);
+    ostream << step_nr << '\n';
+}
+
+void Simulation::deserialize(std::istream &istream) {
+    for (NonlocalForce* f: nonlocalForces) f->deserialize(istream);
+    integrator->deserialize(istream);
+    istream >> step_nr;
 }

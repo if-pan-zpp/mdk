@@ -156,6 +156,12 @@ namespace mdk {
          * @param t Time to advance.
          */
         void step(double t);
+        
+        void setCheckpoint(double t, std::string filename);
+        
+        void serialize(std::ostream &ostream);
+        
+        void deserialize(std::istream &istream);
 
     private:
         /// Model of the simulation.
@@ -203,5 +209,7 @@ namespace mdk {
 
         /// Internal function for invoking force fields.
         void calcForces();
+        
+        std::queue<double, std::string> checkpoints;
     };
 }

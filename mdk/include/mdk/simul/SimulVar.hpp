@@ -18,7 +18,7 @@ namespace mdk {
          */
         virtual void bind(Simulation& simulation) = 0;
         
-        virtual void serialize(std::ostream &ostream) = 0;
-        virtual void deserialize(std::istream &istream) = 0;
+        virtual void serialize(std::ostream &ostream) {}
+        virtual void deserialize(std::istream &istream) {}
     };
 }

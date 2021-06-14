@@ -26,5 +26,8 @@ namespace mdk {
             fix(v);
             return v;
         }
+        
+        void serialize(std::ostream &ostream);
+        void deserialize(std::istream &istream);
     };
 }

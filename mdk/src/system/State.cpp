@@ -57,3 +57,4 @@ void State::deserialize(std::istream &istream) {
     dyn.F.deserialize(n, istream);
     
     top.deserialize(istream);
+}

@@ -9,3 +9,9 @@ void Topology::setCell(VRef _cell) {
         }
     }
 }
+
+void Topology::serialize(std::ostream &ostream) {
+}
+
+void Topology::deserialize(std::istream &istream) {
+}
