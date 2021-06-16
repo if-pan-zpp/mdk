@@ -18,4 +18,37 @@ namespace mdk {
         if (d1.dot(u3) < 0.) phi = -phi;
         return phi;
     }
+
+    double asphericity(Vectors const& v) {
+        Vector mean = v.vectorwise().mean();
+
+        Eigen::Matrix3d mit;
+        double crg;
+        for (size_t i = 0; i < v.size(); ++i) {
+            Vector diff = v.col(i) - mean;
+            crg += diff.squaredNorm();
+
+            Vector sq_diff = diff.array() * diff.array();
+            mit(0,0) += sq_diff(1) + sq_diff(2);
+            mit(1,1) += sq_diff(2) + sq_diff(0);
+            mit(2,2) += sq_diff(0) + sq_diff(1);
+            mit(0,1) -= diff(0) * diff(1);
+            mit(1,2) -= diff(1) * diff(2);
+            mit(0,2) -= diff(0) * diff(2);
+        }
+        mit(1,0) = mit(0,1);
+        mit(2,1) = mit(1,2);
+        mit(2,0) = mit(0,2);
+        crg = sqrt(crg / v.size());
+
+        auto eigenvaluesC = mit.eigenvalues();
+        double eigenvalues[3] = {
+            sqrt(eigenvaluesC(0).real() / v.size()),
+            sqrt(eigenvaluesC(1).real() / v.size()),
+            sqrt(eigenvaluesC(2).real() / v.size())
+        };
+
+        std::sort(eigenvalues, eigenvalues + 3);
+        return eigenvalues[1] - 0.5 * (eigenvalues[0] + eigenvalues[2]);
+    }
 }

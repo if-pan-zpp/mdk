@@ -37,10 +37,26 @@ namespace mdk {
         }
 
         /**
+         * Returns an iterator over constituent vectors.
+         * @return An interator over constituent vectors.
+         */
+        auto vectorwise() {
+            return colwise();
+        }
+
+        /**
+         * Returns a const iterator over constituent vectors.
+         * @return A const interator over constituent vectors.
+         */
+        auto vectorwise() const {
+            return colwise();
+        }
+
+        /**
          *
          * @return A number of vectors.
          */
-        int size() {
+        int size() const {
             return cols();
         }
 
