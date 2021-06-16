@@ -88,8 +88,6 @@
               <p class="caption"><span class="caption-text">Sections:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="src/installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/arch.html">Architecture of the library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src/prep/index.html">Preparation layer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src/simul/index.html">Simulation layer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src/utils/index.html">Utilities</a></li>
@@ -274,6 +272,8 @@
       <li><a href="src/entire.html#_CPPv4N3mdk5angleE4VRef4VRef4VRef">mdk::angle (C++ function)</a>
 </li>
       <li><a href="src/entire.html#_CPPv4N3mdk8angstromE">mdk::angstrom (C++ member)</a>, <a href="src/utils/units.html#_CPPv4N3mdk8angstromE">[1]</a>
+</li>
+      <li><a href="src/entire.html#_CPPv4N3mdk11asphericityERK7Vectors">mdk::asphericity (C++ function)</a>
 </li>
       <li><a href="src/entire.html#_CPPv4N3mdk4atomE">mdk::atom (C++ member)</a>, <a href="src/utils/units.html#_CPPv4N3mdk4atomE">[1]</a>
 </li>
@@ -1011,10 +1011,10 @@
 </li>
       <li><a href="src/entire.html#_CPPv4N3mdk3pdb7Literal1jE">mdk::pdb::Literal::j (C++ member)</a>, <a href="src/prep/pdb/fields.html#_CPPv4N3mdk3pdb7Literal1jE">[1]</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="src/entire.html#_CPPv4N3mdk3pdb7Literal3litE">mdk::pdb::Literal::lit (C++ member)</a>, <a href="src/prep/pdb/fields.html#_CPPv4N3mdk3pdb7Literal3litE">[1]</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="src/entire.html#_CPPv4N3mdk3pdb7Literal7LiteralEiiNSt6stringE">mdk::pdb::Literal::Literal (C++ function)</a>, <a href="src/prep/pdb/fields.html#_CPPv4N3mdk3pdb7Literal7LiteralEiiNSt6stringE">[1]</a>
 </li>
       <li><a href="src/entire.html#_CPPv4N3mdk3pdb7Literal4readERKNSt6stringE">mdk::pdb::Literal::read (C++ function)</a>, <a href="src/prep/pdb/fields.html#_CPPv4N3mdk3pdb7Literal4readERKNSt6stringE">[1]</a>
@@ -1661,6 +1661,12 @@
 </li>
       <li><a href="src/entire.html#_CPPv4N3mdk8skipLineERNSt7istreamE">mdk::skipLine (C++ function)</a>
 </li>
+      <li><a href="src/entire.html#_CPPv4N3mdk9SolidWallE">mdk::SolidWall (C++ class)</a>
+</li>
+      <li><a href="src/entire.html#_CPPv4N3mdk9SolidWall9asyncPartER8Dynamics">mdk::SolidWall::asyncPart (C++ function)</a>
+</li>
+      <li><a href="src/entire.html#_CPPv4N3mdk9SolidWall4wallE">mdk::SolidWall::wall (C++ member)</a>
+</li>
       <li><a href="src/entire.html#_CPPv4N3mdk4StatE">mdk::Stat (C++ struct)</a>, <a href="src/simul/stats.html#_CPPv4N3mdk4StatE">[1]</a>
 </li>
       <li><a href="src/entire.html#_CPPv4N3mdk4Stat8backboneE">mdk::Stat::backbone (C++ member)</a>, <a href="src/simul/stats.html#_CPPv4N3mdk4Stat8backboneE">[1]</a>
@@ -1773,9 +1779,11 @@
 </li>
       <li><a href="src/entire.html#_CPPv4N3mdk7VectorsixEi">mdk::Vectors::operator[] (C++ function)</a>, <a href="src/entire.html#_CPPv4NK3mdk7VectorsixEi">[1]</a>, <a href="src/simul/primitives.html#_CPPv4N3mdk7VectorsixEi">[2]</a>, <a href="src/simul/primitives.html#_CPPv4NK3mdk7VectorsixEi">[3]</a>
 </li>
-      <li><a href="src/entire.html#_CPPv4N3mdk7Vectors4sizeEv">mdk::Vectors::size (C++ function)</a>, <a href="src/simul/primitives.html#_CPPv4N3mdk7Vectors4sizeEv">[1]</a>
+      <li><a href="src/entire.html#_CPPv4NK3mdk7Vectors4sizeEv">mdk::Vectors::size (C++ function)</a>, <a href="src/simul/primitives.html#_CPPv4NK3mdk7Vectors4sizeEv">[1]</a>
 </li>
       <li><a href="src/entire.html#_CPPv4N3mdk7Vectors7VectorsEi">mdk::Vectors::Vectors (C++ function)</a>, <a href="src/entire.html#_CPPv4N3mdk7Vectors7VectorsEiRK6Vector">[1]</a>, <a href="src/entire.html#_CPPv4N3mdk7Vectors7VectorsEv">[2]</a>, <a href="src/simul/primitives.html#_CPPv4N3mdk7Vectors7VectorsEi">[3]</a>, <a href="src/simul/primitives.html#_CPPv4N3mdk7Vectors7VectorsEiRK6Vector">[4]</a>, <a href="src/simul/primitives.html#_CPPv4N3mdk7Vectors7VectorsEv">[5]</a>
+</li>
+      <li><a href="src/entire.html#_CPPv4N3mdk7Vectors10vectorwiseEv">mdk::Vectors::vectorwise (C++ function)</a>, <a href="src/entire.html#_CPPv4NK3mdk7Vectors10vectorwiseEv">[1]</a>, <a href="src/simul/primitives.html#_CPPv4N3mdk7Vectors10vectorwiseEv">[2]</a>, <a href="src/simul/primitives.html#_CPPv4NK3mdk7Vectors10vectorwiseEv">[3]</a>
 </li>
       <li><a href="src/entire.html#_CPPv4N3mdk4viewERKNSt6stringEi">mdk::view (C++ function)</a>, <a href="src/entire.html#_CPPv4N3mdk4viewERKNSt6stringEii">[1]</a>
 </li>

@@ -89,8 +89,6 @@
               <p class="caption"><span class="caption-text">Sections:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="arch.html">Architecture of the library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="prep/index.html">Preparation layer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="simul/index.html">Simulation layer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils/index.html">Utilities</a></li>
@@ -536,6 +534,11 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk8dihedralE4VRef4VRef4VRef4VRef">
 <span id="_CPPv3N3mdk8dihedralE4VRef4VRef4VRef4VRef"></span><span id="_CPPv2N3mdk8dihedralE4VRef4VRef4VRef4VRef"></span><span id="mdk::dihedral__VRef.VRef.VRef.VRef"></span><span class="target" id="Math_8hpp_1a70b42f510ca2db1d6efce31623df118f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dihedral</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N3mdk4VRefE" title="mdk::VRef"><span class="n"><span class="pre">VRef</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">v1</span></span>, <a class="reference internal" href="#_CPPv4N3mdk4VRefE" title="mdk::VRef"><span class="n"><span class="pre">VRef</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">v2</span></span>, <a class="reference internal" href="#_CPPv4N3mdk4VRefE" title="mdk::VRef"><span class="n"><span class="pre">VRef</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">v3</span></span>, <a class="reference internal" href="#_CPPv4N3mdk4VRefE" title="mdk::VRef"><span class="n"><span class="pre">VRef</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">v4</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3mdk8dihedralE4VRef4VRef4VRef4VRef" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3mdk11asphericityERK7Vectors">
+<span id="_CPPv3N3mdk11asphericityERK7Vectors"></span><span id="_CPPv2N3mdk11asphericityERK7Vectors"></span><span id="mdk::asphericity__VectorsCR"></span><span class="target" id="Math_8hpp_1ad9e9499e9cf47572bd4f4a1efa60d02f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">asphericity</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N3mdk7VectorsE" title="mdk::Vectors"><span class="n"><span class="pre">Vectors</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">v</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3mdk11asphericityERK7Vectors" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
@@ -1005,7 +1008,7 @@
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk7VectorsE">
 <span id="_CPPv3N3mdk7VectorsE"></span><span id="_CPPv2N3mdk7VectorsE"></span><span id="mdk::Vectors"></span><span class="target" id="classmdk_1_1Vectors"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Vectors</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3mdk10VectorBaseE" title="mdk::VectorBase"><span class="n"><span class="pre">VectorBase</span></span></a><a class="headerlink" href="#_CPPv4N3mdk7VectorsE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><em>#include &lt;Vectors.hpp&gt;</em><p>This class is a sort of a decorator over standard Eigen::Matrix3Xd. The chief difference is that this class offers an interface more appropriate for dealing with it as though it were a list of vectors (for example, one needs not use m.col(i) to get t’th vector in the matrix. Also, now <a class="reference internal" href="simul/primitives.html#classmdk_1_1Vectors_1a1b983655feccc2ef2532f17a618d5776"><span class="std std-ref">size()</span></a> corresponds to the number of vectors and not the elements of the array. The array itself is not (easily) resizeable. </p>
+<dd><em>#include &lt;Vectors.hpp&gt;</em><p>This class is a sort of a decorator over standard Eigen::Matrix3Xd. The chief difference is that this class offers an interface more appropriate for dealing with it as though it were a list of vectors (for example, one needs not use m.col(i) to get t’th vector in the matrix. Also, now <a class="reference internal" href="simul/primitives.html#classmdk_1_1Vectors_1ad3b4d0b4acc2a08b4245027a990156a7"><span class="std std-ref">size()</span></a> corresponds to the number of vectors and not the elements of the array. The array itself is not (easily) resizeable. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -1039,8 +1042,30 @@
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3mdk7Vectors4sizeEv">
-<span id="_CPPv3N3mdk7Vectors4sizeEv"></span><span id="_CPPv2N3mdk7Vectors4sizeEv"></span><span id="mdk::Vectors::size"></span><span class="target" id="classmdk_1_1Vectors_1a1b983655feccc2ef2532f17a618d5776"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3mdk7Vectors4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N3mdk7Vectors10vectorwiseEv">
+<span id="_CPPv3N3mdk7Vectors10vectorwiseEv"></span><span id="_CPPv2N3mdk7Vectors10vectorwiseEv"></span><span id="mdk::Vectors::vectorwise"></span><span class="target" id="classmdk_1_1Vectors_1aab548ea29da6ae563085fe07ba43c463"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vectorwise</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3mdk7Vectors10vectorwiseEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns an iterator over constituent vectors. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>An interator over constituent vectors. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3mdk7Vectors10vectorwiseEv">
+<span id="_CPPv3NK3mdk7Vectors10vectorwiseEv"></span><span id="_CPPv2NK3mdk7Vectors10vectorwiseEv"></span><span id="mdk::Vectors::vectorwiseC"></span><span class="target" id="classmdk_1_1Vectors_1a2c2a2ef691cbfe69165901a4d8796925"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vectorwise</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3mdk7Vectors10vectorwiseEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns a const iterator over constituent vectors. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A const interator over constituent vectors. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3mdk7Vectors4sizeEv">
+<span id="_CPPv3NK3mdk7Vectors4sizeEv"></span><span id="_CPPv2NK3mdk7Vectors4sizeEv"></span><span id="mdk::Vectors::sizeC"></span><span class="target" id="classmdk_1_1Vectors_1ad3b4d0b4acc2a08b4245027a990156a7"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3mdk7Vectors4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A number of vectors. </p>
@@ -1782,7 +1807,7 @@
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk5ForceE">
 <span id="_CPPv3N3mdk5ForceE"></span><span id="_CPPv2N3mdk5ForceE"></span><span id="mdk::Force"></span><span class="target" id="classmdk_1_1Force"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Force</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv43mdk" title="mdk"><span class="n"><span class="pre">mdk</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3mdk8SimulVarE" title="mdk::SimulVar"><span class="n"><span class="pre">SimulVar</span></span></a><a class="headerlink" href="#_CPPv4N3mdk5ForceE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><em>#include &lt;Force.hpp&gt;</em><p>An abstract interface for the force fields. Certain forces (QA in particular) have a multi-stage evaluation. Thus we separated the computation to an “asynchronous” and “synchronous” parts, where the latter get executed in order of addition to the <code class="docutils literal notranslate"><a class="reference internal" href="simul/simulation.html#classmdk_1_1Simulation"><span class="std std-ref"><span class="pre">Simulation</span></span></a></code> object. </p>
-<p>Subclassed by <a class="reference internal" href="simul/forces/bondangle.html#classmdk_1_1BondAngles"><span class="std std-ref">mdk::BondAngles</span></a>, <a class="reference internal" href="simul/forces/chiral.html#classmdk_1_1Chirality"><span class="std std-ref">mdk::Chirality</span></a>, <a class="reference internal" href="simul/forces/dihedral.html#classmdk_1_1DihedralAngles"><span class="std std-ref">mdk::DihedralAngles</span></a>, <a class="reference internal" href="simul/forces/nonlocal.html#classmdk_1_1NonlocalForce"><span class="std std-ref">mdk::NonlocalForce</span></a>, <a class="reference internal" href="simul/forces/tether.html#classmdk_1_1Tether"><span class="std std-ref">mdk::Tether</span></a></p>
+<p>Subclassed by <a class="reference internal" href="simul/forces/bondangle.html#classmdk_1_1BondAngles"><span class="std std-ref">mdk::BondAngles</span></a>, <a class="reference internal" href="simul/forces/chiral.html#classmdk_1_1Chirality"><span class="std std-ref">mdk::Chirality</span></a>, <a class="reference internal" href="simul/forces/dihedral.html#classmdk_1_1DihedralAngles"><span class="std std-ref">mdk::DihedralAngles</span></a>, <a class="reference internal" href="simul/forces/nonlocal.html#classmdk_1_1NonlocalForce"><span class="std std-ref">mdk::NonlocalForce</span></a>, <a class="reference internal" href="#classmdk_1_1SolidWall"><span class="std std-ref">mdk::SolidWall</span></a>, <a class="reference internal" href="simul/forces/tether.html#classmdk_1_1Tether"><span class="std std-ref">mdk::Tether</span></a></p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -2241,13 +2266,13 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk22PseudoImproperDihedral5typesE">
 <span id="_CPPv3N3mdk22PseudoImproperDihedral5typesE"></span><span id="_CPPv2N3mdk22PseudoImproperDihedral5typesE"></span><span id="mdk::PseudoImproperDihedral::types__TypesCP"></span><span class="target" id="classmdk_1_1PseudoImproperDihedral_1a827dc68327a02e53e7ffb52584b172c5"></span><a class="reference internal" href="#_CPPv4N3mdk5TypesE" title="mdk::Types"><span class="n"><span class="pre">Types</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">types</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><a class="headerlink" href="#_CPPv4N3mdk22PseudoImproperDihedral5typesE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>A const pointer to the types of the residues. TODO: perhaps it should be simply copied. </p>
+<dd><p>A const pointer to the types of the residues. </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk22PseudoImproperDihedral4seqsE">
 <span id="_CPPv3N3mdk22PseudoImproperDihedral4seqsE"></span><span id="_CPPv2N3mdk22PseudoImproperDihedral4seqsE"></span><span id="mdk::PseudoImproperDihedral::seqs__ChainsCP"></span><span class="target" id="classmdk_1_1PseudoImproperDihedral_1a986a4905267cb68b2529a3f2ce9689ce"></span><a class="reference internal" href="#_CPPv4N3mdk6ChainsE" title="mdk::Chains"><span class="n"><span class="pre">Chains</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">seqs</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><a class="headerlink" href="#_CPPv4N3mdk22PseudoImproperDihedral4seqsE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>A const pointer to the chain data of the model. TODO: perhaps it should be simply copied. </p>
+<dd><p>A const pointer to the chain data of the model. </p>
 </dd></dl>
 
 <dl class="cpp var">
@@ -2701,9 +2726,37 @@
 </dd></dl>
 
 <dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3mdk9SolidWallE">
+<span id="_CPPv3N3mdk9SolidWallE"></span><span id="_CPPv2N3mdk9SolidWallE"></span><span id="mdk::SolidWall"></span><span class="target" id="classmdk_1_1SolidWall"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SolidWall</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv43mdk" title="mdk"><span class="n"><span class="pre">mdk</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3mdk5ForceE" title="mdk::Force"><span class="n"><span class="pre">Force</span></span></a><a class="headerlink" href="#_CPPv4N3mdk9SolidWallE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><em>#include &lt;SolidWall.hpp&gt;</em><p>Solid walls. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3mdk9SolidWall9asyncPartER8Dynamics">
+<span id="_CPPv3N3mdk9SolidWall9asyncPartER8Dynamics"></span><span id="_CPPv2N3mdk9SolidWall9asyncPartER8Dynamics"></span><span id="mdk::SolidWall::asyncPart__DynamicsR"></span><span class="target" id="classmdk_1_1SolidWall_1a5f34617205ab3546d903575fc41b1c12"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">asyncPart</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N3mdk8DynamicsE" title="mdk::Dynamics"><span class="n"><span class="pre">Dynamics</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dynamics</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3mdk9SolidWall9asyncPartER8Dynamics" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Asynchronous part of the force computation. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dynamics</strong> – <a class="reference internal" href="#structmdk_1_1Dynamics"><span class="std std-ref">Dynamics</span></a> object to add potential energy and forces to. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3mdk9SolidWall4wallE">
+<span id="_CPPv3N3mdk9SolidWall4wallE"></span><span id="_CPPv2N3mdk9SolidWall4wallE"></span><span id="mdk::SolidWall::wall__Eigen::Hyperplane:double.3:"></span><span class="target" id="classmdk_1_1SolidWall_1afd74026193f739cbf24c3e77ee5db1ae"></span><span class="n"><span class="pre">Eigen</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Hyperplane</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">wall</span></span></span><a class="headerlink" href="#_CPPv4N3mdk9SolidWall4wallE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk9ExportPDBE">
 <span id="_CPPv3N3mdk9ExportPDBE"></span><span id="_CPPv2N3mdk9ExportPDBE"></span><span id="mdk::ExportPDB"></span><span class="target" id="classmdk_1_1ExportPDB"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ExportPDB</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv43mdk" title="mdk"><span class="n"><span class="pre">mdk</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3mdk4HookE" title="mdk::Hook"><span class="n"><span class="pre">Hook</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">private</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv43mdk" title="mdk"><span class="n"><span class="pre">mdk</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3mdk8SimulVarE" title="mdk::SimulVar"><span class="n"><span class="pre">SimulVar</span></span></a><a class="headerlink" href="#_CPPv4N3mdk9ExportPDBE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><em>#include &lt;ExportPDB.hpp&gt;</em><p>The hook for exporting current positions of the residues to a PDB file. The positions are stored as MODELs within the PDB file; (at this moment) the file is output only after the resolution of the simulation, i.e. in the destructor. Also, at the moment only the positions (and not for example REMARKs with QA stats or contacts) are saved. TODO: create an incremental version, and add extra data. </p>
+<dd><em>#include &lt;ExportPDB.hpp&gt;</em><p>The hook for exporting current positions of the residues to a PDB file. The positions are stored as MODELs within the PDB file; (at this moment) the file is output only after the resolution of the simulation, i.e. in the destructor. Also, at the moment only the positions (and not for example REMARKs with QA stats or contacts) are saved. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -2723,7 +2776,7 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk9ExportPDBD0Ev">
 <span id="_CPPv3N3mdk9ExportPDBD0Ev"></span><span id="_CPPv2N3mdk9ExportPDBD0Ev"></span><span id="mdk::ExportPDB::~ExportPDB"></span><span class="target" id="classmdk_1_1ExportPDB_1ae59771205db47326f7859cea9a90ddfc"></span><span class="sig-name descname"><span class="n"><span class="pre">~ExportPDB</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3mdk9ExportPDBD0Ev" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>This destructor saves the <code class="docutils literal notranslate"><span class="pre">to</span></code> the file. TODO: it could be done incrementally. </p>
+<dd><p>This destructor saves the <code class="docutils literal notranslate"><span class="pre">to</span></code> the file. </p>
 </dd></dl>
 
 <dl class="cpp function">
@@ -2809,7 +2862,7 @@
 <dd><p>Execute the hook. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>step_nr</strong> – Number of the step of the simulation when the hook is activated. TODO: is putting <code class="docutils literal notranslate"><span class="pre">step_nr</span></code> here really appropriate? </p>
+<dd class="field-odd"><p><strong>step_nr</strong> – Number of the step of the simulation when the hook is activated. </p>
 </dd>
 </dl>
 </dd></dl>
@@ -2927,7 +2980,7 @@
 <dd><p>Execute the hook. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>step_nr</strong> – Number of the step of the simulation when the hook is activated. TODO: is putting <code class="docutils literal notranslate"><span class="pre">step_nr</span></code> here really appropriate? </p>
+<dd class="field-odd"><p><strong>step_nr</strong> – Number of the step of the simulation when the hook is activated. </p>
 </dd>
 </dl>
 </dd></dl>
@@ -3027,7 +3080,7 @@
 <dt class="field-even">Parameters</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>unit</strong> – Normalized vector between the residues. </p></li>
-<li><p><strong>dx</strong> – Displacement, i.e. the difference between current length and the equilibrium length; TODO: Perhaps we should pass <code class="docutils literal notranslate"><span class="pre">norm</span></code> and <code class="docutils literal notranslate"><span class="pre">norm0</span></code>. </p></li>
+<li><p><strong>dx</strong> – Displacement, i.e. the difference between current length and the equilibrium length; </p></li>
 <li><p><strong>V</strong> – Variable to add the potential to. </p></li>
 <li><p><strong>F1</strong> – Lvalue to add the force on the first residue to. </p></li>
 <li><p><strong>F2</strong> – Lvalue to add the force on the second residue to. </p></li>
@@ -3472,7 +3525,7 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk5Model5Chain15structuredPartsE">
 <span id="_CPPv3N3mdk5Model5Chain15structuredPartsE"></span><span id="_CPPv2N3mdk5Model5Chain15structuredPartsE"></span><span id="mdk::Model::Chain::structuredParts__std::vector:i:"></span><span class="target" id="structmdk_1_1Model_1_1Chain_1afa57eaf108e5f6b08acd6aca06cacc44"></span><a class="reference internal" href="utils/aminoacid.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">structuredParts</span></span></span><a class="headerlink" href="#_CPPv4N3mdk5Model5Chain15structuredPartsE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>A list of indices of structured parts that are overlayed over the chain. TODO: another approach would be to rather store copies of structured parts, one for each instance in a chain, flattening the overall design. </p>
+<dd><p>A list of indices of structured parts that are overlayed over the chain. </p>
 </dd></dl>
 
 </div>
@@ -3547,7 +3600,7 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk5Model7Residue5nat_rE">
 <span id="_CPPv3N3mdk5Model7Residue5nat_rE"></span><span id="_CPPv2N3mdk5Model7Residue5nat_rE"></span><span id="mdk::Model::Residue::nat_r__std::optional:Vector:"></span><span class="target" id="structmdk_1_1Model_1_1Residue_1a7d2965807f9f605318577011ebf6e03d"></span><a class="reference internal" href="utils/aminoacid.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3mdk6VectorE" title="mdk::Vector"><span class="n"><span class="pre">Vector</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nat_r</span></span></span><a class="headerlink" href="#_CPPv4N3mdk5Model7Residue5nat_rE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Native positions of the residues. TODO: verify whether it’s absolutely necessary or whether <code class="docutils literal notranslate"><span class="pre">r</span></code> can be used. </p>
+<dd><p>Native positions of the residues. </p>
 </dd></dl>
 
 </div>
@@ -3664,7 +3717,7 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk10Simulation12addAsyncTaskERKNSt8functionIFvvEEE">
 <span id="_CPPv3N3mdk10Simulation12addAsyncTaskERKNSt8functionIFvvEEE"></span><span id="_CPPv2N3mdk10Simulation12addAsyncTaskERKNSt8functionIFvvEEE"></span><span class="target" id="classmdk_1_1Simulation_1a19a2e8a16ff4d7c7ef1e64f4f951f422"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">addAsyncTask</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="utils/aminoacid.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">f</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3mdk10Simulation12addAsyncTaskERKNSt8functionIFvvEEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Add an “async task”. Cannot be run after simulation initialization. TODO: Ask Kuba Boguta what it’s for. </p>
+<dd><p>Add an “async task”. Cannot be run after simulation initialization. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>f</strong> – Function/lambda to add. (Seemingly the lambda cannot capture the environment, i.e. must be trivial) </p>
@@ -3752,7 +3805,7 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk10Simulation10asyncTasksE">
 <span id="_CPPv3N3mdk10Simulation10asyncTasksE"></span><span id="_CPPv2N3mdk10Simulation10asyncTasksE"></span><span class="target" id="classmdk_1_1Simulation_1a7498cc481db1e7d91ffdc162b1f7c212"></span><a class="reference internal" href="utils/aminoacid.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="utils/aminoacid.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">asyncTasks</span></span></span><a class="headerlink" href="#_CPPv4N3mdk10Simulation10asyncTasksE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Async tasks. TODO: ask Kuba Boguta what it’s for. </p>
+<dd><p>Async tasks. </p>
 </dd></dl>
 
 <dl class="cpp var">
@@ -3980,7 +4033,7 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk10Integrator4initEv">
 <span id="_CPPv3N3mdk10Integrator4initEv"></span><span id="_CPPv2N3mdk10Integrator4initEv"></span><span id="mdk::Integrator::init"></span><span class="target" id="classmdk_1_1Integrator_1aba88a516d6bf153dbd9c3c332116e172"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N3mdk10Integrator4initEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Initialize the state of the integrator. TODO: perhaps it should be just moved to <code class="docutils literal notranslate"><span class="pre">bind</span></code>. </p>
+<dd><p>Initialize the state of the integrator. </p>
 </dd></dl>
 
 <dl class="cpp function">
@@ -4024,7 +4077,7 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk22LangPredictorCorrector4initEv">
 <span id="_CPPv3N3mdk22LangPredictorCorrector4initEv"></span><span id="_CPPv2N3mdk22LangPredictorCorrector4initEv"></span><span id="mdk::LangPredictorCorrector::init"></span><span class="target" id="classmdk_1_1LangPredictorCorrector_1a64c203ab1ae85eb796ac2a30726ff617"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3mdk22LangPredictorCorrector4initEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Initialize the state of the integrator. TODO: perhaps it should be just moved to <code class="docutils literal notranslate"><span class="pre">bind</span></code>. </p>
+<dd><p>Initialize the state of the integrator. </p>
 </dd></dl>
 
 <dl class="cpp function">
@@ -4123,7 +4176,7 @@
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk8LeapfrogE">
 <span id="_CPPv3N3mdk8LeapfrogE"></span><span id="_CPPv2N3mdk8LeapfrogE"></span><span id="mdk::Leapfrog"></span><span class="target" id="classmdk_1_1Leapfrog"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Leapfrog</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv43mdk" title="mdk"><span class="n"><span class="pre">mdk</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3mdk10IntegratorE" title="mdk::Integrator"><span class="n"><span class="pre">Integrator</span></span></a><a class="headerlink" href="#_CPPv4N3mdk8LeapfrogE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><em>#include &lt;Leapfrog.hpp&gt;</em><p><a class="reference internal" href="simul/integrator/leapfrog.html#classmdk_1_1Leapfrog"><span class="std std-ref">Leapfrog</span></a> integration algorithm. TODO: fix it, since the standalone Langevin noise has been removed. </p>
+<dd><em>#include &lt;Leapfrog.hpp&gt;</em><p><a class="reference internal" href="simul/integrator/leapfrog.html#classmdk_1_1Leapfrog"><span class="std std-ref">Leapfrog</span></a> integration algorithm. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -4145,7 +4198,7 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk8Leapfrog4initEv">
 <span id="_CPPv3N3mdk8Leapfrog4initEv"></span><span id="_CPPv2N3mdk8Leapfrog4initEv"></span><span id="mdk::Leapfrog::init"></span><span class="target" id="classmdk_1_1Leapfrog_1a9e9114cb24b3675ca5c448d6024a14bf"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3mdk8Leapfrog4initEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Initialize the state of the integrator. TODO: perhaps it should be just moved to <code class="docutils literal notranslate"><span class="pre">bind</span></code>. </p>
+<dd><p>Initialize the state of the integrator. </p>
 </dd></dl>
 
 <dl class="cpp function">
@@ -4177,7 +4230,7 @@
 <dl class="cpp struct">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk8DynamicsE">
 <span id="_CPPv3N3mdk8DynamicsE"></span><span id="_CPPv2N3mdk8DynamicsE"></span><span id="mdk::Dynamics"></span><span class="target" id="structmdk_1_1Dynamics"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Dynamics</span></span></span><a class="headerlink" href="#_CPPv4N3mdk8DynamicsE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><em>#include &lt;State.hpp&gt;</em><p>An object containing the dynamical state of the simulation, i.e. forces and the potential energy. TODO: better name? </p>
+<dd><em>#include &lt;State.hpp&gt;</em><p>An object containing the dynamical state of the simulation, i.e. forces and the potential energy. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -4668,7 +4721,7 @@
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk8TopologyE">
 <span id="_CPPv3N3mdk8TopologyE"></span><span id="_CPPv2N3mdk8TopologyE"></span><span id="mdk::Topology"></span><span class="target" id="classmdk_1_1Topology"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Topology</span></span></span><a class="headerlink" href="#_CPPv4N3mdk8TopologyE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><em>#include &lt;Topology.hpp&gt;</em><p>An object representing the “topology” of the simulation box. In particular, we want to compute PBC-adjusted distances between residues. TODO: physicists wanted to change the name of this. </p>
+<dd><em>#include &lt;Topology.hpp&gt;</em><p>An object representing the “topology” of the simulation box. In particular, we want to compute PBC-adjusted distances between residues. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -5089,7 +5142,7 @@
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk3pdb4DataE">
 <span id="_CPPv3N3mdk3pdb4DataE"></span><span id="_CPPv2N3mdk3pdb4DataE"></span><span id="mdk::pdb::Data"></span><span class="target" id="classmdk_1_1pdb_1_1Data"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Data</span></span></span><a class="headerlink" href="#_CPPv4N3mdk3pdb4DataE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><em>#include &lt;Data.hpp&gt;</em><p>PDB file in the “raw format”, i.e. as a list of PDB records. Certain utility functions, like parsing from/to <code class="docutils literal notranslate"><a class="reference internal" href="prep/pdb/model.html#classmdk_1_1pdb_1_1Model"><span class="std std-ref"><span class="pre">pdb::Model</span></span></a></code> and retrieving only atom positions, are provided. TODO: perhaps it should be called <code class="docutils literal notranslate"><span class="pre">File</span></code> ? </p>
+<dd><em>#include &lt;Data.hpp&gt;</em><p>PDB file in the “raw format”, i.e. as a list of PDB records. Certain utility functions, like parsing from/to <code class="docutils literal notranslate"><a class="reference internal" href="prep/pdb/model.html#classmdk_1_1pdb_1_1Model"><span class="std std-ref"><span class="pre">pdb::Model</span></span></a></code> and retrieving only atom positions, are provided. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -5199,7 +5252,7 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>serial</strong> – Serial number of an atom </p></li>
-<li><p><strong>res</strong> – Parent residue, or <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> [TODO: what then?] </p></li>
+<li><p><strong>res</strong> – Parent residue, or <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -5216,7 +5269,7 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>serial</strong> – Serial number of a residue to add. </p></li>
-<li><p><strong>chain</strong> – Parent chain or <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> [TODO: what then?] </p></li>
+<li><p><strong>chain</strong> – Parent chain or <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -5409,7 +5462,7 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk3pdb5Model7Contact4typeE">
 <span id="_CPPv3N3mdk3pdb5Model7Contact4typeE"></span><span id="_CPPv2N3mdk3pdb5Model7Contact4typeE"></span><span id="mdk::pdb::Model::Contact::type__ss"></span><span class="target" id="structmdk_1_1pdb_1_1Model_1_1Contact_1aa7f2e849370fa97277979aea8ce6fd3e"></span><a class="reference internal" href="utils/aminoacid.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">type</span></span></span><a class="headerlink" href="#_CPPv4N3mdk3pdb5Model7Contact4typeE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Type of contact. Takes (at this moment) values “SSBOND”, “NAT”, “NAT_BB”, “NAT_BS”, “NAT_SB”, “NAT_SS”. TODO: Perhaps should convert it into a <code class="docutils literal notranslate"><a class="reference internal" href="utils/contacttype.html#classmdk_1_1ContactType"><span class="std std-ref"><span class="pre">ContactType</span></span></a></code> </p>
+<dd><p>Type of contact. Takes (at this moment) values “SSBOND”, “NAT”, “NAT_BB”, “NAT_BS”, “NAT_SB”, “NAT_SS”. </p>
 </dd></dl>
 
 <dl class="cpp var">
@@ -5711,7 +5764,7 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk3pdb6String6StringEiiRNSt6stringE6int8_t">
-<span id="_CPPv3N3mdk3pdb6String6StringEiiRNSt6stringE6int8_t"></span><span id="_CPPv2N3mdk3pdb6String6StringEiiRNSt6stringE6int8_t"></span><span id="mdk::pdb::String::String__i.i.ssR.int8_t"></span><span class="target" id="classmdk_1_1pdb_1_1String_1a03d0d30d6598b6f0009f548974b00566"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">String</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">j</span></span>, <a class="reference internal" href="utils/aminoacid.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">v</span></span>, <span class="n"><span class="pre">int8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">mode</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3mdk3pdb4Mode4TrimE" title="mdk::pdb::Trim"><span class="n"><span class="pre">Trim</span></span></a><span class="w"> </span><span class="o"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3mdk3pdb4Mode5RightE" title="mdk::pdb::Right"><span class="n"><span class="pre">Right</span></span></a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3mdk3pdb6String6StringEiiRNSt6stringE6int8_t" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N3mdk3pdb6String6StringEiiRNSt6stringE6int8_t"></span><span id="_CPPv2N3mdk3pdb6String6StringEiiRNSt6stringE6int8_t"></span><span id="mdk::pdb::String::String__i.i.ssR.int8_t"></span><span class="target" id="classmdk_1_1pdb_1_1String_1a03d0d30d6598b6f0009f548974b00566"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">String</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">j</span></span>, <a class="reference internal" href="utils/aminoacid.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">v</span></span>, <span class="n"><span class="pre">int8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">mode</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">Trim</span></span><span class="w"> </span><span class="o"><span class="pre">|</span></span><span class="w"> </span><span class="n"><span class="pre">Right</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3mdk3pdb6String6StringEiiRNSt6stringE6int8_t" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
@@ -6554,14 +6607,12 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk2vl4List10registerNFER13NonlocalForceRK4Spec">
 <span id="_CPPv3N3mdk2vl4List10registerNFER13NonlocalForceRK4Spec"></span><span id="_CPPv2N3mdk2vl4List10registerNFER13NonlocalForceRK4Spec"></span><span id="mdk::vl::List::registerNF__NonlocalForceR.SpecCR"></span><span class="target" id="classmdk_1_1vl_1_1List_1a5d3e0b9a1e4befd7048fd8930125d9a8"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">registerNF</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N3mdk13NonlocalForceE" title="mdk::NonlocalForce"><span class="n"><span class="pre">NonlocalForce</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">force</span></span>, <a class="reference internal" href="#_CPPv4N3mdk2vl4SpecE" title="mdk::vl::Spec"><span class="n"><span class="pre">Spec</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">spec</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3mdk2vl4List10registerNFER13NonlocalForceRK4Spec" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><p>Register a nonlocal force, in particular adjust the current specs so as to accomodate the newly added force (for example increase the cutoff distance), and add it to the internal list of the forces whose hooks to call when a list is reconstructed.</p>
-<p>TODO: perhaps</p>
-<code class="docutils literal notranslate"><span class="pre">spec</span></code> shouldn’t be passed but taken from <code class="docutils literal notranslate"><span class="pre">force</span></code> via a call. </p>
+<dd><p>Register a nonlocal force, in particular adjust the current specs so as to accomodate the newly added force (for example increase the cutoff distance), and add it to the internal list of the forces whose hooks to call when a list is reconstructed. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>force</strong> – Nonlocal force to register. </p></li>
-<li><p><strong>spec</strong> – <a class="reference internal" href="simul/verlet.html#structmdk_1_1vl_1_1Spec"><span class="std std-ref">Spec</span></a> with which to register the force.</p></li>
+<li><p><strong>spec</strong> – <a class="reference internal" href="simul/verlet.html#structmdk_1_1vl_1_1Spec"><span class="std std-ref">Spec</span></a> with which to register the force. </p></li>
 </ul>
 </dd>
 </dl>
@@ -6743,7 +6794,7 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3mdk2vl4Spec8cutoffSqE">
 <span id="_CPPv3N3mdk2vl4Spec8cutoffSqE"></span><span id="_CPPv2N3mdk2vl4Spec8cutoffSqE"></span><span id="mdk::vl::Spec::cutoffSq__double"></span><span class="target" id="structmdk_1_1vl_1_1Spec_1ad39f7ca0e50c8e0c36a15fefec2663d5"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cutoffSq</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0</span></span><a class="headerlink" href="#_CPPv4N3mdk2vl4Spec8cutoffSqE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>A square of the cutoff distance. TODO: perhaps it should be just cutoff? </p>
+<dd><p>A square of the cutoff distance. </p>
 </dd></dl>
 
 <dl class="cpp var">

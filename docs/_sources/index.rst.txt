@@ -26,8 +26,6 @@ Project home: `Github <https://github.com/if-pan-zpp/mdk>`_.
    :caption: Sections:
 
    src/installation
-   src/tutorial
-   src/arch
    src/prep/index
    src/simul/index
    src/utils/index
