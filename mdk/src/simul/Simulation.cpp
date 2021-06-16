@@ -3,7 +3,6 @@
 #include "forces/NonlocalForce.hpp"
 #include "hooks/Hook.hpp"
 #include "system/Integrator.hpp"
-#include "verlet/List.hpp"
 using namespace mdk;
 
 extern Dynamics thread_dyn;
@@ -11,16 +10,12 @@ extern Dynamics thread_dyn;
 Dynamics thread_dyn;
 
 void Simulation::calcForces() {
-    auto& state = var<State>();
-    
-    auto& vl = var<vl::List>();
-    state.prepareDyn();
-
-    vl.check();
+    state -> prepareDyn();
+    verlet_list -> check();
 
     #pragma omp parallel
     {
-        thread_dyn.zero(state.n);
+        thread_dyn.zero(state -> n);
 
         #pragma omp master
         for (auto const& task : asyncTasks) {
@@ -33,16 +28,19 @@ void Simulation::calcForces() {
 
         #pragma omp critical
         {
-            state.updateWithDyn(thread_dyn);
+            state -> updateWithDyn(thread_dyn);
         }
     }
 
     for (auto* force: forces) {
-        force->syncPart(state.dyn);
+        force->syncPart(state -> dyn);
     }
 }
 
 void Simulation::init() {
+    state = &var<State>();
+    verlet_list = &var<vl::List>();
+    
     step_nr = 0;
 
     calcForces();

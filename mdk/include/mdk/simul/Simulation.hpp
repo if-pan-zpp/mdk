@@ -2,6 +2,7 @@
 #include "../model/Model.hpp"
 #include "../files/param/Parameters.hpp"
 #include "../data/DataFactory.hpp"
+#include "../verlet/List.hpp"
 #include "SimulVar.hpp"
 #include <typeindex>
 #include <type_traits>
@@ -203,6 +204,9 @@ namespace mdk {
 
         /// Pointer to the integrator used in the simulation.
         Integrator *integrator = nullptr;
+
+        State *state = nullptr;
+        vl::List *verlet_list = nullptr;
 
         /**
          * Whether simulation has yet been initialized; used for running the

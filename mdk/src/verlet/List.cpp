@@ -286,9 +286,6 @@ void List::check() {
         r0 = state->r;
         top0 = state->top;
         update();
-        // For benchmarking, it's important
-        // to keep track of VL size to ensure we do the same amount of stuff
-        cout << "PAIRS SIZE = " << pairs.size() << endl;
     }
     initial = false;
 }
