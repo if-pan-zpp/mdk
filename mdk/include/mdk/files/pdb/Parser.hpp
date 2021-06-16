@@ -8,7 +8,6 @@ namespace mdk::pdb {
     /**
      * A forward decl to the \p RecordParser. It's in the private headers, but
      * for the \p std::shared_ptr it's enough to have a decl only.
-     * TODO: perhaps it's a bad solution?
      */
     class RecordParser;
 

@@ -16,7 +16,6 @@ namespace mdk {
      * simulation, i.e. in the destructor. Also, at the moment only the
      * positions (and not for example REMARKs with QA stats or contacts) are
      * saved.
-     * TODO: create an incremental version, and add extra data.
      */
     class ExportPDB: public Hook, SimulVar {
     private:
@@ -71,7 +70,6 @@ namespace mdk {
 
         /**
          * This destructor saves the \p to the file.
-         * TODO: it could be done incrementally.
          */
         ~ExportPDB();
 

@@ -70,13 +70,11 @@ namespace mdk {
 
         /**
          * A const pointer to the types of the residues.
-         * TODO: perhaps it should be simply copied.
          */
         Types const* types = nullptr;
 
         /**
          * A const pointer to the chain data of the model.
-         * TODO: perhaps it should be simply copied.
          */
         Chains const* seqs = nullptr;
 

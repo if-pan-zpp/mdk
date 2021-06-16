@@ -17,7 +17,6 @@ namespace mdk {
 
         /**
          * Initialize the state of the integrator.
-         * TODO: perhaps it should be just moved to \p bind.
          */
         virtual void init() = 0;
 

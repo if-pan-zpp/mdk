@@ -7,7 +7,6 @@
 namespace mdk {
     /**
      * Leapfrog integration algorithm.
-     * TODO: fix it, since the standalone Langevin noise has been removed.
      */
     class Leapfrog: public Integrator {
     public:

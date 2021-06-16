@@ -155,9 +155,6 @@ namespace mdk::vl {
          * hooks to call when a list is reconstructed.
          * @param force Nonlocal force to register.
          * @param spec Spec with which to register the force.
-         *
-         * TODO: perhaps \p spec shouldn't be passed but taken from \p force via
-         * a call.
          */
         void registerNF(NonlocalForce& force, Spec const& spec);
 

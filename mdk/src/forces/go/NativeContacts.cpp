@@ -35,7 +35,6 @@ void NativeContacts::bind(Simulation &simulation) {
 }
 
 vl::Spec NativeContacts::spec() const {
-    // TODO: make it settable
     double maxCutoff = 18.0 * angstrom;
 
     return (vl::Spec) {

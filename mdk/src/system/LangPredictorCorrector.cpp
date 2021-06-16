@@ -38,7 +38,6 @@ void LangPredictorCorrector::generateNoise() {
 }
 
 void LangPredictorCorrector::integrate() {
-    // TODO: allow changing temperature
     double noiseVariance = sqrt(2.0*temperature *gamma*dt) * dt;
     double gamma_dt = gamma / dt;
 
