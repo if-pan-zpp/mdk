@@ -195,6 +195,7 @@ void Model::legacyMorphIntoSAW(Random& rand, bool useTop, double density,
                 avgBondLen += (residues[i + 1].r - residues[i].r).norm();
             }
         }
+        // TODO: fix this bug in cg.f and then here
         avgBondLen /= (int) residues.size() - 1;
         tether0 = avgBondLen;
     }
@@ -347,10 +348,12 @@ void Model::initVelocity(Random& rand, double temperature, bool useMass) {
     vector<double> masses(n, 1.0 * f77mass);
 
     if (useMass) {
+        //TODO
         assert(0);
     }
 
     for (int i = 0; i < n; ++i) {
+        //TODO: do this only in LEGACY_MODE
         Vector& v = residues[i].v;
         for (int d = 0; d < 3; ++d) {
             v(d) = rand.uniform(-1.0, 1.0);

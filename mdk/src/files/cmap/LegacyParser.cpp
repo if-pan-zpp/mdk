@@ -19,6 +19,7 @@ ContactMap LegacyParser::read(std::istream &is) {
         is >> contact.res[0] >> contact.res[1] >> contact.dist0;
         --contact.res[0];
         --contact.res[1];
+        // TODO: figure out exactly where we need sigmas and where r_min
         contact.dist0 *= f77unit * pow(2.0, 1./6.);
     }
 

@@ -224,6 +224,9 @@ mdk::Model Model::coarsen() {
 
     /* For each \p pdb::Model contact we add a \p Model contact between the
      * parent residues of the atoms with the corresponding type.
+     * TODO: this might be a problem if (a) one of the atoms is parentless,
+     * TODO: (b) if between a pair of \p pdb::Model residues there are many
+     * TODO: contacts.
      */
     for (auto const& cont: contacts) {
         if (!cont.atom[0]->res || !cont.atom[1]->res) continue;

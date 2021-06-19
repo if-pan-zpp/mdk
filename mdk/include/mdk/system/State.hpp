@@ -8,6 +8,7 @@ namespace mdk {
     /**
      * An object containing the dynamical state of the simulation,
      * i.e. forces and the potential energy.
+     * TODO: better name?
      */
     struct Dynamics {
         double V = 0.0;

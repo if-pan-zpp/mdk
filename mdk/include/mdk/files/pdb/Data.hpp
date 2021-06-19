@@ -8,6 +8,7 @@ namespace mdk::pdb {
      * PDB file in the "raw format", i.e. as a list of PDB records. Certain
      * utility functions, like parsing from/to \p pdb::Model and retrieving only
      * atom positions, are provided.
+     * TODO: perhaps it should be called \p File ?
      */
     class Data {
     public:

@@ -142,6 +142,7 @@ namespace mdk {
 
         /**
          * Add an "async task".  Cannot be run after simulation initialization.
+         * TODO: Ask Kuba Boguta what it's for.
          * @param f Function/lambda to add. (Seemingly the lambda cannot
          * capture the environment, i.e. must be trivial)
          */
@@ -199,7 +200,7 @@ namespace mdk {
         /// Hooks of the simulation
         std::vector<Hook*> hooks;
 
-        /// Async tasks.
+        /// Async tasks. TODO: ask Kuba Boguta what it's for.
         std::vector<std::function<void()>> asyncTasks;
 
         /// Pointer to the integrator used in the simulation.

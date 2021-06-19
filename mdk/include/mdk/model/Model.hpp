@@ -51,6 +51,8 @@ namespace mdk {
             ResType type;
             /**
              * Native positions of the residues.
+             * TODO: verify whether it's absolutely necessary or whether
+             * \p r can be used.
              */
             std::optional<Vector> nat_r;
         };
@@ -63,6 +65,9 @@ namespace mdk {
             /**
              * A list of indices of structured parts that are overlayed over
              * the chain.
+             * TODO: another approach would be to rather store copies of
+             * structured parts, one for each instance in a chain, flattening
+             * the overall design.
              */
             std::vector<int> structuredParts;
         };

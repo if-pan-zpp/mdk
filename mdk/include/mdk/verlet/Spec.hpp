@@ -12,6 +12,7 @@ namespace mdk::vl {
     struct Spec {
         /**
          * A square of the cutoff distance.
+         * TODO: perhaps it should be just cutoff?
          */
         double cutoffSq = 0.0;
 

@@ -52,7 +52,7 @@ namespace mdk::pdb {
         /**
          * Add an atom to a residue.
          * @param serial Serial number of an atom
-         * @param res Parent residue, or \p nullptr
+         * @param res Parent residue, or \p nullptr [TODO: what then?]
          * @return Reference to the added atom.
          */
         Atom& addAtom(int serial, Residue *res = nullptr);
@@ -98,7 +98,7 @@ namespace mdk::pdb {
         /**
          * Add a residue to a chain.
          * @param serial Serial number of a residue to add.
-         * @param chain Parent chain or \p nullptr
+         * @param chain Parent chain or \p nullptr [TODO: what then?]
          * @return Reference to the added residue.
          */
         Residue& addResidue(int serial, Chain *chain = nullptr);
@@ -137,6 +137,7 @@ namespace mdk::pdb {
 
             /** Type of contact. Takes (at this moment) values "SSBOND",
              * "NAT", "NAT_BB", "NAT_BS", "NAT_SB", "NAT_SS".
+             * TODO: Perhaps should convert it into a \p ContactType
              */
             std::string type;
 

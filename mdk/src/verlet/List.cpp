@@ -97,6 +97,8 @@ void List::updateGrid() {
     {
         /* First, we determine the (axis-aligned) box containing all the
          * pseudoatoms.
+         * TODO: If less cubic conformations are common, one could try to
+         * TODO: compute a rotated box.
          */
         bboxTP = {};
 

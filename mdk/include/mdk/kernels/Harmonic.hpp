@@ -50,6 +50,7 @@ namespace mdk {
          * @param unit Normalized vector between the residues.
          * @param dx Displacement, i.e. the difference between current length
          * and the equilibrium length;
+         * TODO: Perhaps we should pass \p norm and \p norm0.
          * @param V Variable to add the potential to.
          * @param F1 Lvalue to add the force on the first residue to.
          * @param F2 Lvalue to add the force on the second residue to.
