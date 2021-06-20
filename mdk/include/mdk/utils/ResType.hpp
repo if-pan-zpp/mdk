@@ -4,7 +4,7 @@
 #include <string>
 
 namespace mdk {
-    enum class ResTypeIdx: int8_t {
+    enum ResTypeIdx: int8_t {
         ALA, ARG, ASN, ASP, CYS, GLU, GLN, GLY, HIS, ILE,
         LEU, LYS, MET, PHE, PRO, SER, THR, TRP, TYR, VAL
     };

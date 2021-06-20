@@ -182,7 +182,7 @@ void Model::legacyMorphIntoSAW(Random& rand, bool useTop, double density,
     Eigen::Vector3d minCorner, maxCorner;
     Eigen::AlignedBox3d box;
 
-    double tether0 = (float) 3.8*angstrom;
+    double tether0 = 3.8*angstrom;
     if (nativeBondLen) {
         double avgBondLen = 0.0;
         for (Chain const& chain : chains) {

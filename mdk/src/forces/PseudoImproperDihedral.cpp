@@ -4,7 +4,7 @@ using namespace mdk;
 
 bool LambdaPeak::supp(double psi) const {
     double s = alpha * (psi - psi0);
-    return -M_PI <= s && s <= M_PI;
+    return -M_PI < s && s < M_PI;
 }
 
 void LambdaPeak::eval(double psi, double &L, double &dL_dpsi) const {
@@ -14,69 +14,74 @@ void LambdaPeak::eval(double psi, double &L, double &dL_dpsi) const {
         dL_dpsi = -0.5 * alpha * sin(s);
     }
     else {
-        double t = abs(s/M_PI);
-        auto x_inv = 1.0/(2.0*t*t-2.0*t+1.0);
-        L = (t*t-2.0*t+1.0) * x_inv;
-        dL_dpsi = (2.0*t*(t-1.0)) * x_inv*x_inv;
-        dL_dpsi *= (s > 0 ? 1 : 0) / M_PI;
+        double t = s/M_PI;
+        auto x_inv = 1.0/(2.0*t*t-2.0*abs(t)+1.0);
+        L = (t*t-2.0*abs(t)+1.0) * x_inv;
+        if (t > 0) {
+            double g = 2.0*t*(t-1.0);
+            dL_dpsi = alpha * g/((g+1.0)*(g+1.0)) / M_PI;
+        }
+        else {
+            double g = -2.0*t*(t+1.0);
+            dL_dpsi = alpha * g/((g-1.0)*(g-1.0)) / M_PI;
+        }
     }
 }
 
 template<typename LJ>
-void perLambda(LambdaPeak const& lambda, LJ const& lj, double psi[2],
-    double norm, double& A, double& B, double& C) {
-    if (lambda.supp(psi[0]) && lambda.supp(psi[1])) {
+void perLambda(LambdaPeak *lambda[2], LJ const& lj, double psi[2],
+               double norm, double& A, double& B, double& C, double scale) {
+    if (lambda[0]->supp(psi[0]) && lambda[1]->supp(psi[1])) {
         double L[2], dL_dpsi[2];
         for (int m = 0; m < 2; ++m)
-            lambda.eval(psi[m], L[m], dL_dpsi[m]);
+            lambda[m]->eval(psi[m], L[m], dL_dpsi[m]);
 
         double ljV = 0.0, dljV_dn = 0.0;
         lj.kernel(norm, ljV, dljV_dn);
 
-        A += dL_dpsi[0] * L[1] * ljV;
-        B += dL_dpsi[1] * L[0] * ljV;
-        C += L[0] * L[1] * dljV_dn;
+        A += dL_dpsi[0] * L[1] * ljV * scale;
+        B += dL_dpsi[1] * L[0] * ljV * scale;
+        C += L[0] * L[1] * dljV_dn * scale;
     }
 }
 
-void PseudoImproperDihedral::deriveAngles(int _i1, int _i2, double norm,
-    const Vector &unit, double *psi, Vector (*dpsi_dr)[6]) const {
+void PseudoImproperDihedral::deriveAngles(int _i1, int _i2, double *psi,
+                                          Vector (*dpsi_dr)[4]) const {
 
     int idx[2] = { _i1, _i2 };
     for (int m = 0; m < 2; ++m) {
-        for (int ix = 0; ix < 6; ++ix) {
+        for (int ix = 0; ix < 4; ++ix) {
             dpsi_dr[m][ix].setZero();
         }
     }
 
     for (int m = 0; m < 2; ++m) {
-        int i1 = idx[m]-1, i2 = idx[m], i3 = idx[m];
-        int loc1 = 3*m, loc2 = 3*m+1, loc3 = 3*m+2, loc4 = 3*(1-m)+1;
+        int i1 = idx[m], i2 = idx[m]+1, i3 = idx[m]-1;
 
-        Vector r1 = state->r[i1], r2 = state->r[i2], r3 = state->r[i3];
-        Vector r24 = (m == 0 ? 1 : -1) * norm * unit;
-        Vector r12 = r2 - r1, r23 = r3 - r2, r13 = r3 - r1, r14 = r12 + r24;
+        Vector ri = state->r[i1],
+               rj = state->r[i2],
+               rk = state->r[i3],
+               rl = state->r[idx[1-m]];
 
-        Vector rij = -r23, rkj = -r13, rkl = -r14;
-        Vector rm = -r12.cross(r23);
+        auto rij = ri - rj, rkj = rk - rj, rkl = rk - rl;
+        Vector rm = rij.cross(rkj);
         double rm_norm = rm.norm();
-        Vector rn = r13.cross(r14);
+        Vector rn = rkj.cross(rkl);
         double rn_norm = rn.norm();
 
-        if (rm_norm == 0.0 || rn_norm == 0.0)
-            continue;
+        //TODO: do something sensible when rm or rn norm is too close to zero
 
         double rkj_norm = rkj.norm();
-        Vector fi = rm * rkj_norm / rm_norm;
-        Vector fl = - rn * rkj_norm / rn_norm;
+        Vector fi = rm * rkj_norm / rm_norm / rm_norm;
+        Vector fl = -rn * rkj_norm / rn_norm / rn_norm;
         Vector df = (fi * rij.dot(rkj) - fl * rkl.dot(rkj)) / (rkj_norm * rkj_norm);
         Vector fj = -fi + df;
         Vector fk = -fl - df;
 
-        dpsi_dr[m][loc1] = fi;
-        dpsi_dr[m][loc2] = fj;
-        dpsi_dr[m][loc3] = fk;
-        dpsi_dr[m][loc4] = fl;
+        dpsi_dr[m][0] = fi;
+        dpsi_dr[m][1] = fj;
+        dpsi_dr[m][2] = fk;
+        dpsi_dr[m][3] = fl;
 
         double cos_psi = rm.dot(rn) / (rm_norm * rn_norm);
         psi[m] = acos(cos_psi);
@@ -106,9 +111,9 @@ void PseudoImproperDihedral::bind(Simulation &simulation) {
             auto code2 = (int8_t)type2;
 
             auto& lj = ss_ljs[code1][code2];
-            lj.depth = params.mjMatrix
-                       ? params.mjMatrix->at({type1, type2})
-                       : 1.0 * eps;
+            lj.depth = (use_MJ && params.mjMatrix)
+                ? params.mjMatrix->at({type1, type2})
+                : 1.0 * eps;
             lj.sink_max = params.pairwiseMinDist.at({type1, type2});
         }
     }
@@ -117,61 +122,77 @@ void PseudoImproperDihedral::bind(Simulation &simulation) {
 }
 
 vl::Spec PseudoImproperDihedral::spec() const {
-    double maxCutoff = 0.0;
-    maxCutoff = std::max(maxCutoff, bb_pos_lj.cutoff());
-    maxCutoff = std::max(maxCutoff, bb_neg_lj.cutoff());
-
-    for (int8_t acid1 = 0; acid1 < AminoAcid::N; ++acid1) {
-        for (int8_t acid2 = 0; acid2 < AminoAcid::N; ++acid2) {
-            maxCutoff = std::max(maxCutoff, ss_ljs[acid1][acid2].cutoff());
-        }
-    }
+    double cutoff = 18.0 * angstrom;
 
     return (vl::Spec) {
-        .cutoffSq = pow(maxCutoff, 2.0),
+        .cutoffSq = pow(cutoff, 2.0),
         .minBondSep = 3,
     };
 }
 
 void PseudoImproperDihedral::asyncPart(Dynamics &dyn) {
+    #pragma omp for nowait
     for (auto const& [i1, i2]: pairs) {
         auto r12 = state->top(state->r[i1] - state->r[i2]);
         auto r12_normsq = r12.squaredNorm();
         if (r12_normsq >= savedSpec.cutoffSq) continue;
 
+        auto type1 = (int8_t)(*types)[i1], type2 = (int8_t)(*types)[i2];
+        if (type1 == ResTypeIdx::PRO or type2 == ResTypeIdx::PRO) continue;
+
         auto norm = sqrt(r12_normsq);
         auto unit = r12 / norm;
 
         double psi[2];
-        Vector dpsi_dr[2][6];
-        deriveAngles(i1, i2, norm, unit, psi, dpsi_dr);
+        Vector dpsi_dr[2][4];
+        deriveAngles(i1, i2, psi, dpsi_dr);
 
         double A = 0.0, B = 0.0, C = 0.0;
-        auto type1 = (int8_t)(*types)[i1], type2 = (int8_t)(*types)[i2];
 
-        perLambda(bb_pos, bb_pos_lj,
-            psi, norm, A, B, C);
+        LambdaPeak *peak[2];
+        LennardJones *lj = &bb_pos_lj;
 
-        perLambda(bb_neg, bb_neg_lj,
-            psi, norm, A, B, C);
+        peak[0] = peak[1] = &bb_pos;
 
-        perLambda(ss, ss_ljs[type1][type2],
-            psi, norm, A, B, C);
-
-        int idx[6] = { i1-1, i1, i1 + 1, i2-1, i2, i2+1 };
-        for (int i = 0; i < 6; ++i) {
-            dyn.F[idx[i]] -= A * dpsi_dr[0][i];
-            dyn.F[idx[i]] -= B * dpsi_dr[1][i];
+        if (!peak[0]->supp(psi[0])) {
+            peak[0] = &bb_neg;
         }
-        dyn.F[i1] += C * unit;
-        dyn.F[i2] -= C * unit;
+        if (!peak[1]->supp(psi[1])) {
+            peak[1] = &bb_neg;
+            lj = &bb_neg_lj;
+        }
+
+        if (i2 - i1 == 3) {
+            lj = &bb_neg_lj;
+            peak[0] = &bb_pos;
+            peak[1] = &bb_neg;
+        }
+        
+        perLambda(peak, *lj, psi, norm, A, B, C, 0.2);
+
+        peak[0] = peak[1] = &ss;
+        perLambda(peak, ss_ljs[type1][type2],
+                  psi, norm, A, B, C, 1.0);
+
+        int idx_A[4] = { i1, i1+1, i1-1, i2 };
+        int idx_B[4] = { i2, i2+1, i2-1, i1 };
+        for (int i = 0; i < 4; ++i) {
+            dyn.F[idx_A[i]] -= A * dpsi_dr[0][i];
+            dyn.F[idx_B[i]] -= B * dpsi_dr[1][i];
+        }
+        dyn.F[i1] -= C * unit;
+        dyn.F[i2] += C * unit;
     }
 }
 
 void PseudoImproperDihedral::vlUpdateHook() {
     pairs.clear();
     for (auto const& [i1, i2]: vl->pairs) {
-        if (seqs->sepByN(i1, i2, 4) || seqs->isTerminal[i1] || !seqs->isTerminal[i2])
+        if (not include_i_4 && seqs->sepByN(i1, i2, 4))
+            continue;
+        if (seqs->isTerminal[i1] || seqs->isTerminal[i2])
+            continue;
+        if (not (seqs->sepByAtLeastN(i1, i2, 3)))
             continue;
 
         pairs.emplace_back(i1, i2);

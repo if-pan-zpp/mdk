@@ -12,3 +12,31 @@
 >                 write(*,*) unit*x0(ib),unit*y0(ib),unit*z0(ib)
 >         enddo
 > 
+3120a3133,3135
+> 
+>         cutoff_pid=0.0 !0.00005
+>         cutoff_d2=0.0 !0.01d0
+3143a3159,3160
+>             if(i.eq.1.or.i.eq.men) goto 465
+>             if(j.eq.1.or.j.eq.men) goto 465
+3185c3202,3203
+<                if (abs(d2n).lt.0.01d0 .or. abs(d2m).lt.0.01d0) goto 465
+---
+>                if (abs(d2n).lt.cutoff_d2.or.abs(d2m).lt.cutoff_d2)
+>      $              goto 465
+3237c3255
+<                if(0.00005 .lt.sslbd(m).or.0.00005 .lt.bblbd(m)) then 
+---
+>                if(cutoff_pid.lt.sslbd(m).or.cutoff_pid.lt.bblbd(m)) then 
+3258c3276
+<             if(bblmbd.lt.0.00005 .and. sslmbd.lt.0.00005) goto 465
+---
+>             if(bblmbd.lt.cutoff_pid .and. sslmbd.lt.cutoff_pid) goto 465
+3261c3279
+<             if(bblmbd.gt.0.00005) then
+---
+>             if(bblmbd.gt.cutoff_pid) then
+3304c3322
+<             if(epsmj.gt.0.00005 .and. sslmbd.gt.0.00005) then
+---
+>             if(epsmj.gt.cutoff_pid .and. sslmbd.gt.cutoff_pid) then

@@ -20,7 +20,7 @@ target_include_directories(${TARGET}
 
 target_compile_options(${TARGET}
     PRIVATE
-    -Wall -Wextra -fopenmp -Wno-unused-parameter
+    -Wall -Wextra -Wno-unused-parameter
     $<$<CONFIG:Debug>:-pg -Og>
     $<$<CONFIG:Release>:-Ofast>)
 

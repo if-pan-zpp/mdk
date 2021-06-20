@@ -7,7 +7,7 @@ do
 	cd $t/data
 	patch cg.f cg_patch
 	echo "Compiling..."
-	gfortran -O3 cg.f -o cg 2> /dev/null
+	gfortran -fdefault-real-8 -fdefault-double-8 -O3 cg.f -o cg 2> /dev/null
 	echo "Running..."
 	./cg inputfile > positions.txt
 	rm discard*

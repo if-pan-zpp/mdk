@@ -7,6 +7,7 @@ namespace mdk {
     public:
         double depth = 1.0 * eps;
         double sink_max = 10.0 * angstrom;
+        bool use_sink = false; // TODO: make it settable
 
         SidechainLJ() = default;
         SidechainLJ(double depth, double sink_max):
@@ -17,7 +18,7 @@ namespace mdk {
         }
 
         inline void kernel(double norm, double& V, double& dV_dn) const {
-            if (norm <= sink_max) V -= depth;
+            if (use_sink && norm <= sink_max) V -= depth;
             else LennardJones(sink_max, depth).kernel(norm, V, dV_dn);
         }
 
